@@ -1,256 +1,461 @@
 
-/* =====================================
-   STUDYVERSE AI - WEBSITE FUNCTIONALITY
-===================================== */
+/* =========================================================
+   STUDYVERSE AI — SCRIPT.JS
+   Version 2.0
+   Frontend interactions for JEE Main, JEE Advanced & NEET
+========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  // ELEMENTS
-  const menuToggle = document.getElementById("menuToggle");
-  const navLinks = document.getElementById("navLinks");
+    // -----------------------------------------------------
+    // 1. SELECT WEBSITE ELEMENTS
+    // -----------------------------------------------------
 
-  const loginModal = document.getElementById("loginModal");
-  const modalClose = document.getElementById("modalClose");
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
 
-  const loginButtons = document.querySelectorAll("[data-open-login]");
-  const loginForm = document.getElementById("loginForm");
+    const loginModal = document.getElementById("loginModal");
+    const modalClose = document.getElementById("modalClose");
+    const loginForm = document.getElementById("loginForm");
 
-  const courseSearch = document.getElementById("courseSearch");
-  const examFilter = document.getElementById("examFilter");
+    const studentName = document.getElementById("studentName");
+    const studentEmail = document.getElementById("studentEmail");
 
-  const courseCards = document.querySelectorAll(".course-card");
-  const emptyState = document.getElementById("emptyState");
+    const courseSearch = document.getElementById("courseSearch");
+    const courseGrid = document.getElementById("courseGrid");
+    const emptyState = document.getElementById("emptyState");
 
-  const toast = document.getElementById("toast");
+    const toast = document.getElementById("toast");
+    const year = document.getElementById("year");
 
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const courseCards = document.querySelectorAll(".course-card");
 
-  // COPYRIGHT YEAR
-  document.getElementById("year").textContent =
-    new Date().getFullYear();
+    // -----------------------------------------------------
+    // 2. TOAST NOTIFICATION SYSTEM
+    // -----------------------------------------------------
 
+    let toastTimer;
 
-  // NOTIFICATION SYSTEM
-  let toastTimeout;
+    function showToast(message) {
 
-  function showToast(message) {
+        if (!toast) {
+            alert(message);
+            return;
+        }
 
-    if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add("show");
 
-    toast.textContent = message;
-    toast.classList.add("show");
+        clearTimeout(toastTimer);
 
-    clearTimeout(toastTimeout);
-
-    toastTimeout = setTimeout(function () {
-      toast.classList.remove("show");
-    }, 3000);
-  }
-
-
-  // MOBILE NAVIGATION
-  if (menuToggle && navLinks) {
-
-    menuToggle.addEventListener("click", function () {
-
-      const isOpen = navLinks.classList.toggle("open");
-
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
-
-    });
-
-    navLinks.querySelectorAll("a").forEach(function (link) {
-
-      link.addEventListener("click", function () {
-
-        navLinks.classList.remove("open");
-        menuToggle.setAttribute("aria-expanded", "false");
-
-      });
-
-    });
-
-  }
-
-
-  // LOGIN MODAL
-  function openLogin() {
-
-    loginModal.classList.add("show");
-    loginModal.setAttribute("aria-hidden", "false");
-
-    document.body.classList.add("modal-open");
-
-    const emailInput = document.getElementById("studentEmail");
-
-    setTimeout(function () {
-      emailInput.focus();
-    }, 100);
-
-  }
-
-
-  function closeLogin() {
-
-    loginModal.classList.remove("show");
-    loginModal.setAttribute("aria-hidden", "true");
-
-    document.body.classList.remove("modal-open");
-
-  }
-
-
-  loginButtons.forEach(function (button) {
-
-    button.addEventListener("click", openLogin);
-
-  });
-
-
-  modalClose.addEventListener("click", closeLogin);
-
-
-  loginModal.addEventListener("click", function (event) {
-
-    if (event.target === loginModal) {
-      closeLogin();
+        toastTimer = setTimeout(function () {
+            toast.classList.remove("show");
+        }, 3000);
     }
 
-  });
+    // -----------------------------------------------------
+    // 3. MOBILE NAVIGATION MENU
+    // -----------------------------------------------------
 
+    if (menuToggle && navLinks) {
 
-  document.addEventListener("keydown", function (event) {
+        menuToggle.addEventListener("click", function () {
 
-    if (event.key === "Escape" && loginModal.classList.contains("show")) {
-      closeLogin();
-    }
+            navLinks.classList.toggle("open");
 
-  });
+            const isOpen = navLinks.classList.contains("open");
 
-
-  // DEMO LOGIN FORM
-  if (loginForm) {
-
-    loginForm.addEventListener("submit", function (event) {
-
-      event.preventDefault();
-
-      const email = document.getElementById("studentEmail").value.trim();
-
-      const exam = document.getElementById("studentExam").value;
-
-      if (!email || !exam) {
-
-        showToast("Please enter your email and select your examination.");
-
-        return;
-
-      }
-
-      showToast("Demo only! Student registration will be activated soon.");
-
-      loginForm.reset();
-
-      setTimeout(closeLogin, 1500);
-
-    });
-
-  }
-
-
-  // COURSE SEARCH AND FILTER
-  function filterCourses() {
-
-    const searchText = courseSearch.value.toLowerCase().trim();
-
-    const selectedExam = examFilter.value.toLowerCase();
-
-    let visibleCount = 0;
-
-    courseCards.forEach(function (card) {
-
-      const searchData =
-        card.dataset.search.toLowerCase() + " " +
-        card.textContent.toLowerCase();
-
-      const examData = card.dataset.exam.toLowerCase();
-
-      const matchesSearch = searchData.includes(searchText);
-
-      const matchesExam =
-        selectedExam === "all" ||
-        examData.split(" ").includes(selectedExam);
-
-      if (matchesSearch && matchesExam) {
-
-        card.style.display = "";
-
-        visibleCount++;
-
-      } else {
-
-        card.style.display = "none";
-
-      }
-
-    });
-
-    emptyState.hidden = visibleCount !== 0;
-
-  }
-
-
-  if (courseSearch) {
-
-    courseSearch.addEventListener("input", filterCourses);
-
-  }
-
-
-  if (examFilter) {
-
-    examFilter.addEventListener("change", filterCourses);
-
-  }
-
-
-  // EXAMINATION AND SUBJECT SELECTION
-  document.querySelectorAll("[data-exam]").forEach(function (button) {
-
-    button.addEventListener("click", function () {
-
-      const selected = button.dataset.exam;
-
-      showToast(selected + " learning library will be available soon.");
-
-    });
-
-  });
-
-
-  // SMOOTH NAVIGATION FOR INTERNAL LINKS
-  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-
-    link.addEventListener("click", function (event) {
-
-      const targetId = link.getAttribute("href");
-
-      if (targetId === "#") {
-
-        event.preventDefault();
-
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
         });
 
-      }
+        // Close menu after clicking a navigation link
+        navLinks.querySelectorAll("a").forEach(function (link) {
+
+            link.addEventListener("click", function () {
+
+                navLinks.classList.remove("open");
+                menuToggle.setAttribute("aria-expanded", "false");
+
+            });
+
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener("click", function (event) {
+
+            if (
+                !navLinks.contains(event.target) &&
+                !menuToggle.contains(event.target)
+            ) {
+                navLinks.classList.remove("open");
+                menuToggle.setAttribute("aria-expanded", "false");
+            }
+
+        });
+
+    }
+
+    // -----------------------------------------------------
+    // 4. LOGIN MODAL
+    // -----------------------------------------------------
+
+    function openLoginModal() {
+
+        if (!loginModal) {
+            showToast("Login feature will be available soon!");
+            return;
+        }
+
+        loginModal.classList.add("show");
+        document.body.style.overflow = "hidden";
+
+        if (studentName) {
+            studentName.focus();
+        }
+    }
+
+    function closeLoginModal() {
+
+        if (!loginModal) return;
+
+        loginModal.classList.remove("show");
+        document.body.style.overflow = "";
+
+    }
+
+    // Open login modal from all login buttons
+    document.querySelectorAll("[data-open-login]").forEach(function (button) {
+
+        button.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            openLoginModal();
+
+        });
 
     });
 
-  });
+    // Also support common login button IDs
+    ["loginBtn", "ctaLogin"].forEach(function (id) {
 
+        const button = document.getElementById(id);
 
-  // INITIAL MESSAGE IN CONSOLE
-  console.log("STUDYVERSE AI: Website initialized successfully!");
+        if (button) {
+            button.addEventListener("click", function (event) {
+
+                event.preventDefault();
+                openLoginModal();
+
+            });
+        }
+
+    });
+
+    // Close button
+    if (modalClose) {
+        modalClose.addEventListener("click", closeLoginModal);
+    }
+
+    // Close when clicking outside modal content
+    if (loginModal) {
+
+        loginModal.addEventListener("click", function (event) {
+
+            if (event.target === loginModal) {
+                closeLoginModal();
+            }
+
+        });
+
+    }
+
+    // Close modal with Escape key
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+
+            closeLoginModal();
+
+            if (navLinks && menuToggle) {
+                navLinks.classList.remove("open");
+                menuToggle.setAttribute("aria-expanded", "false");
+            }
+
+        }
+
+    });
+
+    // -----------------------------------------------------
+    // 5. DEMO LOGIN FORM
+    // -----------------------------------------------------
+
+    if (loginForm) {
+
+        loginForm.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            const name = studentName
+                ? studentName.value.trim()
+                : "";
+
+            const email = studentEmail
+                ? studentEmail.value.trim()
+                : "";
+
+            if (!name || !email) {
+                showToast("Please enter your name and email.");
+                return;
+            }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+                showToast("Please enter a valid email address.");
+                return;
+            }
+
+            // This is a frontend demo only.
+            // Real registration will be connected to Supabase later.
+
+            showToast("Welcome to STUDYVERSE AI, " + name + "!");
+
+            loginForm.reset();
+            closeLoginModal();
+
+        });
+
+    }
+
+    // -----------------------------------------------------
+    // 6. COURSE SEARCH AND FILTER SYSTEM
+    // -----------------------------------------------------
+
+    let activeFilter = "all";
+
+    function filterCourses() {
+
+        const searchText = courseSearch
+            ? courseSearch.value.toLowerCase().trim()
+            : "";
+
+        let visibleCount = 0;
+
+        courseCards.forEach(function (card) {
+
+            const exam = (card.dataset.exam || "").toLowerCase();
+            const searchData = (card.dataset.search || "").toLowerCase();
+            const cardText = card.textContent.toLowerCase();
+
+            const matchesFilter =
+                activeFilter === "all" ||
+                exam === activeFilter;
+
+            const matchesSearch =
+                searchData.includes(searchText) ||
+                cardText.includes(searchText);
+
+            const shouldShow = matchesFilter && matchesSearch;
+
+            card.style.display = shouldShow ? "" : "none";
+
+            if (shouldShow) {
+                visibleCount++;
+            }
+
+        });
+
+        // Show empty message when there are no matching courses
+        if (emptyState) {
+            emptyState.style.display =
+                visibleCount === 0 ? "block" : "none";
+        }
+
+        if (courseGrid) {
+            courseGrid.setAttribute(
+                "aria-live",
+                "polite"
+            );
+        }
+
+    }
+
+    // Search input
+    if (courseSearch) {
+
+        courseSearch.addEventListener("input", filterCourses);
+
+    }
+
+    // Filter buttons
+    filterButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            activeFilter = (button.dataset.filter || "all").toLowerCase();
+
+            filterButtons.forEach(function (item) {
+                item.classList.remove("active");
+                item.setAttribute("aria-pressed", "false");
+            });
+
+            button.classList.add("active");
+            button.setAttribute("aria-pressed", "true");
+
+            filterCourses();
+
+        });
+
+    });
+
+    // -----------------------------------------------------
+    // 7. EXAM SELECTION BUTTONS
+    // -----------------------------------------------------
+
+    document.querySelectorAll("[data-exam]").forEach(function (element) {
+
+        // Course cards are handled by the filter system.
+        if (element.classList.contains("course-card")) return;
+
+        element.addEventListener("click", function () {
+
+            const selectedExam = (
+                element.dataset.exam || ""
+            ).toLowerCase();
+
+            if (!selectedExam) return;
+
+            const matchingFilter = Array.from(filterButtons).find(
+                function (button) {
+                    return (
+                        (button.dataset.filter || "").toLowerCase() ===
+                        selectedExam
+                    );
+                }
+            );
+
+            if (matchingFilter) {
+                matchingFilter.click();
+            }
+
+            // If the element is an exam link, allow normal navigation.
+            if (element.tagName === "A") {
+                const href = element.getAttribute("href") || "";
+
+                if (href.startsWith("#")) {
+                    const target = document.querySelector(href);
+
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+                    }
+                }
+            }
+
+        });
+
+    });
+
+    // -----------------------------------------------------
+    // 8. COURSE MATERIAL BUTTONS
+    // -----------------------------------------------------
+
+    document.querySelectorAll("[data-coming]").forEach(function (button) {
+
+        button.addEventListener("click", function (event) {
+
+            event.preventDefault();
+
+            showToast(
+                "Study materials are being prepared. Stay tuned!"
+            );
+
+        });
+
+    });
+
+    // -----------------------------------------------------
+    // 9. COURSE SELECTION BUTTONS
+    // -----------------------------------------------------
+
+    document.querySelectorAll("[data-select]").forEach(function (button) {
+
+        button.addEventListener("click", function (event) {
+
+            event.preventDefault();
+
+            const selectedCourse = button.dataset.select;
+
+            if (selectedCourse) {
+                showToast(
+                    selectedCourse + " selected! Course access is coming soon."
+                );
+            } else {
+                showToast("Course selection will be available soon!");
+            }
+
+        });
+
+    });
+
+    // -----------------------------------------------------
+    // 10. SMOOTH SCROLL FOR INTERNAL LINKS
+    // -----------------------------------------------------
+
+    document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+
+        link.addEventListener("click", function (event) {
+
+            const targetId = link.getAttribute("href");
+
+            if (!targetId || targetId === "#") return;
+
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+
+                event.preventDefault();
+
+                targetElement.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            }
+
+        });
+
+    });
+
+    // -----------------------------------------------------
+    // 11. AUTOMATIC FOOTER YEAR
+    // -----------------------------------------------------
+
+    if (year) {
+        year.textContent = new Date().getFullYear();
+    }
+
+    // -----------------------------------------------------
+    // 12. INITIALIZE COURSE FILTERS
+    // -----------------------------------------------------
+
+    filterCourses();
+
+    // -----------------------------------------------------
+    // 13. WEBSITE INITIALIZATION MESSAGE
+    // -----------------------------------------------------
+
+    console.log(
+        "%cSTUDYVERSE AI",
+        "color:#8b5cf6;font-size:24px;font-weight:bold;"
+    );
+
+    console.log(
+        "%cWebsite JavaScript initialized successfully!",
+        "color:#22c55e;font-size:14px;"
+    );
 
 });
