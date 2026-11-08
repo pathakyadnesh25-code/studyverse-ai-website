@@ -525,5 +525,27 @@ async function testStudyverseDatabase() {
 
 // Run database test after page loads
 testStudyverseDatabase();
+async function testStudyverseDatabase() {
+  try {
+    const { data, error } = await window.studyverseSupabase
+      .from("courses")
+      .select("id, title, exam_type")
+      .limit(5);
 
+    if (error) {
+      throw error;
+    }
+
+    console.log("STUDYVERSE AI: Database connection successful!");
+    console.log("Available courses:", data);
+
+  } catch (error) {
+    console.error(
+      "STUDYVERSE AI: Database connection failed:",
+      error.message
+    );
+  }
+}
+
+testStudyverseDatabase();
 });
