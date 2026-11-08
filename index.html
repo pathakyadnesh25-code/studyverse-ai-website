@@ -1,0 +1,472 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="STUDYVERSE AI - Learn smarter with AI-powered JEE and NEET preparation, animated lessons, notes, PYQs and mock tests.">
+
+  <meta name="theme-color" content="#090b18">
+
+  <title>STUDYVERSE AI | JEE & NEET Preparation</title>
+
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+  <header class="header">
+    <nav class="navbar container">
+
+      <a href="#" class="brand">
+        <img src="assets/logo.svg" alt="Studyverse AI Logo">
+        <span>STUDYVERSE<span class="brand-ai"> AI</span></span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#home">Home</a>
+        <a href="#exams">Examinations</a>
+        <a href="#features">Features</a>
+        <a href="#courses">Courses</a>
+        <a href="#about">About</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" data-open-login>Login</button>
+        <button class="btn btn-primary" data-open-login>Get Started <span>↗</span></button>
+      </div>
+
+    </nav>
+  </header>
+
+
+  <main>
+
+    <!-- HERO SECTION -->
+    <section class="hero section-padding" id="home">
+
+      <div class="container hero-grid">
+
+        <div class="hero-content">
+
+          <div class="announcement">
+            <span class="live-dot"></span>
+            THE FUTURE OF SMART LEARNING IS HERE
+          </div>
+
+          <h1>
+            Your Dreams.
+            <span>Your Future.</span>
+            <span class="gradient-text">Our AI Learning.</span>
+          </h1>
+
+          <p class="hero-description">
+            Prepare for JEE Main, JEE Advanced and NEET with
+            AI-powered animated lessons, smart notes, previous
+            year questions and personalised learning.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="#exams" class="btn btn-primary btn-large">
+              Start Learning <span>→</span>
+            </a>
+
+            <a href="#features" class="btn btn-outline btn-large">
+              Explore Features
+            </a>
+          </div>
+
+          <div class="hero-trust">
+            <div class="trust-item">
+              <strong>3</strong>
+              <span>Exam Categories</span>
+            </div>
+            <div class="trust-item">
+              <strong>AI</strong>
+              <span>Smart Learning</span>
+            </div>
+            <div class="trust-item">
+              <strong>24/7</strong>
+              <span>Learn Anytime</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="hero-visual">
+          <div class="visual-glow"></div>
+
+          <img src="assets/hero.svg" alt="AI-powered education illustration">
+
+          <div class="floating-card floating-one">
+            <span class="floating-icon">✦</span>
+            <div>
+              <strong>AI Learning</strong>
+              <small>Learn visually</small>
+            </div>
+          </div>
+
+          <div class="floating-card floating-two">
+            <span class="floating-icon">✓</span>
+            <div>
+              <strong>Smart Practice</strong>
+              <small>Improve every day</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- EXAM CATEGORIES -->
+    <section class="section-padding" id="exams">
+
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="eyebrow">CHOOSE YOUR DESTINATION</span>
+          <h2>One Platform. <span class="gradient-text">Three Goals.</span></h2>
+          <p>Choose your examination and begin your preparation journey.</p>
+        </div>
+
+        <div class="exam-grid">
+
+          <article class="exam-card jee">
+            <div class="exam-icon">⚛</div>
+            <span class="exam-label">ENGINEERING ENTRANCE</span>
+            <h3>JEE Main</h3>
+            <p>Build strong fundamentals and prepare for your engineering entrance examination.</p>
+            <div class="subject-list">
+              <span>Physics</span>
+              <span>Chemistry</span>
+              <span>Mathematics</span>
+            </div>
+            <button class="text-link" data-exam="JEE Main">Explore JEE Main →</button>
+          </article>
+
+          <article class="exam-card advanced">
+            <div class="exam-icon">🚀</div>
+            <span class="exam-label">ADVANCED PREPARATION</span>
+            <h3>JEE Advanced</h3>
+            <p>Challenge your understanding with advanced concepts and problem-solving practice.</p>
+            <div class="subject-list">
+              <span>Physics</span>
+              <span>Chemistry</span>
+              <span>Mathematics</span>
+            </div>
+            <button class="text-link" data-exam="JEE Advanced">Explore JEE Advanced →</button>
+          </article>
+
+          <article class="exam-card neet">
+            <div class="exam-icon">🧬</div>
+            <span class="exam-label">MEDICAL ENTRANCE</span>
+            <h3>NEET UG</h3>
+            <p>Understand biology and master physics and chemistry for medical entrance preparation.</p>
+            <div class="subject-list">
+              <span>Physics</span>
+              <span>Chemistry</span>
+              <span>Biology</span>
+            </div>
+            <button class="text-link" data-exam="NEET UG">Explore NEET →</button>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- FEATURES -->
+    <section class="section-padding features-section" id="features">
+
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="eyebrow">LEARN WITHOUT LIMITS</span>
+          <h2>Everything You Need. <span class="gradient-text">In One Place.</span></h2>
+          <p>Powerful learning tools designed to make complex concepts easier.</p>
+        </div>
+
+        <div class="feature-grid">
+
+          <article class="feature-card">
+            <div class="feature-icon purple">▶</div>
+            <h3>AI Animated Videos</h3>
+            <p>Visual explanations, scientific animations and step-by-step chapter lessons.</p>
+            <span class="feature-status">Coming soon</span>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon blue">▤</div>
+            <h3>Smart Short Notes</h3>
+            <p>Chapter-wise revision notes, definitions, diagrams and important concepts.</p>
+            <span class="feature-status">Coming soon</span>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon orange">∑</div>
+            <h3>Formula Library</h3>
+            <p>Important formulas, units, shortcuts and chapter-wise formula sheets.</p>
+            <span class="feature-status">Coming soon</span>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon green">❖</div>
+            <h3>Previous Year Questions</h3>
+            <p>Practise examination questions with answers and detailed explanations.</p>
+            <span class="feature-status">Coming soon</span>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon pink">◷</div>
+            <h3>Mock Test Series</h3>
+            <p>Timed tests, examination-style practice and performance analysis.</p>
+            <span class="feature-status">Coming soon</span>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon cyan">✦</div>
+            <h3>AI Doubt Solver</h3>
+            <p>Ask questions and get step-by-step explanations in simple language.</p>
+            <span class="feature-status">Coming soon</span>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- COURSE LIBRARY -->
+    <section class="section-padding" id="courses">
+
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="eyebrow">EXPLORE THE LEARNING LIBRARY</span>
+          <h2>Choose Your <span class="gradient-text">Subject.</span></h2>
+          <p>Find your subjects and explore your future learning resources.</p>
+        </div>
+
+        <div class="course-controls">
+          <div class="search-box">
+            <span>⌕</span>
+            <input id="courseSearch" type="search" placeholder="Search subjects or examinations..." aria-label="Search courses">
+          </div>
+
+          <select id="examFilter" aria-label="Filter by examination">
+            <option value="all">All examinations</option>
+            <option value="jee">JEE Main</option>
+            <option value="advanced">JEE Advanced</option>
+            <option value="neet">NEET UG</option>
+          </select>
+        </div>
+
+        <div class="course-grid" id="courseGrid">
+
+          <article class="course-card" data-exam="jee advanced" data-search="physics mechanics jee">
+            <div class="course-top physics-bg">⚛</div>
+            <div class="course-body">
+              <span class="course-tag">JEE MAIN / ADVANCED</span>
+              <h3>Physics</h3>
+              <p>Mechanics, thermodynamics, electricity, optics and modern physics.</p>
+              <button class="text-link" data-exam="JEE Physics">Explore Subject →</button>
+            </div>
+          </article>
+
+          <article class="course-card" data-exam="jee advanced neet" data-search="chemistry organic inorganic physical">
+            <div class="course-top chemistry-bg">⚗</div>
+            <div class="course-body">
+              <span class="course-tag">JEE / NEET</span>
+              <h3>Chemistry</h3>
+              <p>Physical, organic and inorganic chemistry with detailed explanations.</p>
+              <button class="text-link" data-exam="Chemistry">Explore Subject →</button>
+            </div>
+          </article>
+
+          <article class="course-card" data-exam="jee advanced" data-search="mathematics maths algebra calculus">
+            <div class="course-top maths-bg">∑</div>
+            <div class="course-body">
+              <span class="course-tag">JEE MAIN / ADVANCED</span>
+              <h3>Mathematics</h3>
+              <p>Algebra, calculus, coordinate geometry and advanced problem solving.</p>
+              <button class="text-link" data-exam="JEE Mathematics">Explore Subject →</button>
+            </div>
+          </article>
+
+          <article class="course-card" data-exam="neet" data-search="biology botany zoology human physiology">
+            <div class="course-top biology-bg">🧬</div>
+            <div class="course-body">
+              <span class="course-tag">NEET UG</span>
+              <h3>Biology</h3>
+              <p>Botany, zoology, genetics, human physiology and ecology.</p>
+              <button class="text-link" data-exam="NEET Biology">Explore Subject →</button>
+            </div>
+          </article>
+
+        </div>
+
+        <p class="empty-state" id="emptyState" hidden>No matching subjects found.</p>
+
+      </div>
+    </section>
+
+
+    <!-- HOW IT WORKS -->
+    <section class="section-padding process-section" id="about">
+
+      <div class="container">
+
+        <div class="section-heading">
+          <span class="eyebrow">YOUR LEARNING JOURNEY</span>
+          <h2>Learn Smarter. <span class="gradient-text">Every Day.</span></h2>
+          <p>A simple learning process designed around your examination goals.</p>
+        </div>
+
+        <div class="process-grid">
+
+          <div class="process-card">
+            <span>01</span>
+            <h3>Choose Your Exam</h3>
+            <p>Select JEE Main, JEE Advanced or NEET.</p>
+          </div>
+
+          <div class="process-card">
+            <span>02</span>
+            <h3>Understand Concepts</h3>
+            <p>Study chapters through videos, notes and examples.</p>
+          </div>
+
+          <div class="process-card">
+            <span>03</span>
+            <h3>Practise Questions</h3>
+            <p>Improve through PYQs, exercises and mock tests.</p>
+          </div>
+
+          <div class="process-card">
+            <span>04</span>
+            <h3>Track Your Progress</h3>
+            <p>Identify weaknesses and improve your preparation.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CALL TO ACTION -->
+    <section class="section-padding">
+
+      <div class="container">
+        <div class="cta-box">
+          <div class="cta-content">
+            <span class="eyebrow">YOUR FUTURE STARTS TODAY</span>
+            <h2>Make Every Study Hour <span class="gradient-text">Count.</span></h2>
+            <p>Start your journey towards your dream engineering or medical college.</p>
+            <button class="btn btn-primary btn-large" data-open-login>
+              Join STUDYVERSE AI →
+            </button>
+          </div>
+          <div class="cta-symbol">✦</div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-grid">
+
+      <div class="footer-brand">
+        <a href="#" class="brand">
+          <img src="assets/logo.svg" alt="">
+          <span>STUDYVERSE<span class="brand-ai"> AI</span></span>
+        </a>
+        <p>Learn visually. Practise intelligently. Prepare confidently.</p>
+      </div>
+
+      <div>
+        <h4>Explore</h4>
+        <a href="#exams">Examinations</a>
+        <a href="#courses">Courses</a>
+        <a href="#features">Features</a>
+      </div>
+
+      <div>
+        <h4>Resources</h4>
+        <a href="#features">AI Learning</a>
+        <a href="#features">Notes</a>
+        <a href="#features">Mock Tests</a>
+      </div>
+
+      <div>
+        <h4>Information</h4>
+        <a href="#about">About Us</a>
+        <a href="mailto:support@studyverseai.in">Contact</a>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <p>© <span id="year"></span> STUDYVERSE AI. All rights reserved.</p>
+      <p>An independent educational platform. Not affiliated with NTA.</p>
+    </div>
+  </footer>
+
+
+  <!-- LOGIN MODAL - DEMO ONLY -->
+  <div class="modal" id="loginModal" aria-hidden="true">
+    <div class="modal-content">
+
+      <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+
+      <div class="modal-logo">✦</div>
+
+      <h2>Welcome to <span class="gradient-text">STUDYVERSE AI</span></h2>
+      <p>Create your student account when registration becomes available.</p>
+
+      <form id="loginForm">
+
+        <label for="studentEmail">Email Address</label>
+        <input id="studentEmail" type="email" placeholder="Enter your email" required>
+
+        <label for="studentExam">Your Examination</label>
+        <select id="studentExam" required>
+          <option value="">Select examination</option>
+          <option>JEE Main</option>
+          <option>JEE Advanced</option>
+          <option>NEET UG</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary btn-full">
+          Continue
+        </button>
+
+      </form>
+
+      <small class="modal-note">Demo interface. Real account registration will be added with Supabase.</small>
+
+    </div>
+  </div>
+
+
+  <!-- NOTIFICATION -->
+  <div class="toast" id="toast" role="status"></div>
+
+</body>
+</html>
