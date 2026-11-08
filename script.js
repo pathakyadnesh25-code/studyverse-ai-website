@@ -458,4 +458,72 @@ document.addEventListener("DOMContentLoaded", function () {
         "color:#22c55e;font-size:14px;"
     );
 
+/* ==========================================
+   STUDYVERSE AI - SUPABASE CONNECTION
+========================================== */
+
+// Your Supabase project credentials
+const STUDYVERSE_SUPABASE_URL =
+    "https://mtxkvupfczhglaqghcbc.supabase.co/rest/v1";
+
+const STUDYVERSE_SUPABASE_KEY =
+    "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
+
+// Initialize Supabase only once
+if (!window.studyverseSupabase) {
+
+    if (!window.supabase) {
+        console.error(
+            "STUDYVERSE AI: Supabase library not loaded!"
+        );
+    } else {
+
+        window.studyverseSupabase =
+            window.supabase.createClient(
+                STUDYVERSE_SUPABASE_URL,
+                STUDYVERSE_SUPABASE_KEY
+            );
+
+        console.log(
+            "STUDYVERSE AI: Supabase client initialized!"
+        );
+    }
+}
+
+// Test actual database connection
+async function testStudyverseDatabase() {
+
+    try {
+
+        const { data, error } =
+            await window.studyverseSupabase
+                .from("courses")
+                .select("id, title, exam_type")
+                .limit(5);
+
+        if (error) {
+            throw error;
+        }
+
+        console.log(
+            "STUDYVERSE AI: Database connection successful!"
+        );
+
+        console.log("Available courses:", data);
+
+        return data;
+
+    } catch (error) {
+
+        console.error(
+            "STUDYVERSE AI: Database connection failed:",
+            error.message
+        );
+
+    }
+}
+
+// Run database test after page loads
+testStudyverseDatabase();
+
 });
