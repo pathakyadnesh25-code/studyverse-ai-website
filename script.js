@@ -1,15 +1,15 @@
 
 /* =========================================================
    STUDYVERSE AI — SCRIPT.JS
-   Version 2.0
-   Frontend interactions for JEE Main, JEE Advanced & NEET
+   Version 3.0
+   Frontend + Supabase + Dynamic Exam & Chapter Dashboard
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    // -----------------------------------------------------
+    // =====================================================
     // 1. SELECT WEBSITE ELEMENTS
-    // -----------------------------------------------------
+    // =====================================================
 
     const menuToggle = document.getElementById("menuToggle");
     const navLinks = document.getElementById("navLinks");
@@ -31,16 +31,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const filterButtons = document.querySelectorAll(".filter-btn");
     const courseCards = document.querySelectorAll(".course-card");
 
-    // -----------------------------------------------------
+    // =====================================================
     // 2. TOAST NOTIFICATION SYSTEM
-    // -----------------------------------------------------
+    // =====================================================
 
     let toastTimer;
 
     function showToast(message) {
 
         if (!toast) {
-            alert(message);
+            console.log("STUDYVERSE AI:", message);
             return;
         }
 
@@ -54,51 +54,65 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 3000);
     }
 
-    // -----------------------------------------------------
-    // 3. MOBILE NAVIGATION MENU
-    // -----------------------------------------------------
+    // =====================================================
+    // 3. MOBILE NAVIGATION
+    // =====================================================
 
     if (menuToggle && navLinks) {
 
-        menuToggle.addEventListener("click", function () {
+        menuToggle.addEventListener("click", function (event) {
+
+            event.stopPropagation();
 
             navLinks.classList.toggle("open");
 
             const isOpen = navLinks.classList.contains("open");
 
-            menuToggle.setAttribute("aria-expanded", String(isOpen));
+            menuToggle.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
         });
 
-        // Close menu after clicking a navigation link
         navLinks.querySelectorAll("a").forEach(function (link) {
 
             link.addEventListener("click", function () {
 
                 navLinks.classList.remove("open");
-                menuToggle.setAttribute("aria-expanded", "false");
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
 
             });
 
         });
 
-        // Close menu when clicking outside
         document.addEventListener("click", function (event) {
 
             if (
                 !navLinks.contains(event.target) &&
                 !menuToggle.contains(event.target)
             ) {
+
                 navLinks.classList.remove("open");
-                menuToggle.setAttribute("aria-expanded", "false");
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
             }
 
         });
 
     }
 
-    // -----------------------------------------------------
+    // =====================================================
     // 4. LOGIN MODAL
-    // -----------------------------------------------------
+    // =====================================================
 
     function openLoginModal() {
 
@@ -108,11 +122,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         loginModal.classList.add("show");
+
         document.body.style.overflow = "hidden";
 
         if (studentName) {
             studentName.focus();
         }
+
     }
 
     function closeLoginModal() {
@@ -120,44 +136,45 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!loginModal) return;
 
         loginModal.classList.remove("show");
+
         document.body.style.overflow = "";
 
     }
 
-    // Open login modal from all login buttons
     document.querySelectorAll("[data-open-login]").forEach(function (button) {
 
         button.addEventListener("click", function (event) {
 
             event.preventDefault();
+
             openLoginModal();
 
         });
 
     });
 
-    // Also support common login button IDs
     ["loginBtn", "ctaLogin"].forEach(function (id) {
 
         const button = document.getElementById(id);
 
         if (button) {
+
             button.addEventListener("click", function (event) {
 
                 event.preventDefault();
+
                 openLoginModal();
 
             });
+
         }
 
     });
 
-    // Close button
     if (modalClose) {
         modalClose.addEventListener("click", closeLoginModal);
     }
 
-    // Close when clicking outside modal content
     if (loginModal) {
 
         loginModal.addEventListener("click", function (event) {
@@ -170,7 +187,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-    // Close modal with Escape key
     document.addEventListener("keydown", function (event) {
 
         if (event.key === "Escape") {
@@ -178,17 +194,23 @@ document.addEventListener("DOMContentLoaded", function () {
             closeLoginModal();
 
             if (navLinks && menuToggle) {
+
                 navLinks.classList.remove("open");
-                menuToggle.setAttribute("aria-expanded", "false");
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
             }
 
         }
 
     });
 
-    // -----------------------------------------------------
+    // =====================================================
     // 5. DEMO LOGIN FORM
-    // -----------------------------------------------------
+    // =====================================================
 
     if (loginForm) {
 
@@ -216,21 +238,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            // This is a frontend demo only.
-            // Real registration will be connected to Supabase later.
+            // Demo only — real authentication will use Supabase Auth.
 
             showToast("Welcome to STUDYVERSE AI, " + name + "!");
 
             loginForm.reset();
+
             closeLoginModal();
 
         });
 
     }
 
-    // -----------------------------------------------------
-    // 6. COURSE SEARCH AND FILTER SYSTEM
-    // -----------------------------------------------------
+    // =====================================================
+    // 6. COURSE SEARCH AND FILTER
+    // =====================================================
 
     let activeFilter = "all";
 
@@ -245,12 +267,18 @@ document.addEventListener("DOMContentLoaded", function () {
         courseCards.forEach(function (card) {
 
             const exam = (card.dataset.exam || "").toLowerCase();
+
             const searchData = (card.dataset.search || "").toLowerCase();
+
             const cardText = card.textContent.toLowerCase();
+
+            // FIX: Supports cards belonging to multiple exams.
+
+            const examList = exam.split(/\s+/);
 
             const matchesFilter =
                 activeFilter === "all" ||
-                exam === activeFilter;
+                examList.includes(activeFilter);
 
             const matchesSearch =
                 searchData.includes(searchText) ||
@@ -266,41 +294,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
         });
 
-        // Show empty message when there are no matching courses
         if (emptyState) {
+
             emptyState.style.display =
                 visibleCount === 0 ? "block" : "none";
+
         }
 
         if (courseGrid) {
-            courseGrid.setAttribute(
-                "aria-live",
-                "polite"
-            );
+            courseGrid.setAttribute("aria-live", "polite");
         }
 
     }
 
-    // Search input
     if (courseSearch) {
-
         courseSearch.addEventListener("input", filterCourses);
-
     }
 
-    // Filter buttons
     filterButtons.forEach(function (button) {
 
         button.addEventListener("click", function () {
 
-            activeFilter = (button.dataset.filter || "all").toLowerCase();
+            activeFilter = (
+                button.dataset.filter || "all"
+            ).toLowerCase();
 
             filterButtons.forEach(function (item) {
+
                 item.classList.remove("active");
+
                 item.setAttribute("aria-pressed", "false");
+
             });
 
             button.classList.add("active");
+
             button.setAttribute("aria-pressed", "true");
 
             filterCourses();
@@ -309,13 +337,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    // -----------------------------------------------------
-    // 7. EXAM SELECTION BUTTONS
-    // -----------------------------------------------------
+    // =====================================================
+    // 7. EXAM FILTER BUTTONS
+    // =====================================================
 
     document.querySelectorAll("[data-exam]").forEach(function (element) {
 
-        // Course cards are handled by the filter system.
         if (element.classList.contains("course-card")) return;
 
         element.addEventListener("click", function () {
@@ -328,10 +355,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const matchingFilter = Array.from(filterButtons).find(
                 function (button) {
-                    return (
-                        (button.dataset.filter || "").toLowerCase() ===
-                        selectedExam
-                    );
+
+                    const filter = (
+                        button.dataset.filter || ""
+                    ).toLowerCase();
+
+                    return filter === selectedExam;
+
                 }
             );
 
@@ -339,29 +369,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 matchingFilter.click();
             }
 
-            // If the element is an exam link, allow normal navigation.
-            if (element.tagName === "A") {
-                const href = element.getAttribute("href") || "";
-
-                if (href.startsWith("#")) {
-                    const target = document.querySelector(href);
-
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start"
-                        });
-                    }
-                }
-            }
-
         });
 
     });
 
-    // -----------------------------------------------------
-    // 8. COURSE MATERIAL BUTTONS
-    // -----------------------------------------------------
+    // =====================================================
+    // 8. UPCOMING COURSE MATERIAL BUTTONS
+    // =====================================================
 
     document.querySelectorAll("[data-coming]").forEach(function (button) {
 
@@ -377,9 +391,448 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    // -----------------------------------------------------
-    // 9. COURSE SELECTION BUTTONS
-    // -----------------------------------------------------
+    // =====================================================
+    // 9. SUPABASE CONNECTION
+    // =====================================================
+
+    const STUDYVERSE_SUPABASE_URL =
+        "https://mtxkvupfczhglaqghcbc.supabase.co";
+
+    // This is the browser-safe publishable key.
+    // Never put a Supabase secret/service_role key here.
+
+    const STUDYVERSE_SUPABASE_KEY =
+        "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
+
+    if (!window.studyverseSupabase) {
+
+        if (!window.supabase) {
+
+            console.error(
+                "STUDYVERSE AI: Supabase library not loaded!"
+            );
+
+        } else {
+
+            window.studyverseSupabase =
+                window.supabase.createClient(
+                    STUDYVERSE_SUPABASE_URL,
+                    STUDYVERSE_SUPABASE_KEY
+                );
+
+            console.log(
+                "STUDYVERSE AI: Supabase client initialized successfully!"
+            );
+
+        }
+
+    }
+
+    const supabaseClient = window.studyverseSupabase;
+
+    // =====================================================
+    // 10. TEST SUPABASE DATABASE CONNECTION
+    // =====================================================
+
+    async function testStudyverseDatabase() {
+
+        if (!supabaseClient) {
+
+            console.error(
+                "STUDYVERSE AI: Supabase client unavailable!"
+            );
+
+            return;
+
+        }
+
+        try {
+
+            const { data, error } = await supabaseClient
+                .from("exams")
+                .select("id, name, slug")
+                .limit(5);
+
+            if (error) throw error;
+
+            console.log(
+                "STUDYVERSE AI: Database connection successful!"
+            );
+
+            console.log(
+                "Available examinations:",
+                data
+            );
+
+        } catch (error) {
+
+            console.error(
+                "STUDYVERSE AI: Database connection failed:",
+                error
+            );
+
+        }
+
+    }
+
+    // =====================================================
+    // 11. DYNAMIC EXAM DASHBOARD
+    // =====================================================
+
+    let studyverseExams = [];
+
+    let dashboardPromise = null;
+
+    async function loadStudyverseExamDashboard() {
+
+        const root = document.getElementById(
+            "studyverse-dynamic-dashboard"
+        );
+
+        if (!root) {
+
+            console.error(
+                "STUDYVERSE AI: Dashboard HTML not found!"
+            );
+
+            return;
+
+        }
+
+        if (!supabaseClient) {
+
+            console.error(
+                "STUDYVERSE AI: Supabase client unavailable!"
+            );
+
+            return;
+
+        }
+
+        const examContainer = document.getElementById("sv-exam-cards");
+
+        const subjectContainer = document.getElementById("sv-subject-cards");
+
+        const selectedHeading = document.getElementById("sv-selected-exam");
+
+        const loading = document.getElementById("sv-exam-loading");
+
+        const message = document.getElementById("sv-dashboard-message");
+
+        if (!examContainer || !subjectContainer) {
+
+            console.error(
+                "STUDYVERSE AI: Exam or subject container missing from HTML!"
+            );
+
+            return;
+
+        }
+
+        function escapeHTML(value) {
+
+            return String(value ?? "").replace(/[&<>"']/g, function (char) {
+
+                return {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                }[char];
+
+            });
+
+        }
+
+        try {
+
+            if (loading) {
+                loading.textContent = "Loading examinations...";
+            }
+
+            // Fetch published examinations.
+
+            const { data: exams, error: examError } = await supabaseClient
+                .from("exams")
+                .select("id, name, slug, description, is_published")
+                .eq("is_published", true)
+                .order("name");
+
+            if (examError) throw examError;
+
+            // Fetch published subjects.
+
+            const { data: subjects, error: subjectError } = await supabaseClient
+                .from("subjects")
+                .select("id, exam_id, name, slug, is_published")
+                .eq("is_published", true)
+                .order("name");
+
+            if (subjectError) throw subjectError;
+
+            studyverseExams = exams || [];
+
+            if (studyverseExams.length === 0) {
+
+                if (loading) {
+                    loading.textContent =
+                        "No published examinations found.";
+                }
+
+                return;
+
+            }
+
+            // Display examination cards.
+
+            examContainer.innerHTML = studyverseExams.map(
+                function (exam, index) {
+
+                    return `
+                        <button
+                            type="button"
+                            class="sv-exam-card ${index === 0 ? "active" : ""}"
+                            data-exam-id="${escapeHTML(exam.id)}"
+                        >
+                            <span class="sv-card-label">
+                                EXAMINATION
+                            </span>
+
+                            <h3>${escapeHTML(exam.name)}</h3>
+
+                            <p>
+                                ${escapeHTML(
+                                    exam.description ||
+                                    "Explore learning resources."
+                                )}
+                            </p>
+                        </button>
+                    `;
+
+                }
+            ).join("");
+
+            if (loading) {
+                loading.textContent = "";
+            }
+
+            // Display subjects for the selected exam.
+
+            function showSubjects(examId, examName) {
+
+                if (selectedHeading) {
+
+                    selectedHeading.textContent =
+                        examName + " - Subjects";
+
+                }
+
+                const matchingSubjects = (subjects || []).filter(
+                    function (subject) {
+                        return subject.exam_id === examId;
+                    }
+                );
+
+                if (matchingSubjects.length === 0) {
+
+                    subjectContainer.innerHTML =
+                        "<p class='sv-status'>No published subjects available yet.</p>";
+
+                    return;
+
+                }
+
+                subjectContainer.innerHTML = matchingSubjects.map(
+                    function (subject) {
+
+                        return `
+                            <button
+                                type="button"
+                                class="sv-subject-card"
+                                data-subject-id="${escapeHTML(subject.id)}"
+                                data-subject-name="${escapeHTML(subject.name)}"
+                            >
+                                <span class="sv-card-label">
+                                    SUBJECT
+                                </span>
+
+                                <h3>${escapeHTML(subject.name)}</h3>
+
+                                <p>
+                                    Explore chapters and learning resources.
+                                </p>
+                            </button>
+                        `;
+
+                    }
+                ).join("");
+
+            }
+
+            // Handle dynamic exam-card clicks.
+
+            examContainer.addEventListener("click", function (event) {
+
+                const card = event.target.closest(".sv-exam-card");
+
+                if (!card || !examContainer.contains(card)) return;
+
+                examContainer.querySelectorAll(".sv-exam-card")
+                    .forEach(function (item) {
+                        item.classList.remove("active");
+                    });
+
+                card.classList.add("active");
+
+                const selectedExam = studyverseExams.find(
+                    function (exam) {
+                        return exam.id === card.dataset.examId;
+                    }
+                );
+
+                if (selectedExam) {
+
+                    showSubjects(
+                        selectedExam.id,
+                        selectedExam.name
+                    );
+
+                }
+
+            });
+
+            // Show first examination by default.
+
+            showSubjects(
+                studyverseExams[0].id,
+                studyverseExams[0].name
+            );
+
+            if (message) {
+
+                message.textContent =
+                    "Examinations and subjects loaded successfully!";
+
+            }
+
+            console.log(
+                "STUDYVERSE AI: Dynamic exam dashboard loaded!",
+                {
+                    exams: studyverseExams,
+                    subjects: subjects
+                }
+            );
+
+        } catch (error) {
+
+            if (loading) {
+
+                loading.textContent =
+                    "Unable to load examinations.";
+
+            }
+
+            console.error(
+                "STUDYVERSE AI: Dashboard error:",
+                error.message,
+                error.details,
+                error.code
+            );
+
+        }
+
+    }
+
+    // Start the dashboard.
+
+    dashboardPromise = loadStudyverseExamDashboard();
+
+    // =====================================================
+    // 12. CONNECT STATIC EXAM CARDS TO DYNAMIC DASHBOARD
+    // =====================================================
+
+    async function selectDynamicExam(selectedCourse) {
+
+        const dashboard = document.getElementById(
+            "studyverse-dynamic-dashboard"
+        );
+
+        if (dashboard) {
+
+            dashboard.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
+
+        if (dashboardPromise) {
+            await dashboardPromise;
+        }
+
+        const searchValue = String(selectedCourse || "")
+            .toLowerCase()
+            .trim();
+
+        const examAliases = {
+            "jee": ["jee-main", "jee"],
+            "main": ["jee-main", "jee"],
+            "jee main": ["jee-main", "jee"],
+            "advanced": ["jee-advanced", "advanced"],
+            "jee advanced": ["jee-advanced", "advanced"],
+            "neet": ["neet-ug", "neet"],
+            "neet ug": ["neet-ug", "neet"]
+        };
+
+        const possibleSlugs = examAliases[searchValue] || [searchValue];
+
+        const selectedExam = studyverseExams.find(
+            function (exam) {
+
+                const slug = String(exam.slug || "").toLowerCase();
+
+                const name = String(exam.name || "").toLowerCase();
+
+                return (
+                    possibleSlugs.includes(slug) ||
+                    name === searchValue ||
+                    slug === searchValue
+                );
+
+            }
+        );
+
+        if (!selectedExam) {
+
+            showToast(
+                "The selected examination is not available yet."
+            );
+
+            return;
+
+        }
+
+        const examCard = document.querySelector(
+            '.sv-exam-card[data-exam-id="' +
+            selectedExam.id +
+            '"]'
+        );
+
+        if (examCard) {
+
+            examCard.click();
+
+            showToast(
+                selectedExam.name + " selected successfully!"
+            );
+
+        }
+
+    }
+
+    // Static examination buttons use data-select="jee",
+    // data-select="advanced" and data-select="neet".
 
     document.querySelectorAll("[data-select]").forEach(function (button) {
 
@@ -390,20 +843,248 @@ document.addEventListener("DOMContentLoaded", function () {
             const selectedCourse = button.dataset.select;
 
             if (selectedCourse) {
-                showToast(
-                    selectedCourse + " selected! Course access is coming soon."
-                );
+
+                selectDynamicExam(selectedCourse);
+
             } else {
-                showToast("Course selection will be available soon!");
+
+                showToast("Please select an examination.");
+
             }
 
         });
 
     });
 
-    // -----------------------------------------------------
-    // 10. SMOOTH SCROLL FOR INTERNAL LINKS
-    // -----------------------------------------------------
+    // =====================================================
+    // 13. DYNAMIC CHAPTER LIBRARY
+    // =====================================================
+
+    const svSubjectContainer = document.getElementById(
+        "sv-subject-cards"
+    );
+
+    const svChapterContainer = document.getElementById(
+        "sv-chapter-cards"
+    );
+
+    const svChapterHeading = document.getElementById(
+        "sv-selected-subject"
+    );
+
+    function svEscapeHTML(value) {
+
+        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[char];
+
+        });
+
+    }
+
+    if (svSubjectContainer) {
+
+        svSubjectContainer.addEventListener(
+            "click",
+            async function (event) {
+
+                const subjectCard = event.target.closest(
+                    ".sv-subject-card"
+                );
+
+                if (
+                    !subjectCard ||
+                    !svSubjectContainer.contains(subjectCard)
+                ) {
+                    return;
+                }
+
+                const subjectId = subjectCard.dataset.subjectId;
+
+                const subjectName = subjectCard.dataset.subjectName;
+
+                if (!subjectId) return;
+
+                if (!svChapterContainer || !svChapterHeading) {
+
+                    console.error(
+                        "STUDYVERSE AI: Chapter HTML elements are missing!"
+                    );
+
+                    return;
+
+                }
+
+                if (!supabaseClient) {
+
+                    showToast("Database connection is unavailable.");
+
+                    return;
+
+                }
+
+                svChapterHeading.textContent =
+                    subjectName + " - Loading chapters...";
+
+                svChapterContainer.innerHTML =
+                    "<p class='sv-status'>Loading chapters...</p>";
+
+                try {
+
+                    const { data: chapters, error } = await supabaseClient
+                        .from("chapters")
+                        .select(
+                            "id, chapter_name, chapter_number, description"
+                        )
+                        .eq("subject_id", subjectId)
+                        .eq("is_published", true)
+                        .order("chapter_number");
+
+                    if (error) throw error;
+
+                    if (!chapters || chapters.length === 0) {
+
+                        svChapterHeading.textContent =
+                            subjectName + " - Chapters";
+
+                        svChapterContainer.innerHTML =
+                            "<p class='sv-status'>No published chapters available yet.</p>";
+
+                        return;
+
+                    }
+
+                    svChapterHeading.textContent =
+                        subjectName + " - " +
+                        chapters.length + " Chapters";
+
+                    svChapterContainer.innerHTML = chapters.map(
+                        function (chapter) {
+
+                            return `
+                                <article class="sv-chapter-card">
+
+                                    <span class="sv-chapter-number">
+                                        CHAPTER
+                                        ${svEscapeHTML(chapter.chapter_number)}
+                                    </span>
+
+                                    <h4>
+                                        ${svEscapeHTML(chapter.chapter_name)}
+                                    </h4>
+
+                                    <p>
+                                        ${svEscapeHTML(
+                                            chapter.description ||
+                                            "Explore this chapter."
+                                        )}
+                                    </p>
+
+                                    <button
+                                        type="button"
+                                        class="sv-chapter-open"
+                                        data-chapter-id="${svEscapeHTML(chapter.id)}"
+                                        data-chapter-name="${svEscapeHTML(chapter.chapter_name)}"
+                                    >
+                                        Explore Chapter →
+                                    </button>
+
+                                </article>
+                            `;
+
+                        }
+                    ).join("");
+
+                    console.log(
+                        "STUDYVERSE AI: Chapters loaded successfully!",
+                        chapters
+                    );
+
+                } catch (error) {
+
+                    svChapterHeading.textContent =
+                        "Unable to load chapters";
+
+                    svChapterContainer.innerHTML =
+                        "<p class='sv-status'>Please check database permissions and try again.</p>";
+
+                    console.error(
+                        "STUDYVERSE AI: Chapter loading error:",
+                        error.message,
+                        error.code,
+                        error.details
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+    // =====================================================
+    // 14. CHAPTER SELECTION
+    // =====================================================
+
+    if (svChapterContainer) {
+
+        svChapterContainer.addEventListener(
+            "click",
+            function (event) {
+
+                const button = event.target.closest(
+                    ".sv-chapter-open"
+                );
+
+                if (
+                    !button ||
+                    !svChapterContainer.contains(button)
+                ) {
+                    return;
+                }
+
+                const chapterName = button.dataset.chapterName;
+
+                const chapterId = button.dataset.chapterId;
+
+                console.log(
+                    "STUDYVERSE AI: Selected chapter:",
+                    {
+                        chapterName: chapterName,
+                        chapterId: chapterId
+                    }
+                );
+
+                const message = document.getElementById(
+                    "sv-dashboard-message"
+                );
+
+                if (message) {
+
+                    message.textContent =
+                        chapterName +
+                        " selected. Chapter learning content will be added next.";
+
+                }
+
+                showToast(
+                    chapterName + " selected successfully!"
+                );
+
+            }
+        );
+
+    }
+
+    // =====================================================
+    // 15. SMOOTH SCROLL FOR INTERNAL LINKS
+    // =====================================================
 
     document.querySelectorAll('a[href^="#"]').forEach(function (link) {
 
@@ -413,7 +1094,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!targetId || targetId === "#") return;
 
-            const targetElement = document.querySelector(targetId);
+            let targetElement;
+
+            try {
+
+                targetElement = document.querySelector(targetId);
+
+            } catch (error) {
+
+                return;
+
+            }
 
             if (targetElement) {
 
@@ -430,23 +1121,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-    // -----------------------------------------------------
-    // 11. AUTOMATIC FOOTER YEAR
-    // -----------------------------------------------------
+    // =====================================================
+    // 16. AUTOMATIC FOOTER YEAR
+    // =====================================================
 
     if (year) {
+
         year.textContent = new Date().getFullYear();
+
     }
 
-    // -----------------------------------------------------
-    // 12. INITIALIZE COURSE FILTERS
-    // -----------------------------------------------------
+    // =====================================================
+    // 17. INITIALIZE COURSE FILTERS
+    // =====================================================
 
     filterCourses();
 
-    // -----------------------------------------------------
-    // 13. WEBSITE INITIALIZATION MESSAGE
-    // -----------------------------------------------------
+    // =====================================================
+    // 18. TEST DATABASE CONNECTION
+    // =====================================================
+
+    testStudyverseDatabase();
+
+    // =====================================================
+    // 19. WEBSITE INITIALIZATION
+    // =====================================================
 
     console.log(
         "%cSTUDYVERSE AI",
@@ -458,390 +1157,4 @@ document.addEventListener("DOMContentLoaded", function () {
         "color:#22c55e;font-size:14px;"
     );
 
-/* ==========================================
-   STUDYVERSE AI - SUPABASE CONNECTION
-========================================== */
-
-// 1. Project credentials
-
-const STUDYVERSE_SUPABASE_URL =
-    "https://mtxkvupfczhglaqghcbc.supabase.co";
-
-const STUDYVERSE_SUPABASE_KEY =
-    "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
-
-
-// 2. Initialize Supabase
-
-if (!window.studyverseSupabase) {
-
-    if (!window.supabase) {
-
-        console.error(
-            "STUDYVERSE AI: Supabase library not loaded!"
-        );
-
-    } else {
-
-        window.studyverseSupabase =
-            window.supabase.createClient(
-                STUDYVERSE_SUPABASE_URL,
-                STUDYVERSE_SUPABASE_KEY
-            );
-
-        console.log(
-            "STUDYVERSE AI: Supabase client initialized successfully!"
-        );
-    }
-}
-
-
-// 3. Test database connection
-
-async function testStudyverseDatabase() {
-
-    if (!window.studyverseSupabase) {
-        console.error("Supabase client is unavailable!");
-        return;
-    }
-
-    try {
-
-        const { data, error } =
-            await window.studyverseSupabase
-             .from("exams")
-             .select("*")
-             .limit(5);
-
-        if (error) throw error;
-
-        console.log(
-            "STUDYVERSE AI: Database connection successful!"
-        );
-
-        console.log("Available courses:", data);
-
-    } catch (error) {
-
-        console.error(
-            "STUDYVERSE AI: Database connection failed:",
-            error
-        );
-
-    }
-}
-
-
-// 4. Run only once
-
-testStudyverseDatabase();
-   /* ==========================================
-   STUDYVERSE AI - DYNAMIC EXAM DASHBOARD
-========================================== */
-
-async function loadStudyverseExamDashboard() {
-
-    const root = document.getElementById(
-        "studyverse-dynamic-dashboard"
-    );
-
-    if (!root) {
-        console.error("STUDYVERSE AI: Dashboard HTML not found!");
-        return;
-    }
-
-    const client = window.studyverseSupabase;
-
-    if (!client) {
-        console.error("STUDYVERSE AI: Supabase client unavailable!");
-        return;
-    }
-
-    const examContainer = document.getElementById("sv-exam-cards");
-    const subjectContainer = document.getElementById("sv-subject-cards");
-    const selectedHeading = document.getElementById("sv-selected-exam");
-    const loading = document.getElementById("sv-exam-loading");
-    const message = document.getElementById("sv-dashboard-message");
-
-    function escapeHTML(value) {
-        return String(value ?? "").replace(/[&<>"']/g, function (char) {
-            return {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;"
-            }[char];
-        });
-    }
-
-    try {
-
-        loading.textContent = "Loading examinations...";
-
-        // Fetch published exams
-        const { data: exams, error: examError } = await client
-            .from("exams")
-            .select("id, name, slug, description, is_published")
-            .eq("is_published", true)
-            .order("name");
-
-        if (examError) throw examError;
-
-        // Fetch published subjects
-        const { data: subjects, error: subjectError } = await client
-            .from("subjects")
-            .select("id, exam_id, name, slug, is_published")
-            .eq("is_published", true)
-            .order("name");
-
-        if (subjectError) throw subjectError;
-
-        if (!exams || exams.length === 0) {
-            loading.textContent = "No published examinations found.";
-            return;
-        }
-
-        // Display examination cards
-        examContainer.innerHTML = exams.map((exam, index) => `
-            <button
-                type="button"
-                class="sv-exam-card ${index === 0 ? "active" : ""}"
-                data-exam-id="${escapeHTML(exam.id)}"
-            >
-                <span class="sv-card-label">EXAMINATION</span>
-                <h3>${escapeHTML(exam.name)}</h3>
-                <p>${escapeHTML(exam.description || "Explore learning resources.")}</p>
-            </button>
-        `).join("");
-
-        loading.textContent = "";
-
-        // Display subjects belonging to selected exam
-        function showSubjects(examId, examName) {
-
-            selectedHeading.textContent = examName + " - Subjects";
-
-            const matchingSubjects = subjects.filter(subject =>
-                subject.exam_id === examId
-            );
-
-            if (matchingSubjects.length === 0) {
-                subjectContainer.innerHTML =
-                    "<p class='sv-status'>No published subjects available yet.</p>";
-                return;
-            }
-
-            subjectContainer.innerHTML = matchingSubjects.map(subject => `
-                <button
-                    type="button"
-                    class="sv-subject-card"
-                    data-subject-id="${escapeHTML(subject.id)}"
-                    data-subject-name="${escapeHTML(subject.name)}"
-                >
-                    <span class="sv-card-label">SUBJECT</span>
-                    <h3>${escapeHTML(subject.name)}</h3>
-                    <p>Explore chapters and learning resources.</p>
-                </button>
-            `).join("");
-        }
-
-        // Exam card click events
-        examContainer.querySelectorAll(".sv-exam-card").forEach(card => {
-
-            card.addEventListener("click", function () {
-
-                examContainer.querySelectorAll(".sv-exam-card")
-                    .forEach(item => item.classList.remove("active"));
-
-                this.classList.add("active");
-
-                const exam = exams.find(item =>
-                    item.id === this.dataset.examId
-                );
-
-                if (exam) {
-                    showSubjects(exam.id, exam.name);
-                }
-            });
-
-        });
-
-        // Display the first exam by default
-        showSubjects(exams[0].id, exams[0].name);
-
-        message.textContent =
-            "Examinations and subjects loaded successfully!";
-
-        console.log(
-            "STUDYVERSE AI: Dynamic exam dashboard loaded!",
-            { exams, subjects }
-        );
-
-    } catch (error) {
-
-        loading.textContent = "Unable to load examinations.";
-
-        console.error(
-            "STUDYVERSE AI: Dashboard error:",
-            error.message,
-            error.details,
-            error.code
-        );
-    }
-}
-
-// Start dashboard
-loadStudyverseExamDashboard();
-   /* ==========================================
-   STUDYVERSE AI - DYNAMIC CHAPTER LIBRARY
-========================================== */
-
-const svSubjectContainer =
-    document.getElementById("sv-subject-cards");
-
-const svChapterContainer =
-    document.getElementById("sv-chapter-cards");
-
-const svChapterHeading =
-    document.getElementById("sv-selected-subject");
-
-function svEscapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, char => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-    })[char]);
-}
-
-// Listen for subject selection
-if (svSubjectContainer) {
-
-    svSubjectContainer.addEventListener("click", async function(event) {
-
-        const subjectCard = event.target.closest(".sv-subject-card");
-
-        if (!subjectCard) return;
-
-        const subjectId = subjectCard.dataset.subjectId;
-        const subjectName = subjectCard.dataset.subjectName;
-
-        if (!subjectId) return;
-
-        svChapterHeading.textContent =
-            subjectName + " - Loading chapters...";
-
-        svChapterContainer.innerHTML = "";
-
-        try {
-
-            const { data: chapters, error } =
-                await window.studyverseSupabase
-                    .from("chapters")
-                    .select("id, chapter_name, chapter_number, description")
-                    .eq("subject_id", subjectId)
-                    .eq("is_published", true)
-                    .order("chapter_number");
-
-            if (error) throw error;
-
-            if (!chapters || chapters.length === 0) {
-
-                svChapterHeading.textContent =
-                    subjectName + " - Chapters";
-
-                svChapterContainer.innerHTML =
-                    "<p class='sv-status'>No published chapters available yet.</p>";
-
-                return;
-            }
-
-            svChapterHeading.textContent =
-                subjectName + " - " + chapters.length + " Chapters";
-
-            svChapterContainer.innerHTML = chapters.map(chapter => `
-
-                <article class="sv-chapter-card">
-
-                    <span class="sv-chapter-number">
-                        CHAPTER ${svEscapeHTML(chapter.chapter_number)}
-                    </span>
-
-                    <h4>${svEscapeHTML(chapter.chapter_name)}</h4>
-
-                    <p>
-                        ${svEscapeHTML(
-                            chapter.description || "Explore this chapter."
-                        )}
-                    </p>
-
-                    <button
-                        type="button"
-                        class="sv-chapter-open"
-                        data-chapter-id="${svEscapeHTML(chapter.id)}"
-                        data-chapter-name="${svEscapeHTML(chapter.chapter_name)}"
-                    >
-                        Explore Chapter →
-                    </button>
-
-                </article>
-
-            `).join("");
-
-            console.log(
-                "STUDYVERSE AI: Chapters loaded successfully!",
-                chapters
-            );
-
-        } catch (error) {
-
-            svChapterHeading.textContent =
-                "Unable to load chapters";
-
-            svChapterContainer.innerHTML =
-                "<p class='sv-status'>Please check the database permissions and try again.</p>";
-
-            console.error(
-                "STUDYVERSE AI: Chapter loading error:",
-                error.message,
-                error.code,
-                error.details
-            );
-        }
-
-    });
-
-}
-
-// Temporary chapter button action
-if (svChapterContainer) {
-
-    svChapterContainer.addEventListener("click", function(event) {
-
-        const button = event.target.closest(".sv-chapter-open");
-
-        if (!button) return;
-
-        const chapterName = button.dataset.chapterName;
-        const chapterId = button.dataset.chapterId;
-
-        console.log("Selected chapter:", {
-            chapterName,
-            chapterId
-        });
-
-        const message = document.getElementById("sv-dashboard-message");
-
-        if (message) {
-            message.textContent =
-                chapterName + " selected. Chapter learning page is our next feature.";
-        }
-
-    });
-
-}
-
 });
-
