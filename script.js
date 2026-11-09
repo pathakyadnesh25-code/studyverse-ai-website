@@ -462,20 +462,25 @@ document.addEventListener("DOMContentLoaded", function () {
    STUDYVERSE AI - SUPABASE CONNECTION
 ========================================== */
 
-// Your Supabase project credentials
+// 1. Project credentials
+
 const STUDYVERSE_SUPABASE_URL =
-  "https://mtxkvupfczhglaqghcbc.supabase.co";
+    "https://mtxkvupfczhglaqghcbc.supabase.co";
 
 const STUDYVERSE_SUPABASE_KEY =
-    "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
+    "YOUR_SUPABASE_PUBLISHABLE_KEY";
 
-// Initialize Supabase only once
+
+// 2. Initialize Supabase
+
 if (!window.studyverseSupabase) {
 
     if (!window.supabase) {
+
         console.error(
             "STUDYVERSE AI: Supabase library not loaded!"
         );
+
     } else {
 
         window.studyverseSupabase =
@@ -485,13 +490,20 @@ if (!window.studyverseSupabase) {
             );
 
         console.log(
-            "STUDYVERSE AI: Supabase client initialized!"
+            "STUDYVERSE AI: Supabase client initialized successfully!"
         );
     }
 }
 
-// Test actual database connection
+
+// 3. Test database connection
+
 async function testStudyverseDatabase() {
+
+    if (!window.studyverseSupabase) {
+        console.error("Supabase client is unavailable!");
+        return;
+    }
 
     try {
 
@@ -501,9 +513,7 @@ async function testStudyverseDatabase() {
                 .select("id, title, exam_type")
                 .limit(5);
 
-        if (error) {
-            throw error;
-        }
+        if (error) throw error;
 
         console.log(
             "STUDYVERSE AI: Database connection successful!"
@@ -511,41 +521,20 @@ async function testStudyverseDatabase() {
 
         console.log("Available courses:", data);
 
-        return data;
-
     } catch (error) {
 
         console.error(
             "STUDYVERSE AI: Database connection failed:",
-            error.message
+            error
         );
 
     }
 }
 
-// Run database test after page loads
-testStudyverseDatabase();
-async function testStudyverseDatabase() {
-  try {
-    const { data, error } = await window.studyverseSupabase
-      .from("courses")
-      .select("id, title, exam_type")
-      .limit(5);
 
-    if (error) {
-      throw error;
-    }
-
-    console.log("STUDYVERSE AI: Database connection successful!");
-    console.log("Available courses:", data);
-
-  } catch (error) {
-    console.error(
-      "STUDYVERSE AI: Database connection failed:",
-      error.message
-    );
-  }
-}
+// 4. Run only once
 
 testStudyverseDatabase();
+
 });
+
