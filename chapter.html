@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090b14">
+
+    <title>Chapter Learning | STUDYVERSE AI</title>
+
+    <link rel="stylesheet" href="./chapter-learning.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./chapter-learning.js" defer></script>
+</head>
+
+<body>
+    <header class="learning-header">
+        <a href="./index.html" class="brand">
+            <span class="brand-icon">S</span>
+            <span>STUDYVERSE <strong>AI</strong></span>
+        </a>
+
+        <a href="./index.html#studyverse-dynamic-dashboard"
+           class="back-button">
+            ← Back to Dashboard
+        </a>
+    </header>
+
+    <main class="learning-container">
+
+        <div class="breadcrumbs">
+            <a href="./index.html">Home</a>
+            <span>/</span>
+            <span id="breadcrumb-exam">Examination</span>
+            <span>/</span>
+            <span id="breadcrumb-subject">Subject</span>
+        </div>
+
+        <section class="chapter-hero">
+            <div class="chapter-hero-content">
+                <div class="eyebrow">STUDYVERSE AI · CHAPTER LEARNING</div>
+
+                <h1 id="chapter-title">Loading chapter...</h1>
+
+                <p id="chapter-description">
+                    Your complete learning experience starts here.
+                </p>
+
+                <div class="chapter-meta">
+                    <span id="chapter-exam">Loading exam...</span>
+                    <span id="chapter-subject">Loading subject...</span>
+                    <span id="chapter-number">Chapter</span>
+                </div>
+            </div>
+
+            <div class="chapter-hero-icon">📚</div>
+        </section>
+
+        <div id="page-message" class="page-message" role="status">
+            Connecting to STUDYVERSE AI...
+        </div>
+
+        <section class="progress-panel">
+            <div>
+                <h2>Your learning progress</h2>
+                <p>Track the lessons you complete in this browser.</p>
+            </div>
+
+            <div class="progress-value" id="progress-value">0%</div>
+
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </section>
+
+        <nav class="learning-tabs" aria-label="Chapter resources">
+            <button class="learning-tab active" data-tab="lessons">
+                ▶ Video Lessons
+            </button>
+
+            <button class="learning-tab" data-tab="notes">
+                ▤ Study Notes
+            </button>
+
+            <button class="learning-tab" data-tab="formulas">
+                ∑ Formulas
+            </button>
+
+            <button class="learning-tab" data-tab="pyqs">
+                ✎ PYQs
+            </button>
+        </nav>
+
+        <section class="learning-section active" data-section="lessons">
+            <div class="section-heading">
+                <div>
+                    <h2>Video Lessons</h2>
+                    <p>Learn each concept step by step.</p>
+                </div>
+                <span class="resource-count" id="lesson-count">0 lessons</span>
+            </div>
+
+            <div id="lesson-list" class="resource-grid">
+                <div class="loading-card">Loading lessons...</div>
+            </div>
+        </section>
+
+        <section class="learning-section" data-section="notes">
+            <div class="section-heading">
+                <div>
+                    <h2>Study Notes</h2>
+                    <p>Read and revise your chapter concepts.</p>
+                </div>
+                <span class="resource-count" id="notes-count">0 notes</span>
+            </div>
+
+            <div id="notes-list" class="resource-grid">
+                <div class="loading-card">Loading notes...</div>
+            </div>
+        </section>
+
+        <section class="learning-section" data-section="formulas">
+            <div class="section-heading">
+                <div>
+                    <h2>Important Formulas</h2>
+                    <p>Quick revision of important concepts and formulas.</p>
+                </div>
+                <span class="resource-count" id="formula-count">0 formulas</span>
+            </div>
+
+            <div id="formula-list" class="resource-grid">
+                <div class="loading-card">Loading formulas...</div>
+            </div>
+        </section>
+
+        <section class="learning-section" data-section="pyqs">
+            <div class="section-heading">
+                <div>
+                    <h2>Previous Year Questions</h2>
+                    <p>Practise questions relevant to this chapter.</p>
+                </div>
+                <span class="resource-count" id="pyq-count">0 questions</span>
+            </div>
+
+            <div id="pyq-list" class="resource-grid">
+                <div class="loading-card">Loading questions...</div>
+            </div>
+
+            <p class="security-note">
+                Answer keys and detailed solutions will be connected
+                after student authentication is implemented.
+            </p>
+        </section>
+
+        <footer class="learning-footer">
+            <strong>STUDYVERSE AI</strong>
+            <p>Learn smarter. Practise better. Achieve more.</p>
+        </footer>
+
+    </main>
+</body>
+</html>
