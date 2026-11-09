@@ -693,6 +693,155 @@ async function loadStudyverseExamDashboard() {
 
 // Start dashboard
 loadStudyverseExamDashboard();
+   /* ==========================================
+   STUDYVERSE AI - DYNAMIC CHAPTER LIBRARY
+========================================== */
+
+const svSubjectContainer =
+    document.getElementById("sv-subject-cards");
+
+const svChapterContainer =
+    document.getElementById("sv-chapter-cards");
+
+const svChapterHeading =
+    document.getElementById("sv-selected-subject");
+
+function svEscapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
+}
+
+// Listen for subject selection
+if (svSubjectContainer) {
+
+    svSubjectContainer.addEventListener("click", async function(event) {
+
+        const subjectCard = event.target.closest(".sv-subject-card");
+
+        if (!subjectCard) return;
+
+        const subjectId = subjectCard.dataset.subjectId;
+        const subjectName = subjectCard.dataset.subjectName;
+
+        if (!subjectId) return;
+
+        svChapterHeading.textContent =
+            subjectName + " - Loading chapters...";
+
+        svChapterContainer.innerHTML = "";
+
+        try {
+
+            const { data: chapters, error } =
+                await window.studyverseSupabase
+                    .from("chapters")
+                    .select("id, chapter_name, chapter_number, description")
+                    .eq("subject_id", subjectId)
+                    .eq("is_published", true)
+                    .order("chapter_number");
+
+            if (error) throw error;
+
+            if (!chapters || chapters.length === 0) {
+
+                svChapterHeading.textContent =
+                    subjectName + " - Chapters";
+
+                svChapterContainer.innerHTML =
+                    "<p class='sv-status'>No published chapters available yet.</p>";
+
+                return;
+            }
+
+            svChapterHeading.textContent =
+                subjectName + " - " + chapters.length + " Chapters";
+
+            svChapterContainer.innerHTML = chapters.map(chapter => `
+
+                <article class="sv-chapter-card">
+
+                    <span class="sv-chapter-number">
+                        CHAPTER ${svEscapeHTML(chapter.chapter_number)}
+                    </span>
+
+                    <h4>${svEscapeHTML(chapter.chapter_name)}</h4>
+
+                    <p>
+                        ${svEscapeHTML(
+                            chapter.description || "Explore this chapter."
+                        )}
+                    </p>
+
+                    <button
+                        type="button"
+                        class="sv-chapter-open"
+                        data-chapter-id="${svEscapeHTML(chapter.id)}"
+                        data-chapter-name="${svEscapeHTML(chapter.chapter_name)}"
+                    >
+                        Explore Chapter →
+                    </button>
+
+                </article>
+
+            `).join("");
+
+            console.log(
+                "STUDYVERSE AI: Chapters loaded successfully!",
+                chapters
+            );
+
+        } catch (error) {
+
+            svChapterHeading.textContent =
+                "Unable to load chapters";
+
+            svChapterContainer.innerHTML =
+                "<p class='sv-status'>Please check the database permissions and try again.</p>";
+
+            console.error(
+                "STUDYVERSE AI: Chapter loading error:",
+                error.message,
+                error.code,
+                error.details
+            );
+        }
+
+    });
+
+}
+
+// Temporary chapter button action
+if (svChapterContainer) {
+
+    svChapterContainer.addEventListener("click", function(event) {
+
+        const button = event.target.closest(".sv-chapter-open");
+
+        if (!button) return;
+
+        const chapterName = button.dataset.chapterName;
+        const chapterId = button.dataset.chapterId;
+
+        console.log("Selected chapter:", {
+            chapterName,
+            chapterId
+        });
+
+        const message = document.getElementById("sv-dashboard-message");
+
+        if (message) {
+            message.textContent =
+                chapterName + " selected. Chapter learning page is our next feature.";
+        }
+
+    });
+
+}
 
 });
 
