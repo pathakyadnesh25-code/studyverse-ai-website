@@ -509,9 +509,9 @@ async function testStudyverseDatabase() {
 
         const { data, error } =
             await window.studyverseSupabase
-                .from("courses")
-                .select("id, title, exam_type")
-                .limit(5);
+             .from("exams")
+             .select("*")
+             .limit(5);
 
         if (error) throw error;
 
