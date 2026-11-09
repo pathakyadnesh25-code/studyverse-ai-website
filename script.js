@@ -464,7 +464,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Your Supabase project credentials
 const STUDYVERSE_SUPABASE_URL =
-    "https://mtxkvupfczhglaqghcbc.supabase.";
+  "https://mtxkvupfczhglaqghcbc.supabase.co";
 
 const STUDYVERSE_SUPABASE_KEY =
     "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
