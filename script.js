@@ -535,6 +535,164 @@ async function testStudyverseDatabase() {
 // 4. Run only once
 
 testStudyverseDatabase();
+   /* ==========================================
+   STUDYVERSE AI - DYNAMIC EXAM DASHBOARD
+========================================== */
+
+async function loadStudyverseExamDashboard() {
+
+    const root = document.getElementById(
+        "studyverse-dynamic-dashboard"
+    );
+
+    if (!root) {
+        console.error("STUDYVERSE AI: Dashboard HTML not found!");
+        return;
+    }
+
+    const client = window.studyverseSupabase;
+
+    if (!client) {
+        console.error("STUDYVERSE AI: Supabase client unavailable!");
+        return;
+    }
+
+    const examContainer = document.getElementById("sv-exam-cards");
+    const subjectContainer = document.getElementById("sv-subject-cards");
+    const selectedHeading = document.getElementById("sv-selected-exam");
+    const loading = document.getElementById("sv-exam-loading");
+    const message = document.getElementById("sv-dashboard-message");
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+            return {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            }[char];
+        });
+    }
+
+    try {
+
+        loading.textContent = "Loading examinations...";
+
+        // Fetch published exams
+        const { data: exams, error: examError } = await client
+            .from("exams")
+            .select("id, name, slug, description, is_published")
+            .eq("is_published", true)
+            .order("name");
+
+        if (examError) throw examError;
+
+        // Fetch published subjects
+        const { data: subjects, error: subjectError } = await client
+            .from("subjects")
+            .select("id, exam_id, name, slug, is_published")
+            .eq("is_published", true)
+            .order("name");
+
+        if (subjectError) throw subjectError;
+
+        if (!exams || exams.length === 0) {
+            loading.textContent = "No published examinations found.";
+            return;
+        }
+
+        // Display examination cards
+        examContainer.innerHTML = exams.map((exam, index) => `
+            <button
+                type="button"
+                class="sv-exam-card ${index === 0 ? "active" : ""}"
+                data-exam-id="${escapeHTML(exam.id)}"
+            >
+                <span class="sv-card-label">EXAMINATION</span>
+                <h3>${escapeHTML(exam.name)}</h3>
+                <p>${escapeHTML(exam.description || "Explore learning resources.")}</p>
+            </button>
+        `).join("");
+
+        loading.textContent = "";
+
+        // Display subjects belonging to selected exam
+        function showSubjects(examId, examName) {
+
+            selectedHeading.textContent = examName + " - Subjects";
+
+            const matchingSubjects = subjects.filter(subject =>
+                subject.exam_id === examId
+            );
+
+            if (matchingSubjects.length === 0) {
+                subjectContainer.innerHTML =
+                    "<p class='sv-status'>No published subjects available yet.</p>";
+                return;
+            }
+
+            subjectContainer.innerHTML = matchingSubjects.map(subject => `
+                <button
+                    type="button"
+                    class="sv-subject-card"
+                    data-subject-id="${escapeHTML(subject.id)}"
+                    data-subject-name="${escapeHTML(subject.name)}"
+                >
+                    <span class="sv-card-label">SUBJECT</span>
+                    <h3>${escapeHTML(subject.name)}</h3>
+                    <p>Explore chapters and learning resources.</p>
+                </button>
+            `).join("");
+        }
+
+        // Exam card click events
+        examContainer.querySelectorAll(".sv-exam-card").forEach(card => {
+
+            card.addEventListener("click", function () {
+
+                examContainer.querySelectorAll(".sv-exam-card")
+                    .forEach(item => item.classList.remove("active"));
+
+                this.classList.add("active");
+
+                const exam = exams.find(item =>
+                    item.id === this.dataset.examId
+                );
+
+                if (exam) {
+                    showSubjects(exam.id, exam.name);
+                }
+            });
+
+        });
+
+        // Display the first exam by default
+        showSubjects(exams[0].id, exams[0].name);
+
+        message.textContent =
+            "Examinations and subjects loaded successfully!";
+
+        console.log(
+            "STUDYVERSE AI: Dynamic exam dashboard loaded!",
+            { exams, subjects }
+        );
+
+    } catch (error) {
+
+        loading.textContent = "Unable to load examinations.";
+
+        console.error(
+            "STUDYVERSE AI: Dashboard error:",
+            error.message,
+            error.details,
+            error.code
+        );
+    }
+}
+
+// Start dashboard
+loadStudyverseExamDashboard();
 
 });
 
