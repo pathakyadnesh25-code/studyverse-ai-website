@@ -468,7 +468,7 @@ const STUDYVERSE_SUPABASE_URL =
     "https://mtxkvupfczhglaqghcbc.supabase.co";
 
 const STUDYVERSE_SUPABASE_KEY =
-    "YOUR_SUPABASE_PUBLISHABLE_KEY";
+    "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
 
 
 // 2. Initialize Supabase
