@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // your existing script.js. Never use a service-role key.
 
     const SUPABASE_PUBLISHABLE_KEY =
-        "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
+        "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
 
     const messageBox = document.getElementById("page-message");
 
