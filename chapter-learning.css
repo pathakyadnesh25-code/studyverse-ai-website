@@ -433,3 +433,21 @@ button {
         font-size: 12px;
     }
 }
+.completion-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.completion-label input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
