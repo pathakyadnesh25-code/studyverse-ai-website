@@ -1028,8 +1028,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+
     // =====================================================
-    // 14. CHAPTER SELECTION
+    // 14. CHAPTER SELECTION AND NAVIGATION
     // =====================================================
 
     if (svChapterContainer) {
@@ -1049,38 +1050,42 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
-                const chapterName = button.dataset.chapterName;
-
                 const chapterId = button.dataset.chapterId;
 
+                const chapterName = button.dataset.chapterName;
+
+                if (!chapterId) {
+
+                    console.error(
+                        "STUDYVERSE AI: Chapter ID is missing!"
+                    );
+
+                    showToast(
+                        "Unable to open this chapter. Please try again."
+                    );
+
+                    return;
+                }
+
                 console.log(
-                    "STUDYVERSE AI: Selected chapter:",
+                    "STUDYVERSE AI: Opening chapter:",
                     {
                         chapterName: chapterName,
                         chapterId: chapterId
                     }
                 );
 
-                const message = document.getElementById(
-                    "sv-dashboard-message"
-                );
+                // Navigate to the chapter learning page.
 
-                if (message) {
-
-                    message.textContent =
-                        chapterName +
-                        " selected. Chapter learning content will be added next.";
-
-                }
-
-                showToast(
-                    chapterName + " selected successfully!"
-                );
+                window.location.href =
+                    "./chapter.html?chapter_id=" +
+                    encodeURIComponent(chapterId);
 
             }
         );
 
     }
+
 
     // =====================================================
     // 15. SMOOTH SCROLL FOR INTERNAL LINKS
@@ -1161,7 +1166,6 @@ document.addEventListener("DOMContentLoaded", function () {
    STUDYVERSE AI — OPEN CHAPTER NAVIGATION
 ===================================================== */
 
-document.addEventListener("click", function (event) {
 
     const openButton = event.target.closest(".sv-chapter-open");
 
