@@ -1,12 +1,29 @@
 
 /* =========================================================
    STUDYVERSE AI — SCRIPT.JS
-   Version 3.1
-   Frontend + Supabase + Dynamic Exam & Chapter Dashboard
-   Chapter Learning Page Navigation
+   Version 4.0
+
+   Features:
+   1. Mobile navigation
+   2. Supabase connection
+   3. Real student registration and login
+   4. Persistent login sessions
+   5. Logout
+   6. Student profile
+   7. Student dashboard foundation
+   8. Detailed dashboard foundation
+   9. Dynamic exam, subject and chapter library
+   10. Course search and filters
+   11. Chapter navigation
+   12. Toast notifications
+
+   Security:
+   - Uses browser-safe Supabase publishable key.
+   - Never uses service_role or secret keys.
+   - Never stores student passwords locally.
 ========================================================= */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
 
     // =====================================================
     // 1. SELECT WEBSITE ELEMENTS
@@ -21,6 +38,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const studentName = document.getElementById("studentName");
     const studentEmail = document.getElementById("studentEmail");
+    const studentPassword = document.getElementById("studentPassword");
+
+    const nameFieldGroup = document.getElementById("nameFieldGroup");
+    const authModeText = document.getElementById("authModeText");
+    const authSubmitBtn = document.getElementById("authSubmitBtn");
+    const authMessage = document.getElementById("authMessage");
+    const authSwitchLabel = document.getElementById("authSwitchLabel");
+    const authSwitchBtn = document.getElementById("authSwitchBtn");
+
+    const loginBtn = document.getElementById("loginBtn");
+    const getStartedBtn = document.getElementById("getStartedBtn");
+    const profileBtn = document.getElementById("profileBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const profileModal = document.getElementById("profileModal");
+    const profileModalClose = document.getElementById("profileModalClose");
+    const profileDashboardBtn = document.getElementById("profileDashboardBtn");
+
+    const profileStudentName = document.getElementById("profileStudentName");
+    const profileStudentEmail = document.getElementById("profileStudentEmail");
+    const profileAccountStatus = document.getElementById("profileAccountStatus");
+    const profileCreatedAt = document.getElementById("profileCreatedAt");
 
     const courseSearch = document.getElementById("courseSearch");
     const courseGrid = document.getElementById("courseGrid");
@@ -31,6 +70,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const filterButtons = document.querySelectorAll(".filter-btn");
     const courseCards = document.querySelectorAll(".course-card");
+
+    // Dashboard elements
+    const studentDashboard = document.getElementById("student-dashboard");
+    const detailedDashboard = document.getElementById("detailed-dashboard");
 
     // =====================================================
     // 2. TOAST NOTIFICATION SYSTEM
@@ -52,11 +95,61 @@ document.addEventListener("DOMContentLoaded", function () {
 
         toastTimer = setTimeout(function () {
             toast.classList.remove("show");
-        }, 3000);
+        }, 3500);
+    }
+
+    function showAuthMessage(message, isError = false) {
+
+        if (authMessage) {
+            authMessage.textContent = message;
+            authMessage.style.display = "block";
+            authMessage.style.color = isError ? "#ef4444" : "#22c55e";
+        }
+
+        console.log("STUDYVERSE AUTH:", message);
     }
 
     // =====================================================
-    // 3. MOBILE NAVIGATION
+    // 3. SUPABASE CONNECTION
+    // =====================================================
+
+    const STUDYVERSE_SUPABASE_URL =
+        "https://mtxkvupfczhglaqghcbc.supabase.co";
+
+    // Browser-safe publishable key.
+    // Never place a Supabase service_role or secret key here.
+
+    const STUDYVERSE_SUPABASE_KEY =
+        "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
+
+    if (!window.studyverseSupabase) {
+
+        if (!window.supabase) {
+
+            console.error(
+                "STUDYVERSE AI: Supabase library not loaded!"
+            );
+
+        } else {
+
+            window.studyverseSupabase =
+                window.supabase.createClient(
+                    STUDYVERSE_SUPABASE_URL,
+                    STUDYVERSE_SUPABASE_KEY
+                );
+
+            console.log(
+                "STUDYVERSE AI: Supabase client initialized successfully!"
+            );
+
+        }
+
+    }
+
+    const supabaseClient = window.studyverseSupabase;
+
+    // =====================================================
+    // 4. MOBILE NAVIGATION
     // =====================================================
 
     if (menuToggle && navLinks) {
@@ -67,11 +160,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             navLinks.classList.toggle("open");
 
-            const isOpen = navLinks.classList.contains("open");
-
             menuToggle.setAttribute(
                 "aria-expanded",
-                String(isOpen)
+                String(navLinks.classList.contains("open"))
             );
 
         });
@@ -82,10 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 navLinks.classList.remove("open");
 
-                menuToggle.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
+                menuToggle.setAttribute("aria-expanded", "false");
 
             });
 
@@ -100,10 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 navLinks.classList.remove("open");
 
-                menuToggle.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
+                menuToggle.setAttribute("aria-expanded", "false");
 
             }
 
@@ -112,22 +197,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =====================================================
-    // 4. LOGIN MODAL
+    // 5. LOGIN / REGISTRATION MODAL
     // =====================================================
+
+    let authMode = "login";
 
     function openLoginModal() {
 
         if (!loginModal) {
-            showToast("Login feature will be available soon!");
+            showToast("Login section is unavailable.");
             return;
         }
 
         loginModal.classList.add("show");
-
         document.body.style.overflow = "hidden";
 
-        if (studentName) {
-            studentName.focus();
+        if (authMessage) {
+            authMessage.textContent = "";
+            authMessage.style.display = "none";
+        }
+
+        if (studentEmail) {
+            studentEmail.focus();
         }
 
     }
@@ -137,8 +228,72 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!loginModal) return;
 
         loginModal.classList.remove("show");
-
         document.body.style.overflow = "";
+
+    }
+
+    function setAuthMode(mode) {
+
+        authMode = mode;
+
+        if (authMessage) {
+            authMessage.textContent = "";
+            authMessage.style.display = "none";
+        }
+
+        if (mode === "register") {
+
+            if (authModeText) {
+                authModeText.textContent = "Create Your Student Account";
+            }
+
+            if (authSubmitBtn) {
+                authSubmitBtn.textContent = "Create Account";
+            }
+
+            if (nameFieldGroup) {
+                nameFieldGroup.style.display = "block";
+            }
+
+            if (studentName) {
+                studentName.required = true;
+            }
+
+            if (authSwitchLabel) {
+                authSwitchLabel.textContent = "Already have an account?";
+            }
+
+            if (authSwitchBtn) {
+                authSwitchBtn.textContent = "Login";
+            }
+
+        } else {
+
+            if (authModeText) {
+                authModeText.textContent = "Login to STUDYVERSE AI";
+            }
+
+            if (authSubmitBtn) {
+                authSubmitBtn.textContent = "Login";
+            }
+
+            if (nameFieldGroup) {
+                nameFieldGroup.style.display = "none";
+            }
+
+            if (studentName) {
+                studentName.required = false;
+            }
+
+            if (authSwitchLabel) {
+                authSwitchLabel.textContent = "Don't have an account?";
+            }
+
+            if (authSwitchBtn) {
+                authSwitchBtn.textContent = "Create Account";
+            }
+
+        }
 
     }
 
@@ -148,13 +303,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             event.preventDefault();
 
+            setAuthMode("login");
             openLoginModal();
 
         });
 
     });
 
-    ["loginBtn", "ctaLogin"].forEach(function (id) {
+    ["loginBtn", "ctaLogin", "getStartedBtn"].forEach(function (id) {
 
         const button = document.getElementById(id);
 
@@ -164,6 +320,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 event.preventDefault();
 
+                setAuthMode("login");
                 openLoginModal();
 
             });
@@ -188,34 +345,105 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-    document.addEventListener("keydown", function (event) {
+    if (authSwitchBtn) {
 
-        if (event.key === "Escape") {
+        authSwitchBtn.addEventListener("click", function () {
 
-            closeLoginModal();
+            setAuthMode(
+                authMode === "login" ? "register" : "login"
+            );
 
-            if (navLinks && menuToggle) {
+        });
 
-                navLinks.classList.remove("open");
+    }
 
-                menuToggle.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
+    // =====================================================
+    // 6. REAL SUPABASE AUTHENTICATION
+    // =====================================================
 
-            }
+    function getStudentDisplayName(user) {
 
+        if (!user) return "Student";
+
+        const metadata = user.user_metadata || {};
+
+        return (
+            metadata.full_name ||
+            metadata.name ||
+            (user.email ? user.email.split("@")[0] : "Student")
+        );
+
+    }
+
+    async function registerStudent(name, email, password) {
+
+        if (!supabaseClient) {
+            throw new Error("Supabase connection is unavailable.");
         }
 
-    });
+        const { data, error } = await supabaseClient.auth.signUp({
 
-    // =====================================================
-    // 5. DEMO LOGIN FORM
-    // =====================================================
+            email: email,
+            password: password,
+
+            options: {
+                data: {
+                    full_name: name,
+                    name: name
+                }
+            }
+
+        });
+
+        if (error) throw error;
+
+        return data;
+
+    }
+
+    async function loginStudent(email, password) {
+
+        if (!supabaseClient) {
+            throw new Error("Supabase connection is unavailable.");
+        }
+
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+
+            email: email,
+            password: password
+
+        });
+
+        if (error) throw error;
+
+        return data;
+
+    }
+
+    async function logoutStudent() {
+
+        if (!supabaseClient) return;
+
+        const { error } = await supabaseClient.auth.signOut();
+
+        if (error) {
+            console.error("STUDYVERSE AI: Logout error:", error);
+            showToast("Unable to logout. Please try again.");
+            return;
+        }
+
+        closeProfileModal();
+        closeLoginModal();
+
+        showToast("You have logged out successfully.");
+
+        updateAuthenticationUI(null);
+
+    }
 
     if (loginForm) {
 
-        loginForm.addEventListener("submit", function (event) {
+        loginForm.addEventListener("submit", async function (event) {
 
             event.preventDefault();
 
@@ -227,33 +455,473 @@ document.addEventListener("DOMContentLoaded", function () {
                 ? studentEmail.value.trim()
                 : "";
 
-            if (!name || !email) {
-                showToast("Please enter your name and email.");
-                return;
-            }
+            const password = studentPassword
+                ? studentPassword.value
+                : "";
 
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if (!emailPattern.test(email)) {
-                showToast("Please enter a valid email address.");
+            if (authMode === "register" && !name) {
+
+                showAuthMessage("Please enter your full name.", true);
                 return;
+
             }
 
-            // Demo only.
-            // Real authentication will use Supabase Auth.
+            if (!email || !emailPattern.test(email)) {
 
-            showToast("Welcome to STUDYVERSE AI, " + name + "!");
+                showAuthMessage("Please enter a valid email address.", true);
+                return;
 
-            loginForm.reset();
+            }
 
-            closeLoginModal();
+            if (!password || password.length < 6) {
+
+                showAuthMessage(
+                    "Password must contain at least 6 characters.",
+                    true
+                );
+
+                return;
+
+            }
+
+            if (!supabaseClient) {
+
+                showAuthMessage(
+                    "Database connection is unavailable.",
+                    true
+                );
+
+                return;
+
+            }
+
+            if (authSubmitBtn) {
+                authSubmitBtn.disabled = true;
+                authSubmitBtn.textContent = "Please wait...";
+            }
+
+            try {
+
+                if (authMode === "register") {
+
+                    const result = await registerStudent(
+                        name,
+                        email,
+                        password
+                    );
+
+                    if (result.session) {
+
+                        closeLoginModal();
+
+                        loginForm.reset();
+
+                        showToast("Welcome to STUDYVERSE AI, " + name + "!");
+
+                        updateAuthenticationUI(result.user);
+
+                    } else {
+
+                        showAuthMessage(
+                            "Account created! Please check your email and confirm your account before logging in."
+                        );
+
+                    }
+
+                } else {
+
+                    const result = await loginStudent(email, password);
+
+                    closeLoginModal();
+
+                    loginForm.reset();
+
+                    showToast(
+                        "Welcome back, " +
+                        getStudentDisplayName(result.user) +
+                        "!"
+                    );
+
+                    updateAuthenticationUI(result.user);
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "STUDYVERSE AI: Authentication error:",
+                    error
+                );
+
+                showAuthMessage(
+                    error.message || "Authentication failed. Please try again.",
+                    true
+                );
+
+            } finally {
+
+                if (authSubmitBtn) {
+                    authSubmitBtn.disabled = false;
+                    authSubmitBtn.textContent =
+                        authMode === "register" ? "Create Account" : "Login";
+                }
+
+            }
 
         });
 
     }
 
     // =====================================================
-    // 6. COURSE SEARCH AND FILTER
+    // 7. STUDENT PROFILE
+    // =====================================================
+
+    function openProfileModal() {
+
+        if (!profileModal) return;
+
+        profileModal.classList.add("show");
+        document.body.style.overflow = "hidden";
+
+    }
+
+    function closeProfileModal() {
+
+        if (!profileModal) return;
+
+        profileModal.classList.remove("show");
+        document.body.style.overflow = "";
+
+    }
+
+    if (profileBtn) {
+
+        profileBtn.addEventListener("click", function (event) {
+
+            event.preventDefault();
+
+            openProfileModal();
+
+        });
+
+    }
+
+    if (profileModalClose) {
+        profileModalClose.addEventListener("click", closeProfileModal);
+    }
+
+    if (profileModal) {
+
+        profileModal.addEventListener("click", function (event) {
+
+            if (event.target === profileModal) {
+                closeProfileModal();
+            }
+
+        });
+
+    }
+
+    if (logoutBtn) {
+
+        logoutBtn.addEventListener("click", function (event) {
+
+            event.preventDefault();
+
+            logoutStudent();
+
+        });
+
+    }
+
+    // =====================================================
+    // 8. STUDENT DASHBOARD DISPLAY
+    // =====================================================
+
+    function showStudentDashboard() {
+
+        if (studentDashboard) {
+
+            studentDashboard.style.display = "block";
+
+            studentDashboard.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
+
+        closeProfileModal();
+
+    }
+
+    function showDetailedDashboard() {
+
+        if (!detailedDashboard) return;
+
+        detailedDashboard.style.display = "block";
+
+        detailedDashboard.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }
+
+    if (profileDashboardBtn) {
+
+        profileDashboardBtn.addEventListener("click", function () {
+
+            showStudentDashboard();
+
+        });
+
+    }
+
+    document.querySelectorAll("[data-open-dashboard]").forEach(function (button) {
+
+        button.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            showStudentDashboard();
+
+        });
+
+    });
+
+    document.querySelectorAll("[data-open-detailed-dashboard]").forEach(function (button) {
+
+        button.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            showDetailedDashboard();
+
+        });
+
+    });
+
+    function updateDashboardStudentName(user) {
+
+        const name = getStudentDisplayName(user);
+
+        const dashboardName = document.getElementById(
+            "dashboardStudentName"
+        );
+
+        if (dashboardName) {
+            dashboardName.textContent = name;
+        }
+
+    }
+
+    // This dashboard does not invent progress values.
+    // Real progress will be connected after verifying
+    // the actual learning_progress table columns and RLS.
+
+    function prepareProgressDashboard() {
+
+        const loading = document.getElementById(
+            "student-dashboard-loading"
+        );
+
+        const content = document.getElementById(
+            "student-dashboard-content"
+        );
+
+        const empty = document.getElementById(
+            "student-dashboard-empty"
+        );
+
+        const error = document.getElementById(
+            "student-dashboard-error"
+        );
+
+        if (loading) {
+            loading.style.display = "none";
+        }
+
+        if (content) {
+            content.style.display = "block";
+        }
+
+        if (empty) {
+            empty.style.display = "block";
+            empty.textContent =
+                "Your learning statistics will appear here after progress tracking is connected.";
+        }
+
+        if (error) {
+            error.style.display = "none";
+        }
+
+        const todayDate = document.getElementById("todayActivityDate");
+
+        if (todayDate) {
+
+            todayDate.textContent = new Date().toLocaleDateString(
+                "en-IN",
+                {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+        }
+
+    }
+
+    function updateProfileInformation(user) {
+
+        if (!user) return;
+
+        if (profileStudentName) {
+
+            profileStudentName.textContent =
+                getStudentDisplayName(user);
+
+        }
+
+        if (profileStudentEmail) {
+            profileStudentEmail.textContent = user.email || "Not available";
+        }
+
+        if (profileAccountStatus) {
+            profileAccountStatus.textContent =
+                user.email_confirmed_at
+                    ? "Email verified"
+                    : "Email verification pending";
+        }
+
+        if (profileCreatedAt) {
+
+            profileCreatedAt.textContent = user.created_at
+                ? new Date(user.created_at).toLocaleDateString("en-IN")
+                : "Not available";
+
+        }
+
+    }
+
+    // =====================================================
+    // 9. UPDATE AUTHENTICATION UI
+    // =====================================================
+
+    let currentStudent = null;
+
+    function updateAuthenticationUI(user) {
+
+        currentStudent = user || null;
+
+        const loggedIn = Boolean(user);
+
+        document.querySelectorAll(".student-only").forEach(function (element) {
+
+            element.style.display = loggedIn ? "" : "none";
+
+        });
+
+        document.querySelectorAll(".guest-only").forEach(function (element) {
+
+            element.style.display = loggedIn ? "none" : "";
+
+        });
+
+        if (loginBtn) {
+            loginBtn.style.display = loggedIn ? "none" : "";
+        }
+
+        if (profileBtn) {
+            profileBtn.style.display = loggedIn ? "" : "none";
+        }
+
+        if (logoutBtn) {
+            logoutBtn.style.display = loggedIn ? "" : "none";
+        }
+
+        if (getStartedBtn) {
+            getStartedBtn.style.display = loggedIn ? "none" : "";
+        }
+
+        if (loggedIn) {
+
+            updateDashboardStudentName(user);
+            updateProfileInformation(user);
+            prepareProgressDashboard();
+
+            console.log(
+                "STUDYVERSE AI: Student session active.",
+                {
+                    email: user.email,
+                    userId: user.id
+                }
+            );
+
+        } else {
+
+            if (studentDashboard) {
+                studentDashboard.style.display = "none";
+            }
+
+            if (detailedDashboard) {
+                detailedDashboard.style.display = "none";
+            }
+
+            console.log("STUDYVERSE AI: No active student session.");
+
+        }
+
+    }
+
+    // =====================================================
+    // 10. RESTORE EXISTING STUDENT SESSION
+    // =====================================================
+
+    async function initializeStudentAuthentication() {
+
+        if (!supabaseClient) return;
+
+        try {
+
+            const { data, error } =
+                await supabaseClient.auth.getSession();
+
+            if (error) throw error;
+
+            updateAuthenticationUI(
+                data.session ? data.session.user : null
+            );
+
+            supabaseClient.auth.onAuthStateChange(
+                function (event, session) {
+
+                    console.log(
+                        "STUDYVERSE AUTH EVENT:",
+                        event
+                    );
+
+                    updateAuthenticationUI(
+                        session ? session.user : null
+                    );
+
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "STUDYVERSE AI: Session initialization failed:",
+                error
+            );
+
+        }
+
+    }
+
+    // =====================================================
+    // 11. COURSE SEARCH AND FILTER
     // =====================================================
 
     let activeFilter = "all";
@@ -273,8 +941,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const searchData = (card.dataset.search || "").toLowerCase();
 
             const cardText = card.textContent.toLowerCase();
-
-            // Supports cards belonging to multiple examinations.
 
             const examList = exam.split(/\s+/);
 
@@ -340,7 +1006,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =====================================================
-    // 7. EXAM FILTER BUTTONS
+    // 12. STATIC EXAM FILTER BUTTONS
     // =====================================================
 
     document.querySelectorAll("[data-exam]").forEach(function (element) {
@@ -376,7 +1042,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =====================================================
-    // 8. UPCOMING COURSE MATERIAL BUTTONS
+    // 13. UPCOMING COURSE MATERIAL BUTTONS
     // =====================================================
 
     document.querySelectorAll("[data-coming]").forEach(function (button) {
@@ -394,46 +1060,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =====================================================
-    // 9. SUPABASE CONNECTION
-    // =====================================================
-
-    const STUDYVERSE_SUPABASE_URL =
-        "https://mtxkvupfczhglaqghcbc.supabase.co";
-
-    // Browser-safe Supabase publishable key.
-    // Never use a service_role or secret key here.
-
-    const STUDYVERSE_SUPABASE_KEY =
-        "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
-
-    if (!window.studyverseSupabase) {
-
-        if (!window.supabase) {
-
-            console.error(
-                "STUDYVERSE AI: Supabase library not loaded!"
-            );
-
-        } else {
-
-            window.studyverseSupabase =
-                window.supabase.createClient(
-                    STUDYVERSE_SUPABASE_URL,
-                    STUDYVERSE_SUPABASE_KEY
-                );
-
-            console.log(
-                "STUDYVERSE AI: Supabase client initialized successfully!"
-            );
-
-        }
-
-    }
-
-    const supabaseClient = window.studyverseSupabase;
-
-    // =====================================================
-    // 10. TEST SUPABASE DATABASE CONNECTION
+    // 14. TEST SUPABASE DATABASE CONNECTION
     // =====================================================
 
     async function testStudyverseDatabase() {
@@ -478,11 +1105,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =====================================================
-    // 11. DYNAMIC EXAM DASHBOARD
+    // 15. DYNAMIC EXAM DASHBOARD
     // =====================================================
 
     let studyverseExams = [];
-
     let dashboardPromise = null;
 
     async function loadStudyverseExamDashboard() {
@@ -491,25 +1117,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "studyverse-dynamic-dashboard"
         );
 
-        if (!root) {
-
-            console.error(
-                "STUDYVERSE AI: Dashboard HTML not found!"
-            );
-
-            return;
-
-        }
-
-        if (!supabaseClient) {
-
-            console.error(
-                "STUDYVERSE AI: Supabase client unavailable!"
-            );
-
-            return;
-
-        }
+        if (!root || !supabaseClient) return;
 
         const examContainer = document.getElementById("sv-exam-cards");
 
@@ -521,15 +1129,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const message = document.getElementById("sv-dashboard-message");
 
-        if (!examContainer || !subjectContainer) {
-
-            console.error(
-                "STUDYVERSE AI: Exam or subject container missing from HTML!"
-            );
-
-            return;
-
-        }
+        if (!examContainer || !subjectContainer) return;
 
         function escapeHTML(value) {
 
@@ -553,8 +1153,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 loading.textContent = "Loading examinations...";
             }
 
-            // Fetch published examinations.
-
             const { data: exams, error: examError } = await supabaseClient
                 .from("exams")
                 .select("id, name, slug, description, is_published")
@@ -562,8 +1160,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 .order("name");
 
             if (examError) throw examError;
-
-            // Fetch published subjects.
 
             const { data: subjects, error: subjectError } = await supabaseClient
                 .from("subjects")
@@ -586,8 +1182,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
-            // Display examination cards.
-
             examContainer.innerHTML = studyverseExams.map(
                 function (exam, index) {
 
@@ -597,12 +1191,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             class="sv-exam-card ${index === 0 ? "active" : ""}"
                             data-exam-id="${escapeHTML(exam.id)}"
                         >
-                            <span class="sv-card-label">
-                                EXAMINATION
-                            </span>
-
+                            <span class="sv-card-label">EXAMINATION</span>
                             <h3>${escapeHTML(exam.name)}</h3>
-
                             <p>
                                 ${escapeHTML(
                                     exam.description ||
@@ -619,15 +1209,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 loading.textContent = "";
             }
 
-            // Display subjects for the selected examination.
-
             function showSubjects(examId, examName) {
 
                 if (selectedHeading) {
-
-                    selectedHeading.textContent =
-                        examName + " - Subjects";
-
+                    selectedHeading.textContent = examName + " - Subjects";
                 }
 
                 const matchingSubjects = (subjects || []).filter(
@@ -655,15 +1240,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                 data-subject-id="${escapeHTML(subject.id)}"
                                 data-subject-name="${escapeHTML(subject.name)}"
                             >
-                                <span class="sv-card-label">
-                                    SUBJECT
-                                </span>
-
+                                <span class="sv-card-label">SUBJECT</span>
                                 <h3>${escapeHTML(subject.name)}</h3>
-
-                                <p>
-                                    Explore chapters and learning resources.
-                                </p>
+                                <p>Explore chapters and learning resources.</p>
                             </button>
                         `;
 
@@ -672,39 +1251,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
-            // Handle dynamic examination-card clicks.
+            // Event delegation: only one listener is needed.
 
-            examContainer.addEventListener("click", function (event) {
+            if (!examContainer.dataset.listenerAttached) {
 
-                const card = event.target.closest(".sv-exam-card");
+                examContainer.addEventListener("click", function (event) {
 
-                if (!card || !examContainer.contains(card)) return;
+                    const card = event.target.closest(".sv-exam-card");
 
-                examContainer.querySelectorAll(".sv-exam-card")
-                    .forEach(function (item) {
-                        item.classList.remove("active");
-                    });
+                    if (!card || !examContainer.contains(card)) return;
 
-                card.classList.add("active");
+                    examContainer.querySelectorAll(".sv-exam-card")
+                        .forEach(function (item) {
+                            item.classList.remove("active");
+                        });
 
-                const selectedExam = studyverseExams.find(
-                    function (exam) {
-                        return exam.id === card.dataset.examId;
-                    }
-                );
+                    card.classList.add("active");
 
-                if (selectedExam) {
-
-                    showSubjects(
-                        selectedExam.id,
-                        selectedExam.name
+                    const selectedExam = studyverseExams.find(
+                        function (exam) {
+                            return exam.id === card.dataset.examId;
+                        }
                     );
 
-                }
+                    if (selectedExam) {
+                        showSubjects(selectedExam.id, selectedExam.name);
+                    }
 
-            });
+                });
 
-            // Show the first examination by default.
+                examContainer.dataset.listenerAttached = "true";
+
+            }
 
             showSubjects(
                 studyverseExams[0].id,
@@ -712,10 +1290,8 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             if (message) {
-
                 message.textContent =
                     "Examinations and subjects loaded successfully!";
-
             }
 
             console.log(
@@ -729,10 +1305,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
 
             if (loading) {
-
-                loading.textContent =
-                    "Unable to load examinations.";
-
+                loading.textContent = "Unable to load examinations.";
             }
 
             console.error(
@@ -746,12 +1319,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-    // Start the dashboard.
-
     dashboardPromise = loadStudyverseExamDashboard();
 
     // =====================================================
-    // 12. CONNECT STATIC EXAM CARDS TO DYNAMIC DASHBOARD
+    // 16. CONNECT STATIC EXAM CARDS TO DYNAMIC DASHBOARD
     // =====================================================
 
     async function selectDynamicExam(selectedCourse) {
@@ -793,7 +1364,6 @@ document.addEventListener("DOMContentLoaded", function () {
             function (exam) {
 
                 const slug = String(exam.slug || "").toLowerCase();
-
                 const name = String(exam.name || "").toLowerCase();
 
                 return (
@@ -833,10 +1403,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-    // Static examination buttons:
-    // data-select="jee", data-select="advanced",
-    // data-select="neet".
-
     document.querySelectorAll("[data-select]").forEach(function (button) {
 
         button.addEventListener("click", function (event) {
@@ -846,13 +1412,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const selectedCourse = button.dataset.select;
 
             if (selectedCourse) {
-
                 selectDynamicExam(selectedCourse);
-
             } else {
-
                 showToast("Please select an examination.");
-
             }
 
         });
@@ -860,7 +1422,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =====================================================
-    // 13. DYNAMIC CHAPTER LIBRARY
+    // 17. DYNAMIC CHAPTER LIBRARY
     // =====================================================
 
     const svSubjectContainer = document.getElementById(
@@ -909,7 +1471,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 const subjectId = subjectCard.dataset.subjectId;
-
                 const subjectName = subjectCard.dataset.subjectName;
 
                 if (!subjectId) return;
@@ -925,11 +1486,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 if (!supabaseClient) {
-
                     showToast("Database connection is unavailable.");
-
                     return;
-
                 }
 
                 svChapterHeading.textContent =
@@ -1032,7 +1590,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =====================================================
-    // 14. CHAPTER SELECTION AND NAVIGATION
+    // 18. CHAPTER SELECTION AND NAVIGATION
     // =====================================================
 
     if (svChapterContainer) {
@@ -1053,7 +1611,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 const chapterId = button.dataset.chapterId;
-
                 const chapterName = button.dataset.chapterName;
 
                 if (!chapterId) {
@@ -1067,6 +1624,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
                     return;
+
                 }
 
                 console.log(
@@ -1076,8 +1634,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         chapterId: chapterId
                     }
                 );
-
-                // Open the learning page using the chapter UUID.
 
                 window.location.href =
                     "./chapter.html?chapter_id=" +
@@ -1089,7 +1645,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // =====================================================
-    // 15. SMOOTH SCROLL FOR INTERNAL LINKS
+    // 19. SMOOTH SCROLL FOR INTERNAL LINKS
     // =====================================================
 
     document.querySelectorAll('a[href^="#"]').forEach(function (link) {
@@ -1103,13 +1659,9 @@ document.addEventListener("DOMContentLoaded", function () {
             let targetElement;
 
             try {
-
                 targetElement = document.querySelector(targetId);
-
             } catch (error) {
-
                 return;
-
             }
 
             if (targetElement) {
@@ -1128,30 +1680,24 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // =====================================================
-    // 16. AUTOMATIC FOOTER YEAR
+    // 20. AUTOMATIC FOOTER YEAR
     // =====================================================
 
     if (year) {
-
         year.textContent = new Date().getFullYear();
-
     }
 
     // =====================================================
-    // 17. INITIALIZE COURSE FILTERS
+    // 21. INITIALIZE WEBSITE
     // =====================================================
 
     filterCourses();
 
-    // =====================================================
-    // 18. TEST DATABASE CONNECTION
-    // =====================================================
+    // Restore the existing student login session.
+    await initializeStudentAuthentication();
 
+    // Test the Supabase database connection.
     testStudyverseDatabase();
-
-    // =====================================================
-    // 19. WEBSITE INITIALIZATION
-    // =====================================================
 
     console.log(
         "%cSTUDYVERSE AI",
