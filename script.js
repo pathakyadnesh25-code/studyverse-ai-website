@@ -1157,4 +1157,36 @@ document.addEventListener("DOMContentLoaded", function () {
         "color:#22c55e;font-size:14px;"
     );
 
+/* =====================================================
+   STUDYVERSE AI — OPEN CHAPTER NAVIGATION
+===================================================== */
+
+document.addEventListener("click", function (event) {
+
+    const openButton = event.target.closest(".sv-chapter-open");
+
+    if (!openButton) {
+        return;
+    }
+
+    const chapterId = openButton.dataset.chapterId;
+
+    if (!chapterId) {
+        console.error(
+            "STUDYVERSE AI: Chapter ID is missing."
+        );
+        return;
+    }
+
+    console.log(
+        "STUDYVERSE AI: Opening chapter:",
+        chapterId
+    );
+
+    window.location.href =
+        "./chapter.html?chapter_id=" +
+        encodeURIComponent(chapterId);
+
+});
+
 });
