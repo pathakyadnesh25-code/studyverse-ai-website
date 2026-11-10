@@ -1,8 +1,9 @@
 
 /* =========================================================
    STUDYVERSE AI — SCRIPT.JS
-   Version 3.0
+   Version 3.1
    Frontend + Supabase + Dynamic Exam & Chapter Dashboard
+   Chapter Learning Page Navigation
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -238,7 +239,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            // Demo only — real authentication will use Supabase Auth.
+            // Demo only.
+            // Real authentication will use Supabase Auth.
 
             showToast("Welcome to STUDYVERSE AI, " + name + "!");
 
@@ -272,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const cardText = card.textContent.toLowerCase();
 
-            // FIX: Supports cards belonging to multiple exams.
+            // Supports cards belonging to multiple examinations.
 
             const examList = exam.split(/\s+/);
 
@@ -398,8 +400,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const STUDYVERSE_SUPABASE_URL =
         "https://mtxkvupfczhglaqghcbc.supabase.co";
 
-    // This is the browser-safe publishable key.
-    // Never put a Supabase secret/service_role key here.
+    // Browser-safe Supabase publishable key.
+    // Never use a service_role or secret key here.
 
     const STUDYVERSE_SUPABASE_KEY =
         "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
@@ -617,7 +619,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 loading.textContent = "";
             }
 
-            // Display subjects for the selected exam.
+            // Display subjects for the selected examination.
 
             function showSubjects(examId, examName) {
 
@@ -670,7 +672,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
-            // Handle dynamic exam-card clicks.
+            // Handle dynamic examination-card clicks.
 
             examContainer.addEventListener("click", function (event) {
 
@@ -702,7 +704,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             });
 
-            // Show first examination by default.
+            // Show the first examination by default.
 
             showSubjects(
                 studyverseExams[0].id,
@@ -831,8 +833,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-    // Static examination buttons use data-select="jee",
-    // data-select="advanced" and data-select="neet".
+    // Static examination buttons:
+    // data-select="jee", data-select="advanced",
+    // data-select="neet".
 
     document.querySelectorAll("[data-select]").forEach(function (button) {
 
@@ -1028,7 +1031,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-
     // =====================================================
     // 14. CHAPTER SELECTION AND NAVIGATION
     // =====================================================
@@ -1075,7 +1077,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 );
 
-                // Navigate to the chapter learning page.
+                // Open the learning page using the chapter UUID.
 
                 window.location.href =
                     "./chapter.html?chapter_id=" +
@@ -1085,7 +1087,6 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
     }
-
 
     // =====================================================
     // 15. SMOOTH SCROLL FOR INTERNAL LINKS
@@ -1161,36 +1162,5 @@ document.addEventListener("DOMContentLoaded", function () {
         "%cWebsite JavaScript initialized successfully!",
         "color:#22c55e;font-size:14px;"
     );
-
-/* =====================================================
-   STUDYVERSE AI — OPEN CHAPTER NAVIGATION
-===================================================== */
-
-
-    const openButton = event.target.closest(".sv-chapter-open");
-
-    if (!openButton) {
-        return;
-    }
-
-    const chapterId = openButton.dataset.chapterId;
-
-    if (!chapterId) {
-        console.error(
-            "STUDYVERSE AI: Chapter ID is missing."
-        );
-        return;
-    }
-
-    console.log(
-        "STUDYVERSE AI: Opening chapter:",
-        chapterId
-    );
-
-    window.location.href =
-        "./chapter.html?chapter_id=" +
-        encodeURIComponent(chapterId);
-
-});
 
 });
