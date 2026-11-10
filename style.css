@@ -1630,3 +1630,651 @@ footer {
     }
 
 }
+
+/* =========================================================
+   STUDYVERSE AI — STUDENT DASHBOARD & AUTHENTICATION
+   Version 3.0
+   Add this section at the END of the existing style.css
+========================================================= */
+
+
+/* =========================================================
+   1. DASHBOARD VISIBILITY AND GENERAL LAYOUT
+========================================================= */
+
+#student-dashboard,
+#detailed-dashboard {
+    display: none;
+    width: 100%;
+    padding: 65px 0;
+    scroll-margin-top: 90px;
+}
+
+#student-dashboard {
+    background:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(146, 92, 255, 0.12),
+            transparent 40%
+        ),
+        var(--bg-light);
+}
+
+#detailed-dashboard {
+    background:
+        radial-gradient(
+            circle at 90% 10%,
+            rgba(76, 156, 255, 0.10),
+            transparent 40%
+        ),
+        var(--bg);
+}
+
+#student-dashboard .container,
+#detailed-dashboard .container {
+    width: min(1160px, 90%);
+    margin: auto;
+}
+
+
+/* =========================================================
+   2. DASHBOARD HEADINGS
+========================================================= */
+
+#student-dashboard h2,
+#detailed-dashboard h2 {
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.25;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+}
+
+#student-dashboard h3,
+#detailed-dashboard h3 {
+    font-size: 19px;
+    margin-bottom: 12px;
+}
+
+#student-dashboard p,
+#detailed-dashboard p {
+    color: var(--muted);
+}
+
+#dashboardStudentName {
+    color: var(--purple-light);
+    overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   3. DASHBOARD LOADING / EMPTY / ERROR STATES
+========================================================= */
+
+#student-dashboard-loading,
+#student-dashboard-empty,
+#student-dashboard-error {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--muted);
+    text-align: center;
+}
+
+#student-dashboard-error {
+    color: #ff8d8d;
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.06);
+}
+
+#student-dashboard-empty {
+    border-style: dashed;
+}
+
+
+/* =========================================================
+   4. STUDENT DASHBOARD STATISTICS
+========================================================= */
+
+#student-dashboard-content {
+    margin-top: 30px;
+}
+
+#student-dashboard-content > * {
+    min-width: 0;
+}
+
+.dashboard-stats,
+.student-stats-grid,
+.progress-stats-grid,
+.activity-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 17px;
+    margin: 25px 0;
+}
+
+.dashboard-stat-card,
+.student-stat-card,
+.progress-stat-card,
+.activity-stat-card {
+    min-width: 0;
+    padding: 23px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+        145deg,
+        var(--surface-light),
+        var(--surface)
+    );
+    box-shadow: var(--shadow-card);
+    transition: 0.25s ease;
+}
+
+.dashboard-stat-card:hover,
+.student-stat-card:hover,
+.progress-stat-card:hover,
+.activity-stat-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(146, 92, 255, 0.55);
+}
+
+.dashboard-stat-card h3,
+.student-stat-card h3 {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.dashboard-stat-card strong,
+.student-stat-card strong,
+.progress-stat-card strong,
+.activity-stat-card strong {
+    display: block;
+    font-size: clamp(23px, 3vw, 32px);
+    font-weight: 900;
+    color: var(--purple-light);
+    overflow-wrap: anywhere;
+}
+
+.dashboard-stat-card span,
+.student-stat-card span,
+.progress-stat-card span,
+.activity-stat-card span {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   5. OVERALL PROGRESS
+========================================================= */
+
+#overallProgressValue {
+    color: var(--purple-light);
+    font-weight: 900;
+}
+
+.overall-progress-card,
+.dashboard-progress-card {
+    padding: 25px;
+    margin: 25px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+}
+
+.overall-progress-track,
+.dashboard-progress-track {
+    width: 100%;
+    height: 11px;
+    margin: 15px 0;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #292e49;
+}
+
+.overall-progress-fill,
+.dashboard-progress-fill {
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: var(--gradient);
+    transition: width 0.5s ease;
+}
+
+
+/* =========================================================
+   6. TODAY'S STUDY ACTIVITY
+========================================================= */
+
+#todayActivityDate {
+    color: var(--purple-light);
+    font-weight: 700;
+}
+
+.today-activity,
+.dashboard-activity,
+.study-activity-section {
+    margin-top: 35px;
+}
+
+.today-activity-grid,
+.dashboard-activity-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 18px;
+}
+
+.today-activity-card,
+.dashboard-activity-card {
+    padding: 19px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.today-activity-card strong,
+.dashboard-activity-card strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--purple-light);
+    font-size: 24px;
+}
+
+.today-activity-card span,
+.dashboard-activity-card span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   7. DETAILED DASHBOARD
+========================================================= */
+
+#detailed-dashboard {
+    border-top: 1px solid var(--border);
+}
+
+#detailChapterProgress,
+#detailVideoLessons,
+#detailFormulaRevision,
+#detailPyqAccuracy {
+    min-width: 0;
+    padding: 23px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface);
+}
+
+.detail-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin: 25px 0;
+}
+
+#chapterProgressList,
+#studyHistoryList {
+    display: grid;
+    gap: 13px;
+    margin-top: 18px;
+}
+
+.chapter-progress-item,
+.study-history-item {
+    padding: 17px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.chapter-progress-item h4,
+.study-history-item h4 {
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.chapter-progress-item p,
+.study-history-item p {
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   8. STUDENT PROFILE MODAL
+========================================================= */
+
+#profileModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 210;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.78);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+}
+
+#profileModal.show {
+    display: flex;
+    animation: fadeIn 0.25s ease;
+}
+
+#profileModal .modal-box {
+    width: min(460px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#profileStudentName {
+    color: var(--purple-light);
+    font-size: 22px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+#profileStudentEmail {
+    overflow-wrap: anywhere;
+}
+
+#profileAccountStatus {
+    display: inline-block;
+    padding: 7px 11px;
+    border: 1px solid rgba(146, 92, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(146, 92, 255, 0.1);
+    color: var(--purple-light);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+#profileCreatedAt {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   9. LOGIN AND REGISTRATION IMPROVEMENTS
+========================================================= */
+
+#loginModal .modal-box {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#authModeText {
+    color: var(--text);
+}
+
+#authMessage {
+    display: none;
+    margin: 15px 0 0;
+    padding: 11px 13px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 12px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+#nameFieldGroup[hidden] {
+    display: none !important;
+}
+
+#nameFieldGroup {
+    margin-bottom: 5px;
+}
+
+#authSubmitBtn:disabled {
+    opacity: 0.65;
+    cursor: wait;
+    transform: none;
+}
+
+#authSwitchLabel {
+    display: inline;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+#authSwitchBtn {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 4px 6px;
+    border: 0;
+    background: transparent;
+    color: var(--purple-light);
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#authSwitchBtn:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   10. NAVIGATION AUTHENTICATION BUTTONS
+========================================================= */
+
+#profileBtn,
+#logoutBtn,
+#getStartedBtn {
+    white-space: nowrap;
+}
+
+#profileBtn:hover,
+#logoutBtn:hover {
+    border-color: var(--purple);
+}
+
+.nav-actions {
+    flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   11. DASHBOARD BUTTONS
+========================================================= */
+
+#student-dashboard button,
+#detailed-dashboard button {
+    font: inherit;
+}
+
+.dashboard-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 19px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: var(--gradient);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.dashboard-action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-purple);
+}
+
+
+/* =========================================================
+   12. STUDENT DASHBOARD EMPTY AND LOADING CONTENT
+========================================================= */
+
+#student-dashboard-content:empty::after {
+    content: "Your learning dashboard will appear here.";
+    display: block;
+    padding: 25px;
+    color: var(--muted);
+    text-align: center;
+}
+
+#chapterProgressList:empty::after,
+#studyHistoryList:empty::after {
+    content: "No study records available yet.";
+    display: block;
+    padding: 20px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+}
+
+
+/* =========================================================
+   13. TABLET RESPONSIVENESS
+========================================================= */
+
+@media (max-width: 850px) {
+
+    .dashboard-stats,
+    .student-stats-grid,
+    .progress-stats-grid,
+    .activity-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .today-activity-grid,
+    .dashboard-activity-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .detail-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #student-dashboard,
+    #detailed-dashboard {
+        padding: 50px 0;
+    }
+
+}
+
+
+/* =========================================================
+   14. MOBILE RESPONSIVENESS
+========================================================= */
+
+@media (max-width: 560px) {
+
+    #student-dashboard .container,
+    #detailed-dashboard .container {
+        width: 91%;
+    }
+
+    #student-dashboard,
+    #detailed-dashboard {
+        padding: 42px 0;
+    }
+
+    .dashboard-stats,
+    .student-stats-grid,
+    .progress-stats-grid,
+    .activity-stats-grid,
+    .today-activity-grid,
+    .dashboard-activity-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .dashboard-stat-card,
+    .student-stat-card,
+    .progress-stat-card,
+    .activity-stat-card {
+        padding: 15px;
+    }
+
+    .dashboard-stat-card strong,
+    .student-stat-card strong,
+    .progress-stat-card strong,
+    .activity-stat-card strong {
+        font-size: 23px;
+    }
+
+    .overall-progress-card,
+    .dashboard-progress-card {
+        padding: 17px;
+    }
+
+    #detailChapterProgress,
+    #detailVideoLessons,
+    #detailFormulaRevision,
+    #detailPyqAccuracy {
+        padding: 17px;
+    }
+
+    #profileModal .modal-box,
+    #loginModal .modal-box {
+        padding: 24px 19px;
+    }
+
+    .nav-actions {
+        gap: 6px;
+    }
+
+}
+
+
+/* =========================================================
+   15. SMALL MOBILE DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+    .dashboard-stats,
+    .student-stats-grid,
+    .progress-stats-grid,
+    .activity-stats-grid,
+    .today-activity-grid,
+    .dashboard-activity-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   16. ACCESSIBILITY
+========================================================= */
+
+#student-dashboard button:focus-visible,
+#detailed-dashboard button:focus-visible,
+#profileModal button:focus-visible,
+#loginModal button:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    #student-dashboard *,
+    #detailed-dashboard *,
+    #profileModal *,
+    #loginModal * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+
+}
