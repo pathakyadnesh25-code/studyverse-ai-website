@@ -191,8 +191,6 @@
 
     <div id="student-dashboard-content" hidden>
 
-      <!-- OVERALL PROGRESS -->
-
       <div class="student-overview-card">
 
         <div>
@@ -207,8 +205,6 @@
         </div>
 
       </div>
-
-      <!-- LEARNING STATISTICS -->
 
       <div class="student-stats-grid">
 
@@ -237,8 +233,6 @@
         </article>
 
       </div>
-
-      <!-- TODAY'S ACTIVITY -->
 
       <div class="student-activity-card">
 
@@ -346,8 +340,6 @@
 
     </div>
 
-    <!-- CHAPTER-WISE PROGRESS -->
-
     <div class="student-history-card">
 
       <div class="student-section-heading">
@@ -362,8 +354,6 @@
       </div>
 
     </div>
-
-    <!-- STUDY HISTORY -->
 
     <div class="student-history-card">
 
@@ -457,19 +447,13 @@
       Loading examinations...
     </div>
 
-    <!-- EXAM CARDS -->
-
     <div id="sv-exam-cards" class="sv-exam-grid"></div>
-
-    <!-- SUBJECT SECTION -->
 
     <div id="sv-subject-area" class="sv-subject-area">
 
       <h3 id="sv-selected-exam">Select an examination</h3>
 
       <div id="sv-subject-cards" class="sv-subject-grid"></div>
-
-      <!-- CHAPTER SECTION -->
 
       <div id="sv-chapter-area" class="sv-chapter-area">
 
@@ -812,6 +796,8 @@
 
     <form id="loginForm">
 
+      <!-- FULL NAME: REGISTRATION ONLY -->
+
       <div id="nameFieldGroup" hidden>
         <label for="studentName">Full name</label>
         <input
@@ -823,7 +809,53 @@
         >
       </div>
 
+
+      <!-- TARGET EXAMINATION: REGISTRATION ONLY -->
+
+      <div id="targetExamGroup" hidden>
+        <label for="targetExam">Target Examination</label>
+
+        <select id="targetExam" name="target_exam">
+          <option value="">Select your examination</option>
+          <option value="JEE Main">JEE Main</option>
+          <option value="JEE Advanced">JEE Advanced</option>
+          <option value="NEET UG">NEET UG</option>
+        </select>
+      </div>
+
+
+      <!-- ACADEMIC LEVEL: REGISTRATION ONLY -->
+
+      <div id="academicLevelGroup" hidden>
+        <label for="academicLevel">Academic Level</label>
+
+        <select id="academicLevel" name="academic_level">
+          <option value="">Select your academic level</option>
+          <option value="Class 11">Class 11</option>
+          <option value="Class 12">Class 12</option>
+          <option value="Dropper">Dropper</option>
+        </select>
+      </div>
+
+
+      <!-- PREFERRED LANGUAGE: REGISTRATION ONLY -->
+
+      <div id="preferredLanguageGroup" hidden>
+        <label for="preferredLanguage">Preferred Language</label>
+
+        <select id="preferredLanguage" name="preferred_language">
+          <option value="">Select your preferred language</option>
+          <option value="English">English</option>
+          <option value="Hindi">Hindi</option>
+          <option value="Marathi">Marathi</option>
+        </select>
+      </div>
+
+
+      <!-- EMAIL -->
+
       <label for="studentEmail">Email address</label>
+
       <input
         id="studentEmail"
         name="email"
@@ -833,7 +865,11 @@
         required
       >
 
+
+      <!-- PASSWORD -->
+
       <label for="studentPassword">Password</label>
+
       <input
         id="studentPassword"
         name="password"
@@ -843,6 +879,27 @@
         minlength="6"
         required
       >
+
+
+      <!-- CONFIRM PASSWORD: REGISTRATION ONLY -->
+
+      <div id="confirmPasswordGroup" hidden>
+
+        <label for="confirmPassword">Confirm Password</label>
+
+        <input
+          id="confirmPassword"
+          name="confirm_password"
+          type="password"
+          placeholder="Re-enter your password"
+          autocomplete="new-password"
+          minlength="6"
+        >
+
+      </div>
+
+
+      <!-- SUBMIT -->
 
       <button class="btn btn-primary" id="authSubmitBtn" type="submit">
         Log in →
@@ -854,6 +911,7 @@
 
     <p class="auth-switch-text">
       <span id="authSwitchLabel">New to STUDYVERSE AI?</span>
+
       <button id="authSwitchBtn" type="button" class="auth-switch-btn">
         Create an account
       </button>
