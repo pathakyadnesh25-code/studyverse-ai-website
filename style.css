@@ -1246,3 +1246,323 @@ button:focus-visible,a:focus-visible,input:focus-visible {
     }
     .login-modal { padding: 26px 21px; }
 }
+
+/* =====================================================
+   STUDYVERSE AI V5 — LEARNING JOURNEY & ANALYTICS
+===================================================== */
+
+.journey-section {
+    background:
+        radial-gradient(ellipse at 50% 30%,rgba(113,79,255,.09),transparent 60%);
+}
+
+.journey-timeline {
+    max-width: 850px;
+    margin: auto;
+    position: relative;
+    display: grid;
+    gap: 22px;
+}
+
+.journey-timeline::before {
+    content: "";
+    position: absolute;
+    left: 32px;
+    top: 40px;
+    bottom: 40px;
+    width: 2px;
+    background: linear-gradient(
+        to bottom,
+        #a477ff,
+        #55d9ff,
+        #ed83ff,
+        #58e8aa
+    );
+    opacity: .65;
+}
+
+.journey-step {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+}
+
+.journey-step-marker {
+    min-width: 66px;
+    height: 66px;
+    border-radius: 20px;
+    display: grid;
+    place-items: center;
+    background: #151b34;
+    border: 1px solid rgba(155,114,255,.5);
+    color: #c5adff;
+    font: 800 20px Outfit;
+    box-shadow: 0 0 25px rgba(155,114,255,.15);
+    transition: .3s;
+}
+
+.journey-step:hover .journey-step-marker {
+    background: linear-gradient(135deg,#895aff,#526dff);
+    color: white;
+    transform: scale(1.1) rotate(-5deg);
+    box-shadow: 0 0 35px rgba(155,114,255,.4);
+}
+
+.journey-step-content {
+    flex: 1;
+    padding: 23px 26px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: linear-gradient(130deg,rgba(26,35,64,.85),rgba(12,17,34,.85));
+    transition: .3s;
+}
+
+.journey-step-content:hover {
+    border-color: rgba(155,114,255,.55);
+    transform: translateX(8px);
+}
+
+.journey-step-content > span {
+    color: var(--cyan);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.journey-step-content h3 {
+    font: 700 20px Outfit;
+    margin: 7px 0;
+}
+
+.journey-step-content p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.journey-step-content a {
+    color: #bca2ff;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* STUDENT DASHBOARD */
+
+.student-progress-section {
+    background: linear-gradient(180deg,rgba(17,25,48,.45),transparent);
+    border-top: 1px solid var(--border);
+}
+
+.progress-dashboard {
+    max-width: 1100px;
+    margin: auto;
+    padding: 28px;
+    background: rgba(17,24,44,.75);
+    border: 1px solid var(--border);
+    border-radius: 25px;
+    box-shadow: var(--shadow);
+}
+
+.progress-welcome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 15px 10px 30px;
+    border-bottom: 1px solid var(--border);
+}
+
+.progress-welcome h3 {
+    font: 700 27px Outfit;
+}
+
+.progress-welcome p {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.progress-circle {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: conic-gradient(
+        #9b72ff 0deg,
+        #536eff 0deg,
+        rgba(255,255,255,.08) 0deg
+    );
+    position: relative;
+    flex-shrink: 0;
+}
+
+.progress-circle::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: #121a31;
+}
+
+.progress-circle > div {
+    position: relative;
+    display: grid;
+    text-align: center;
+}
+
+.progress-circle strong {
+    font: 800 23px Outfit;
+}
+
+.progress-circle small {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.progress-metrics {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
+    padding: 28px 0;
+}
+
+.progress-metric {
+    padding: 22px 15px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.025);
+    border-radius: 16px;
+    transition: .3s;
+}
+
+.progress-metric:hover {
+    transform: translateY(-6px);
+    border-color: var(--purple);
+}
+
+.metric-icon {
+    display: block;
+    color: var(--cyan);
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.progress-metric strong {
+    font: 800 27px Outfit;
+    display: block;
+}
+
+.progress-metric h4 {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.progress-metric p {
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.chapter-progress-panel,.activity-panel {
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    margin-top: 15px;
+    background: rgba(255,255,255,.025);
+}
+
+.chapter-progress-heading {
+    display: flex;
+    justify-content: space-between;
+    font: 700 15px Outfit;
+    margin-bottom: 17px;
+}
+
+.chapter-progress-heading span { color: var(--cyan); }
+
+.progress-track {
+    height: 9px;
+    background: rgba(255,255,255,.08);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#sv-chapter-progress-bar {
+    width: 0;
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg,#8c5cff,#56d9ff);
+    box-shadow: 0 0 15px rgba(85,217,255,.3);
+    transition: width 1s ease;
+}
+
+.chapter-progress-panel > p,.activity-panel > div {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 12px;
+}
+
+.activity-panel h3 {
+    font: 700 17px Outfit;
+}
+
+/* CHAPTER SEARCH */
+
+.chapter-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: 420px;
+    padding: 12px 17px;
+    margin: 0 0 22px;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    background: rgba(255,255,255,.035);
+    color: var(--cyan);
+}
+
+.chapter-search input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    font-size: 12px;
+}
+
+.chapter-search input::placeholder {
+    color: var(--muted);
+}
+
+/* ERROR AND STATUS */
+
+#sv-dashboard-message[data-status="error"] {
+    color: #ff8d9b;
+}
+
+#sv-dashboard-message[data-status="success"] {
+    color: #65e6b0;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:760px) {
+    .journey-timeline::before { left: 24px; }
+    .journey-step { gap: 15px; }
+    .journey-step-marker {
+        min-width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        font-size: 15px;
+    }
+    .journey-step-content { padding: 18px; }
+    .progress-dashboard { padding: 17px; }
+    .progress-metrics { grid-template-columns: repeat(2,1fr); }
+}
+
+@media(max-width:420px) {
+    .progress-welcome h3 { font-size: 21px; }
+    .progress-circle { width: 85px; height: 85px; }
+    .progress-metric { padding: 16px 11px; }
+}
