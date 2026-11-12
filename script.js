@@ -1,183 +1,144 @@
 
-/* ==========================================================
-   STUDYVERSE AI — MAIN APPLICATION
-   Version 4.0
-   Supabase + Dynamic Dashboard + UI Animations
-========================================================== */
+/* ============================================================
+   STUDYVERSE AI — FUNCTIONAL LEARNING PLATFORM
+   Version 5.0
+   Correct Supabase Relationships
+   Exams → Subjects → Chapters → Chapter Learning
+============================================================ */
 
 "use strict";
 
-/* ==========================================================
+/* ------------------------------------------------------------
    1. SUPABASE CONFIGURATION
-========================================================== */
+------------------------------------------------------------ */
 
-const SUPABASE_URL = "https://mtxkvupfczhglaqghcbc.supabase.co";
+const SUPABASE_URL =
+    "https://mtxkvupfczhglaqghcbc.supabase.co";
+
+/*
+ IMPORTANT:
+ Replace the value below with the REAL existing Supabase
+ publishable/anon key from your project.
+
+ Supabase Dashboard → Project Settings → API Keys.
+
+ Never use the service_role / secret key in browser code.
+*/
 
 const SUPABASE_ANON_KEY =
-    "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
+    "PASTE_YOUR_EXISTING_SUPABASE_PUBLIC_KEY_HERE";
 
-let supabaseClient = null;
-let examData = [];
-let subjectData = [];
+const CHAPTER_PAGE = "chapter-learning.html";
+
+let db = null;
+let exams = [];
 let selectedExam = null;
 let selectedSubject = null;
-let toastTimer = null;
+let chapters = [];
+let chapterSearch = "";
 
-const EXAM_DEFAULTS = [
-    {
-        exam_name: "JEE Main",
-        exam_slug: "jee-main",
-        description: "Prepare for engineering entrance examinations.",
-        symbol: "J"
-    },
-    {
-        exam_name: "JEE Advanced",
-        exam_slug: "jee-advanced",
-        description: "Challenge yourself with advanced concepts.",
-        symbol: "A"
-    },
-    {
-        exam_name: "NEET UG",
-        exam_slug: "neet-ug",
-        description: "Build your foundation for medical entrance.",
-        symbol: "N"
-    }
-];
-
-/* ==========================================================
-   2. INITIALIZATION
-========================================================== */
+/* ------------------------------------------------------------
+   2. START APPLICATION
+------------------------------------------------------------ */
 
 document.addEventListener("DOMContentLoaded", async () => {
+    document.getElementById("year")?.replaceChildren(
+        document.createTextNode(String(new Date().getFullYear()))
+    );
+
     initializeSupabase();
     initializeNavigation();
-    initializeScrollEffects();
-    initializeRevealAnimations();
+    initializeScrollProgress();
+    initializeReveal();
     initializeModal();
-    initializeLoginDemo();
+    initializeTimeline();
+    initializeChapterSearch();
 
-    document.getElementById("year").textContent =
-        new Date().getFullYear();
-
-    await loadExaminations();
+    await loadExams();
 });
 
-/* ==========================================================
-   3. SUPABASE CLIENT
-========================================================== */
+/* ------------------------------------------------------------
+   3. SUPABASE INITIALIZATION
+------------------------------------------------------------ */
 
 function initializeSupabase() {
+    const message = document.getElementById("sv-dashboard-message");
+
     try {
         if (!window.supabase) {
-            throw new Error("Supabase library was not loaded.");
+            throw new Error("Supabase JavaScript library is missing.");
         }
 
-        supabaseClient = window.supabase.createClient(
+        if (
+            !SUPABASE_ANON_KEY ||
+            SUPABASE_ANON_KEY === "PASTE_YOUR_EXISTING_SUPABASE_PUBLIC_KEY_HERE"
+        ) {
+            throw new Error(
+                "Your existing Supabase public key has not been added."
+            );
+        }
+
+        db = window.supabase.createClient(
             SUPABASE_URL,
             SUPABASE_ANON_KEY
         );
 
-        console.log("STUDYVERSE AI: Supabase client initialized.");
+        console.log("STUDYVERSE AI: Supabase initialized.");
+
     } catch (error) {
-        console.error("Supabase initialization failed:", error);
-        showMessage("Database connection could not be initialized.");
+        console.error("Supabase initialization:", error);
+        setMessage(error.message, "error");
     }
 }
 
-/* ==========================================================
+/* ------------------------------------------------------------
    4. NAVIGATION
-========================================================== */
+------------------------------------------------------------ */
 
 function initializeNavigation() {
-    const menuToggle = document.getElementById("menuToggle");
-    const navLinks = document.getElementById("navLinks");
+    const toggle = document.getElementById("menuToggle");
+    const navigation = document.getElementById("navLinks");
 
-    if (menuToggle && navLinks) {
-        menuToggle.addEventListener("click", () => {
-            navLinks.classList.toggle("open");
-            menuToggle.classList.toggle("active");
-        });
+    toggle?.addEventListener("click", () => {
+        navigation?.classList.toggle("open");
+        toggle.classList.toggle("active");
+    });
 
-        navLinks.querySelectorAll("a").forEach(link => {
-            link.addEventListener("click", () => {
-                navLinks.classList.remove("open");
-                menuToggle.classList.remove("active");
-            });
-        });
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-        link.addEventListener("click", event => {
-            const target = document.querySelector(link.getAttribute("href"));
-
-            if (target) {
-                event.preventDefault();
-                target.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-            }
+    navigation?.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => {
+            navigation.classList.remove("open");
+            toggle?.classList.remove("active");
         });
     });
 }
 
-/* ==========================================================
-   5. SCROLL EFFECTS
-========================================================== */
+/* ------------------------------------------------------------
+   5. SCROLL PROGRESS
+------------------------------------------------------------ */
 
-function initializeScrollEffects() {
+function initializeScrollProgress() {
+    const bar = document.getElementById("pageProgress");
     const navbar = document.getElementById("navbar");
-    const progress = document.getElementById("pageProgress");
 
-    function updateScroll() {
-        const scrollTop =
-            window.scrollY || document.documentElement.scrollTop;
-
-        const totalHeight =
+    window.addEventListener("scroll", () => {
+        const maximum =
             document.documentElement.scrollHeight - window.innerHeight;
 
-        if (navbar) {
-            navbar.classList.toggle("scrolled", scrollTop > 30);
-        }
+        const percentage = maximum > 0
+            ? (window.scrollY / maximum) * 100
+            : 0;
 
-        if (progress) {
-            const percentage =
-                totalHeight > 0 ? (scrollTop / totalHeight) * 100 : 0;
+        if (bar) bar.style.width = percentage + "%";
 
-            progress.style.width = percentage + "%";
-        }
-    }
-
-    window.addEventListener("scroll", updateScroll, { passive: true });
-    updateScroll();
-
-    const sections = document.querySelectorAll("main section[id]");
-    const links = document.querySelectorAll(".nav-link");
-
-    if ("IntersectionObserver" in window) {
-        const sectionObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    links.forEach(link => {
-                        link.classList.toggle(
-                            "active",
-                            link.getAttribute("href") ===
-                                "#" + entry.target.id
-                        );
-                    });
-                }
-            });
-        }, { rootMargin: "-35% 0px -55% 0px" });
-
-        sections.forEach(section => sectionObserver.observe(section));
-    }
+        navbar?.classList.toggle("scrolled", window.scrollY > 30);
+    }, { passive: true });
 }
 
-/* ==========================================================
-   6. SCROLL REVEAL ANIMATIONS
-========================================================== */
+/* ------------------------------------------------------------
+   6. REVEAL ANIMATIONS
+------------------------------------------------------------ */
 
-function initializeRevealAnimations() {
+function initializeReveal() {
     const elements = document.querySelectorAll(".reveal");
 
     if (!("IntersectionObserver" in window)) {
@@ -185,277 +146,213 @@ function initializeRevealAnimations() {
         return;
     }
 
-    const observer = new IntersectionObserver((entries, currentObserver) => {
+    const observer = new IntersectionObserver((entries, current) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add("visible");
-                currentObserver.unobserve(entry.target);
+                current.unobserve(entry.target);
             }
         });
-    }, {
-        threshold: 0.12,
-        rootMargin: "0px 0px -35px 0px"
-    });
+    }, { threshold: 0.1 });
 
     elements.forEach(element => observer.observe(element));
 }
 
-/* ==========================================================
+/* ------------------------------------------------------------
    7. LOAD EXAMINATIONS
-========================================================== */
+------------------------------------------------------------ */
 
-async function loadExaminations() {
+async function loadExams() {
     const container = document.getElementById("sv-exam-cards");
 
     if (!container) return;
 
-    container.innerHTML = `
-        <div class="loading-card">
-            <div class="loader"></div>
-            <p>Loading examinations...</p>
-        </div>
-    `;
-
-    if (!supabaseClient) {
-        renderExaminations(EXAM_DEFAULTS, false);
-        showMessage("Demo examination cards are displayed. Database unavailable.");
+    if (!db) {
+        showError(
+            container,
+            "Supabase is not configured. Add your existing public API key."
+        );
         return;
     }
 
+    showLoading(container, "Loading examinations...");
+
     try {
-        const { data, error } = await supabaseClient
+        const { data, error } = await db
             .from("exams")
-            .select("*");
+            .select("id,name,slug,description,is_published")
+            .eq("is_published", true)
+            .order("name");
 
         if (error) throw error;
 
-        if (!data || data.length === 0) {
-            renderExaminations(EXAM_DEFAULTS, false);
-            showMessage("No examination records found in the database.");
+        if (!data?.length) {
+            showEmpty(container, "No published examinations are available.");
             return;
         }
 
-        examData = data.map((exam, index) => ({
-            ...exam,
-            exam_name: getExamName(exam),
-            exam_slug: getExamSlug(exam),
-            symbol: getExamSymbol(exam, index)
-        }));
+        exams = data;
 
-        renderExaminations(examData, true);
+        renderExams(exams);
 
-        console.log("Examinations loaded:", examData.length);
-        showMessage("Examinations loaded successfully!");
+        setMessage(
+            `${exams.length} examinations loaded successfully.`,
+            "success"
+        );
+
+        console.log("Examinations:", exams);
 
     } catch (error) {
-        console.error("Examination loading error:", error);
-
-        renderExaminations(EXAM_DEFAULTS, false);
-        showMessage("Database examination loading failed. Showing demo cards.");
+        console.error("Exam query failed:", error);
+        showError(container, error.message);
+        setMessage("Unable to load examinations.", "error");
     }
 }
 
-function getExamName(exam) {
-    return exam.exam_name ||
-        exam.name ||
-        exam.title ||
-        "Examination";
-}
+/* ------------------------------------------------------------
+   8. DISPLAY EXAMINATIONS
+------------------------------------------------------------ */
 
-function getExamSlug(exam) {
-    return exam.exam_slug ||
-        exam.slug ||
-        slugify(getExamName(exam));
-}
-
-function getExamSymbol(exam, index) {
-    const symbols = ["J", "A", "N"];
-    return (getExamName(exam)[0] || symbols[index % 3]).toUpperCase();
-}
-
-function slugify(value) {
-    return String(value || "")
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
-}
-
-/* ==========================================================
-   8. RENDER EXAMINATIONS
-========================================================== */
-
-function renderExaminations(exams, fromDatabase) {
+function renderExams(items) {
     const container = document.getElementById("sv-exam-cards");
+    container.replaceChildren();
 
-    container.innerHTML = "";
+    const symbols = {
+        "jee-main": "J",
+        "jee-advanced": "A",
+        "neet-ug": "N"
+    };
 
-    exams.forEach((exam, index) => {
-        const name = exam.exam_name || getExamName(exam);
-        const slug = exam.exam_slug || getExamSlug(exam);
-
-        const description =
-            exam.description ||
-            EXAM_DEFAULTS.find(item => item.exam_slug === slug)?.description ||
-            "Explore examination-wise learning resources.";
-
+    items.forEach((exam, index) => {
         const card = document.createElement("article");
+
         card.className = "exam-card reveal visible";
-        card.style.animationDelay = `${index * 120}ms`;
+        card.style.animationDelay = `${index * 100}ms`;
+        card.tabIndex = 0;
+        card.setAttribute("role", "button");
 
-        card.innerHTML = `
-            <div class="exam-icon">${escapeHTML(
-                exam.symbol || getExamSymbol(exam, index)
-            )}</div>
-            <h3>${escapeHTML(name)}</h3>
-            <p>${escapeHTML(description)}</p>
-            <div class="card-action">Explore subjects <span>→</span></div>
-            <span class="card-arrow">↗</span>
-        `;
+        const icon = createElement(
+            "div",
+            "exam-icon",
+            symbols[exam.slug] || "✦"
+        );
 
-        card.addEventListener("click", () => {
-            selectExamination(exam, fromDatabase);
+        const title = createElement("h3", "", exam.name);
+        const description = createElement(
+            "p",
+            "",
+            exam.description || "Explore your examination syllabus."
+        );
+
+        const action = createElement(
+            "div",
+            "card-action",
+            "Explore subjects →"
+        );
+
+        card.append(icon, title, description, action);
+
+        const select = () => selectExam(exam);
+
+        card.addEventListener("click", select);
+        card.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                select();
+            }
         });
 
         container.appendChild(card);
     });
 }
 
-/* ==========================================================
+/* ------------------------------------------------------------
    9. SELECT EXAMINATION
-========================================================== */
+------------------------------------------------------------ */
 
-async function selectExamination(exam, fromDatabase = true) {
+async function selectExam(exam) {
     selectedExam = exam;
+    selectedSubject = null;
+    chapters = [];
 
     const subjectArea = document.getElementById("sv-subject-area");
     const chapterArea = document.getElementById("sv-chapter-area");
 
-    subjectArea.classList.remove("hidden");
-    chapterArea.classList.add("hidden");
+    subjectArea?.classList.remove("hidden");
+    chapterArea?.classList.add("hidden");
 
-    document.getElementById("sv-selected-exam").textContent =
-        exam.exam_name || getExamName(exam);
+    const title = document.getElementById("sv-selected-exam");
+    if (title) title.textContent = exam.name;
 
-    document.getElementById("sv-subject-cards").innerHTML = `
-        <div class="loading-card">
-            <div class="loader"></div>
-            <p>Loading subjects...</p>
-        </div>
-    `;
+    const container = document.getElementById("sv-subject-cards");
 
-    subjectArea.scrollIntoView({
+    showLoading(container, `Loading ${exam.name} subjects...`);
+
+    subjectArea?.scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
 
-    if (!fromDatabase) {
-        renderSubjectCards(getDemoSubjects(exam));
-        return;
-    }
-
     await loadSubjects(exam);
 }
 
-/* ==========================================================
-   10. LOAD SUBJECTS
-========================================================== */
+/* ------------------------------------------------------------
+   10. LOAD SUBJECTS — CORRECT RELATIONSHIP
+------------------------------------------------------------ */
 
 async function loadSubjects(exam) {
     const container = document.getElementById("sv-subject-cards");
 
-    const examName = exam.exam_name || getExamName(exam);
-    const examSlug = exam.exam_slug || getExamSlug(exam);
-
     try {
-        // First attempt: existing exam-subject mapping table.
-        let result = await supabaseClient
-            .from("exam_subjects")
-            .select("*")
-            .eq("exam_slug", examSlug);
+        /*
+          Correct database relationship:
 
-        let records = result.data;
+          exams.id = subjects.exam_id
 
-        if (result.error || !records || records.length === 0) {
-            // Fallback: subjects table.
-            result = await supabaseClient
-                .from("subjects")
-                .select("*");
+          We filter subjects directly using the selected exam UUID.
+          No exam_subjects table or exam_slug column is assumed.
+        */
 
-            if (result.error) throw result.error;
+        const { data, error } = await db
+            .from("subjects")
+            .select("id,exam_id,name,slug,is_published")
+            .eq("exam_id", exam.id)
+            .eq("is_published", true)
+            .order("name");
 
-            records = (result.data || []).filter(subject => {
-                const subjectExamSlug =
-                    subject.exam_slug ||
-                    slugify(subject.exam_name || "");
+        if (error) throw error;
 
-                const subjectExamName =
-                    String(subject.exam_name || "").toLowerCase();
-
-                return subjectExamSlug === examSlug ||
-                    subjectExamName === examName.toLowerCase();
-            });
-        }
-
-        if (!records || records.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    No subjects found for ${escapeHTML(examName)}.
-                </div>
-            `;
-            showMessage("No subjects are currently available.");
+        if (!data?.length) {
+            showEmpty(
+                container,
+                `No published subjects found for ${exam.name}.`
+            );
             return;
         }
 
-        subjectData = records.map((subject, index) => ({
-            id: subject.subject_id || subject.id,
-            subject_name:
-                subject.subject_name ||
-                subject.name ||
-                "Subject",
-            subject_slug:
-                subject.subject_slug ||
-                subject.slug ||
-                slugify(subject.subject_name || subject.name),
-            symbol: getSubjectSymbol(
-                subject.subject_name || subject.name,
-                index
-            )
-        }));
+        renderSubjects(data);
 
-        renderSubjectCards(subjectData);
-        showMessage("Subjects loaded successfully!");
+        setMessage(
+            `${data.length} subjects loaded for ${exam.name}.`,
+            "success"
+        );
+
+        console.log("Subjects:", data);
 
     } catch (error) {
-        console.error("Subject loading error:", error);
-
-        container.innerHTML = `
-            <div class="empty-state">
-                Unable to load subjects. Please check the database connection and table permissions.
-            </div>
-        `;
-
-        showMessage("Subject loading failed. Check the browser console.");
+        console.error("Subject query failed:", error);
+        showError(container, error.message);
     }
 }
 
-function getDemoSubjects(exam) {
-    const name = exam.exam_name || getExamName(exam);
-    const isNEET = name.toLowerCase().includes("neet");
+/* ------------------------------------------------------------
+   11. DISPLAY SUBJECTS
+------------------------------------------------------------ */
 
-    const names = isNEET
-        ? ["Physics", "Chemistry", "Biology"]
-        : ["Physics", "Chemistry", "Mathematics"];
+function renderSubjects(subjects) {
+    const container = document.getElementById("sv-subject-cards");
+    container.replaceChildren();
 
-    return names.map((subject, index) => ({
-        id: null,
-        subject_name: subject,
-        subject_slug: slugify(subject),
-        symbol: getSubjectSymbol(subject, index)
-    }));
-}
-
-function getSubjectSymbol(name, index) {
     const symbols = {
         physics: "Φ",
         chemistry: "⚗",
@@ -463,184 +360,221 @@ function getSubjectSymbol(name, index) {
         biology: "♧"
     };
 
-    return symbols[String(name || "").toLowerCase()] ||
-        ["✦", "◈", "◎"][index % 3];
-}
-
-/* ==========================================================
-   11. RENDER SUBJECTS
-========================================================== */
-
-function renderSubjectCards(subjects) {
-    const container = document.getElementById("sv-subject-cards");
-
-    container.innerHTML = "";
-
     subjects.forEach((subject, index) => {
         const card = document.createElement("button");
 
         card.type = "button";
         card.className = "subject-card reveal visible";
-        card.style.animationDelay = `${index * 100}ms`;
+        card.style.animationDelay = `${index * 80}ms`;
 
-        card.innerHTML = `
-            <div class="subject-symbol">${escapeHTML(subject.symbol)}</div>
-            <h4>${escapeHTML(subject.subject_name)}</h4>
-            <p>Explore chapters →</p>
-        `;
+        const name = subject.name;
 
-        card.addEventListener("click", () => {
-            selectSubject(subject);
-        });
+        card.append(
+            createElement(
+                "div",
+                "subject-symbol",
+                symbols[String(name).toLowerCase()] || "✦"
+            ),
+            createElement("h4", "", name),
+            createElement("p", "", "Explore chapters →")
+        );
+
+        card.addEventListener("click", () => selectSubject(subject));
 
         container.appendChild(card);
     });
 }
 
-/* ==========================================================
+/* ------------------------------------------------------------
    12. SELECT SUBJECT
-========================================================== */
+------------------------------------------------------------ */
 
 async function selectSubject(subject) {
     selectedSubject = subject;
+    chapters = [];
 
-    const chapterArea = document.getElementById("sv-chapter-area");
+    const area = document.getElementById("sv-chapter-area");
+    const label = document.getElementById("sv-selected-subject");
+    const container = document.getElementById("sv-chapter-cards");
 
-    chapterArea.classList.remove("hidden");
+    area?.classList.remove("hidden");
 
-    document.getElementById("sv-selected-subject").textContent =
-        subject.subject_name;
+    if (label) label.textContent = subject.name;
 
-    document.getElementById("sv-chapter-cards").innerHTML = `
-        <div class="loading-card">
-            <div class="loader"></div>
-            <p>Discovering chapters...</p>
-        </div>
-    `;
+    showLoading(container, `Loading ${subject.name} chapters...`);
 
-    chapterArea.scrollIntoView({
+    area?.scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
 
-    if (!subject.id) {
-        document.getElementById("sv-chapter-cards").innerHTML = `
-            <div class="empty-state">
-                Demo subjects do not contain database chapters.
-                Select an examination loaded from your database.
-            </div>
-        `;
-        return;
-    }
-
     await loadChapters(subject);
 }
 
-/* ==========================================================
-   13. LOAD PUBLISHED CHAPTERS
-========================================================== */
+/* ------------------------------------------------------------
+   13. LOAD CHAPTERS — CORRECT RELATIONSHIP
+------------------------------------------------------------ */
 
 async function loadChapters(subject) {
     const container = document.getElementById("sv-chapter-cards");
 
     try {
-        const { data, error } = await supabaseClient
+        /*
+          Correct database relationship:
+
+          subjects.id = chapters.subject_id
+
+          Only published chapters are displayed.
+        */
+
+        const { data, error } = await db
             .from("chapters")
-            .select(`
-                id,
-                subject_id,
-                chapter_name,
-                chapter_number,
-                description,
-                is_published
-            `)
+            .select(
+                "id,subject_id,chapter_name,chapter_number,description,is_published"
+            )
             .eq("subject_id", subject.id)
             .eq("is_published", true)
             .order("chapter_number", { ascending: true });
 
         if (error) throw error;
 
-        if (!data || data.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    No published chapters are available for
-                    ${escapeHTML(subject.subject_name)} yet.
-                </div>
-            `;
-            showMessage("No published chapters found.");
+        if (!data?.length) {
+            showEmpty(
+                container,
+                `No published chapters found in ${subject.name}.`
+            );
             return;
         }
 
-        renderChapterCards(data);
-        showMessage(`${data.length} published chapters loaded successfully!`);
+        chapters = data;
+        renderChapters(chapters);
 
-        console.log("Published chapters:", data.length);
+        setMessage(
+            `${data.length} chapters loaded successfully.`,
+            "success"
+        );
+
+        console.log("Published chapters:", chapters);
 
     } catch (error) {
-        console.error("Chapter loading error:", error);
+        console.error("Chapter query failed:", error);
 
-        container.innerHTML = `
-            <div class="empty-state">
-                Unable to load chapters. Please check Supabase permissions.
-            </div>
-        `;
-
-        showMessage("Chapter loading failed.");
+        showError(
+            container,
+            "Chapter loading failed: " + error.message
+        );
     }
 }
 
-/* ==========================================================
-   14. RENDER CHAPTERS
-========================================================== */
+/* ------------------------------------------------------------
+   14. DISPLAY CHAPTERS
+------------------------------------------------------------ */
 
-function renderChapterCards(chapters) {
+function renderChapters(items) {
     const container = document.getElementById("sv-chapter-cards");
+    container.replaceChildren();
 
-    container.innerHTML = "";
-
-    chapters.forEach((chapter, index) => {
+    items.forEach((chapter, index) => {
         const card = document.createElement("article");
 
         card.className = "chapter-card reveal visible";
-        card.style.animationDelay = `${index * 90}ms`;
+        card.style.animationDelay = `${index * 60}ms`;
 
-        const number = chapter.chapter_number ?? index + 1;
+        card.append(
+            createElement(
+                "div",
+                "chapter-index",
+                String(chapter.chapter_number ?? index + 1).padStart(2, "0")
+            ),
+            createElement("h4", "", chapter.chapter_name),
+            createElement(
+                "p",
+                "",
+                chapter.description || "Explore the complete chapter."
+            ),
+            createElement(
+                "span",
+                "chapter-action",
+                "Start learning →"
+            )
+        );
 
-        card.innerHTML = `
-            <div class="chapter-index">${escapeHTML(number)}</div>
-            <h4>${escapeHTML(chapter.chapter_name)}</h4>
-            <p>${escapeHTML(
-                chapter.description || "Explore this chapter and master its concepts."
-            )}</p>
-            <span class="chapter-action">Start learning →</span>
-        `;
-
-        card.addEventListener("click", () => {
-            openChapter(chapter);
-        });
+        card.addEventListener("click", () => openChapter(chapter));
 
         container.appendChild(card);
     });
 }
 
-/* ==========================================================
-   15. OPEN CHAPTER LEARNING PAGE
-========================================================== */
+/* ------------------------------------------------------------
+   15. CHAPTER SEARCH
+------------------------------------------------------------ */
+
+function initializeChapterSearch() {
+    const input = document.getElementById("sv-chapter-search");
+
+    input?.addEventListener("input", event => {
+        chapterSearch = event.target.value.toLowerCase().trim();
+
+        if (!chapters.length) return;
+
+        const filtered = chapters.filter(chapter =>
+            chapter.chapter_name.toLowerCase().includes(chapterSearch)
+        );
+
+        if (!filtered.length) {
+            showEmpty(
+                document.getElementById("sv-chapter-cards"),
+                "No chapters match your search."
+            );
+            return;
+        }
+
+        renderChapters(filtered);
+    });
+}
+
+/* ------------------------------------------------------------
+   16. OPEN CHAPTER LEARNING PAGE
+------------------------------------------------------------ */
 
 function openChapter(chapter) {
-    if (!chapter.id) {
-        showToast("Chapter ID is unavailable.");
+    if (!chapter?.id) {
+        setMessage("This chapter does not have a valid ID.", "error");
         return;
     }
 
-    window.location.href =
-        "./chapter.html?chapter_id=" +
-        encodeURIComponent(chapter.id);
+    const params = new URLSearchParams({
+        chapter_id: chapter.id,
+        exam_id: selectedExam.id,
+        subject_id: selectedSubject.id
+    });
+
+    window.location.href = `${CHAPTER_PAGE}?${params.toString()}`;
 }
 
-/* ==========================================================
-   16. LOGIN MODAL — DEMO ONLY
-========================================================== */
+/* ------------------------------------------------------------
+   17. LEARNING JOURNEY TIMELINE
+------------------------------------------------------------ */
+
+function initializeTimeline() {
+    document.querySelectorAll("[data-journey-step]").forEach(step => {
+        step.addEventListener("click", () => {
+            const destination = step.dataset.destination;
+
+            if (destination) {
+                document.getElementById(destination)?.scrollIntoView({
+                    behavior: "smooth"
+                });
+            }
+        });
+    });
+}
+
+/* ------------------------------------------------------------
+   18. LOGIN MODAL
+   Existing login UI only; real authentication is a separate
+   integration and must not be simulated as successful.
+------------------------------------------------------------ */
 
 function initializeModal() {
     const modal = document.getElementById("loginModal");
@@ -648,61 +582,87 @@ function initializeModal() {
 
     document.querySelectorAll("[data-open-login]").forEach(button => {
         button.addEventListener("click", () => {
-            modal.classList.add("active");
+            modal?.classList.add("active");
             document.body.classList.add("modal-open");
         });
     });
 
     function closeModal() {
-        modal.classList.remove("active");
+        modal?.classList.remove("active");
         document.body.classList.remove("modal-open");
     }
 
-    close.addEventListener("click", closeModal);
+    close?.addEventListener("click", closeModal);
 
-    modal.addEventListener("click", event => {
+    modal?.addEventListener("click", event => {
         if (event.target === modal) closeModal();
     });
 
     document.addEventListener("keydown", event => {
         if (event.key === "Escape") closeModal();
     });
-}
 
-function initializeLoginDemo() {
-    const form = document.getElementById("loginForm");
-
-    form.addEventListener("submit", event => {
+    document.getElementById("loginForm")?.addEventListener("submit", event => {
         event.preventDefault();
-
-        const name =
-            document.getElementById("studentName").value.trim();
-
-        const email =
-            document.getElementById("studentEmail").value.trim();
-
-        if (!name || !email) return;
-
-        // Only the display name is stored.
-        // Passwords are never saved.
-        localStorage.setItem("sv_demo_name", name);
-
-        document.getElementById("loginModal").classList.remove("active");
-        document.body.classList.remove("modal-open");
-
-        showToast(`Welcome to STUDYVERSE AI, ${name}!`);
-        form.reset();
+        showToast("Real student authentication is being integrated next.");
     });
 }
 
-/* ==========================================================
-   17. MESSAGE SYSTEM
-========================================================== */
+/* ------------------------------------------------------------
+   19. UI HELPERS
+------------------------------------------------------------ */
 
-function showMessage(message) {
+function createElement(tag, className, text) {
+    const element = document.createElement(tag);
+
+    if (className) element.className = className;
+    element.textContent = String(text ?? "");
+
+    return element;
+}
+
+function showLoading(container, message) {
+    if (!container) return;
+
+    container.replaceChildren();
+
+    const box = createElement("div", "loading-card", "");
+    const loader = createElement("div", "loader", "");
+    const text = createElement("p", "", message);
+
+    box.append(loader, text);
+    container.appendChild(box);
+}
+
+function showEmpty(container, message) {
+    if (!container) return;
+
+    container.replaceChildren(
+        createElement("div", "empty-state", message)
+    );
+}
+
+function showError(container, message) {
+    if (!container) return;
+
+    const box = createElement("div", "empty-state", "");
+    const title = createElement("strong", "", "Something needs attention");
+    const detail = createElement("p", "", message);
+
+    detail.style.marginTop = "10px";
+    detail.style.overflowWrap = "anywhere";
+
+    box.append(title, detail);
+    container.replaceChildren(box);
+}
+
+function setMessage(message, type = "info") {
     const element = document.getElementById("sv-dashboard-message");
 
-    if (element) element.textContent = message;
+    if (!element) return;
+
+    element.textContent = message;
+    element.dataset.status = type;
 }
 
 function showToast(message) {
@@ -713,31 +673,13 @@ function showToast(message) {
     toast.textContent = message;
     toast.classList.add("show");
 
-    clearTimeout(toastTimer);
+    window.clearTimeout(showToast.timer);
 
-    toastTimer = setTimeout(() => {
+    showToast.timer = window.setTimeout(() => {
         toast.classList.remove("show");
     }, 3000);
 }
 
-/* ==========================================================
-   18. SECURITY — SAFE HTML TEXT
-========================================================== */
-
-function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, character => {
-        const entities = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        };
-
-        return entities[character];
-    });
-}
-
-/* ==========================================================
-   END OF STUDYVERSE AI — VERSION 4.0
-========================================================== */
+/* ------------------------------------------------------------
+   END — STUDYVERSE AI VERSION 5.0
+------------------------------------------------------------ */
