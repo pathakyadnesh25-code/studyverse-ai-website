@@ -2278,3 +2278,54 @@ footer {
     }
 
 }
+
+
+/* ==========================================================
+   HOMEPAGE DASHBOARD PREVIEW + SEPARATE STUDENT DASHBOARD
+========================================================== */
+.home-dashboard-preview{padding:58px 0 72px;position:relative}
+.dashboard-preview-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center;padding:30px;border:1px solid var(--border);border-radius:24px;background:linear-gradient(135deg,rgba(128,85,255,.12),rgba(85,217,255,.06));box-shadow:var(--shadow)}
+.dashboard-preview-copy h2{font-family:Outfit,sans-serif;font-size:clamp(28px,3.5vw,42px);line-height:1.15;margin:10px 0}
+.dashboard-preview-copy p{color:var(--muted);max-width:540px;margin-bottom:22px}
+.dashboard-preview-live{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.preview-clock-block,.preview-study-block{padding:22px;border:1px solid var(--border);border-radius:18px;background:rgba(7,11,25,.55);display:flex;flex-direction:column;gap:7px;min-width:0}
+.preview-label,.daily-card-kicker{font-size:10px;letter-spacing:1.2px;font-weight:800;color:var(--muted)}
+.preview-clock-block strong,.preview-study-block strong{font-family:Outfit,sans-serif;font-size:clamp(23px,3vw,34px);color:var(--white);font-variant-numeric:tabular-nums}
+.preview-clock-block span:last-child,.preview-study-block span:last-child{font-size:12px;color:var(--muted)}
+.student-dashboard-page{min-height:70vh}
+.dashboard-page-hero{padding:70px 0 30px}
+.dashboard-page-hero h1{font-family:Outfit,sans-serif;font-size:clamp(38px,6vw,64px);line-height:1.06;margin:14px 0}
+.dashboard-page-hero p{color:var(--muted);margin-bottom:22px}
+.daily-study-panel{padding-top:24px}
+.daily-study-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:18px;margin:28px 0}
+.daily-time-card,.daily-activity-card,.daily-target-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;box-shadow:var(--shadow)}
+.daily-time-card>strong{display:block;font-family:Outfit,sans-serif;font-size:clamp(34px,5vw,54px);margin:12px 0}
+.daily-time-card p,.daily-target-card p{color:var(--muted);font-size:13px}
+.daily-live-clock{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:14px;margin-top:22px;color:var(--muted);font-size:13px}
+.daily-live-clock strong{color:var(--cyan);font-variant-numeric:tabular-nums}
+.daily-panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:15px}
+.daily-panel-heading h3{font-family:Outfit,sans-serif;font-size:22px;margin:5px 0}
+.daily-panel-heading>span{color:var(--muted);font-size:12px}
+.today-activity-list{display:grid;gap:12px;max-height:260px;overflow:auto}
+.today-activity-row{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+.activity-dot{width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:var(--cyan);margin-top:6px;box-shadow:0 0 12px rgba(85,217,255,.6)}
+.today-activity-row div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.today-activity-row strong{font-size:13px;font-weight:600}
+.today-activity-row small{color:var(--muted);font-size:11px}
+.daily-target-card{margin-top:20px}
+.target-progress{display:flex;flex-direction:column;text-align:right}
+.target-progress strong{font-size:22px;color:var(--cyan)}
+.target-progress span{font-size:11px;color:var(--muted)}
+.target-form{display:flex;gap:10px;margin:20px 0}
+.target-form input{flex:1;min-width:0;background:var(--bg-soft);color:var(--white);border:1px solid var(--border);border-radius:12px;padding:13px 15px;font:inherit;outline:none}
+.target-form input:focus{border-color:var(--purple)}
+.target-list{display:grid;gap:8px}
+.target-row{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.025);cursor:pointer}
+.target-row input{accent-color:var(--purple);width:17px;height:17px}
+.target-row span{flex:1;font-size:14px}
+.target-row.is-done span{text-decoration:line-through;color:var(--muted)}
+.target-delete{border:0;background:transparent;color:var(--muted);font-size:22px;cursor:pointer;padding:0 5px}
+.target-delete:hover{color:#ff7b91}
+.tracker-storage-note{font-size:12px;color:var(--muted);margin:16px 0 0}
+@media(max-width:760px){.dashboard-preview-inner,.daily-study-grid{grid-template-columns:1fr}.dashboard-preview-live{grid-template-columns:1fr 1fr}.dashboard-preview-inner{padding:22px}.target-form{flex-direction:column}.dashboard-page-hero{padding-top:45px}}
+@media(max-width:420px){.dashboard-preview-live{grid-template-columns:1fr}.daily-time-card,.daily-activity-card,.daily-target-card{padding:18px}}
