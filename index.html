@@ -19,6 +19,152 @@
 
 <body>
 
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+  <div class="container nav-inner">
+
+    <a href="#home" class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <path d="M5 15L20 7L35 15L20 23L5 15Z" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M11 19V27C16 32 24 32 29 27V19" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M35 15V25" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      STUDYVERSE <span>AI</span>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#exams">Examinations</a>
+      <a href="#features">Features</a>
+      <a href="#courses">Courses</a>
+      <a href="#how">How it works</a>
+      <a href="student-dashboard.html" class="student-only" hidden>My Dashboard</a>
+    </nav>
+
+    <div class="nav-actions">
+
+      <button class="btn btn-outline" id="loginBtn" type="button">
+        Log in
+      </button>
+
+      <button class="btn btn-primary student-only" id="profileBtn" type="button" hidden>
+        My Profile
+      </button>
+
+      <button class="btn btn-outline student-only" id="logoutBtn" type="button" hidden>
+        Log out
+      </button>
+
+      <a href="#exams" class="btn btn-primary guest-only" id="getStartedBtn">
+        Get Started →
+      </a>
+
+      <button class="menu-btn" id="menuToggle" aria-label="Open navigation" aria-expanded="false">
+        ☰
+      </button>
+
+    </div>
+  </div>
+</header>
+
+
+<main>
+
+<!-- ================= HERO SECTION ================= -->
+
+<section class="container hero" id="home">
+
+  <div class="hero-content">
+
+    <div class="eyebrow">
+      <span class="live-dot"></span>
+      THE FUTURE OF SMART LEARNING
+    </div>
+
+    <h1>
+      Learn Smarter.<br>
+      Prepare Better.<br>
+      <span class="gradient-text">Achieve More.</span>
+    </h1>
+
+    <p class="hero-description">
+      Your all-in-one learning destination for JEE Main, JEE Advanced and NEET UG.
+      Understand difficult concepts, practise questions and move closer to your dream college.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#exams" class="btn btn-primary">Explore Learning →</a>
+      <a href="#features" class="btn btn-outline">Discover Features</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <strong>3</strong>
+        <span>Exam categories</span>
+      </div>
+
+      <div class="stat">
+        <strong>24/7</strong>
+        <span>Learn at your pace</span>
+      </div>
+
+      <div class="stat">
+        <strong>AI</strong>
+        <span>Smart learning vision</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-visual" aria-label="AI learning dashboard illustration">
+
+    <div class="visual-glow"></div>
+    <div class="orbit"></div>
+    <div class="orbit two"></div>
+
+    <div class="float-bubble bubble-one">✨ AI Powered Learning</div>
+    <div class="float-bubble bubble-two">📈 Keep improving!</div>
+
+    <div class="learning-card">
+
+      <div class="card-top">
+        <div class="brand" style="font-size:13px">
+          <div class="brand-icon" style="width:29px;height:29px;border-radius:8px">✦</div>
+          STUDYVERSE
+        </div>
+        <span class="ai-chip">AI LEARNING</span>
+      </div>
+
+      <div class="visual-title">Your Learning Space</div>
+      <div class="visual-sub">Build knowledge, one concept at a time.</div>
+
+      <div class="progress-track">
+        <div class="progress-value"></div>
+      </div>
+
+      <div class="progress-label">
+        <span>Learning preview</span>
+        <strong>AI</strong>
+      </div>
+
+      <div class="subject-grid">
+        <div class="subject"><span>⚛️</span><small>Physics</small></div>
+        <div class="subject"><span>🧪</span><small>Chemistry</small></div>
+        <div class="subject"><span>📐</span><small>Maths</small></div>
+      </div>
+
+      <div style="margin-top:22px;padding:13px;border-radius:11px;background:rgba(146,92,255,.12);font-size:11px;color:#d9c9ff">
+        ✨ Your next achievement starts here.
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
 
 <!-- ================= STUDENT DASHBOARD PREVIEW ================= -->
 <section class="home-dashboard-preview" id="student-dashboard-preview">
@@ -43,6 +189,13 @@
     </div>
   </div>
 </section>
+
+
+
+
+<!-- ================= STUDENT OVERVIEW DASHBOARD ================= -->
+
+<!-- ================= DETAILED STUDENT DASHBOARD ================= -->
 
 <!-- ================= EXAMINATION SECTION ================= -->
 
