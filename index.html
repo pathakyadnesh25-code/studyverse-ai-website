@@ -2,502 +2,999 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#080b18">
-    <meta name="description" content="STUDYVERSE AI - Your intelligent learning destination for JEE Main, JEE Advanced and NEET UG.">
-    <title>STUDYVERSE AI | Learn Smarter. Achieve More.</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b18">
+  <meta name="description" content="STUDYVERSE AI - Your smart learning destination for JEE Main, JEE Advanced and NEET UG preparation.">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <title>STUDYVERSE AI | Learn Smarter. Achieve More.</title>
 
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="chapter-learning.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="script.js"></script>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./chapter-learning.css">
 </head>
 
 <body>
-    <div class="ambient ambient-one"></div>
-    <div class="ambient ambient-two"></div>
-    <div class="ambient ambient-three"></div>
 
-    <div class="page-progress" id="pageProgress"></div>
+<!-- ================= NAVBAR ================= -->
 
-    <!-- NAVIGATION -->
-    <header class="navbar" id="navbar">
+<header class="navbar">
+  <div class="container nav-inner">
+
+    <a href="#home" class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <path d="M5 15L20 7L35 15L20 23L5 15Z" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M11 19V27C16 32 24 32 29 27V19" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M35 15V25" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      STUDYVERSE <span>AI</span>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#exams">Examinations</a>
+      <a href="#features">Features</a>
+      <a href="#courses">Courses</a>
+      <a href="#how">How it works</a>
+      <a href="#student-dashboard" class="student-only" hidden>My Dashboard</a>
+    </nav>
+
+    <div class="nav-actions">
+
+      <button class="btn btn-outline" id="loginBtn" type="button">
+        Log in
+      </button>
+
+      <button class="btn btn-primary student-only" id="profileBtn" type="button" hidden>
+        My Profile
+      </button>
+
+      <button class="btn btn-outline student-only" id="logoutBtn" type="button" hidden>
+        Log out
+      </button>
+
+      <a href="#exams" class="btn btn-primary guest-only" id="getStartedBtn">
+        Get Started →
+      </a>
+
+      <button class="menu-btn" id="menuToggle" aria-label="Open navigation" aria-expanded="false">
+        ☰
+      </button>
+
+    </div>
+  </div>
+</header>
+
+
+<main>
+
+<!-- ================= HERO SECTION ================= -->
+
+<section class="container hero" id="home">
+
+  <div class="hero-content">
+
+    <div class="eyebrow">
+      <span class="live-dot"></span>
+      THE FUTURE OF SMART LEARNING
+    </div>
+
+    <h1>
+      Learn Smarter.<br>
+      Prepare Better.<br>
+      <span class="gradient-text">Achieve More.</span>
+    </h1>
+
+    <p class="hero-description">
+      Your all-in-one learning destination for JEE Main, JEE Advanced and NEET UG.
+      Understand difficult concepts, practise questions and move closer to your dream college.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="#exams" class="btn btn-primary">Explore Learning →</a>
+      <a href="#features" class="btn btn-outline">Discover Features</a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <strong>3</strong>
+        <span>Exam categories</span>
+      </div>
+
+      <div class="stat">
+        <strong>24/7</strong>
+        <span>Learn at your pace</span>
+      </div>
+
+      <div class="stat">
+        <strong>AI</strong>
+        <span>Smart learning vision</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hero-visual" aria-label="AI learning dashboard illustration">
+
+    <div class="visual-glow"></div>
+    <div class="orbit"></div>
+    <div class="orbit two"></div>
+
+    <div class="float-bubble bubble-one">✨ AI Powered Learning</div>
+    <div class="float-bubble bubble-two">📈 Keep improving!</div>
+
+    <div class="learning-card">
+
+      <div class="card-top">
+        <div class="brand" style="font-size:13px">
+          <div class="brand-icon" style="width:29px;height:29px;border-radius:8px">✦</div>
+          STUDYVERSE
+        </div>
+        <span class="ai-chip">AI LEARNING</span>
+      </div>
+
+      <div class="visual-title">Your Learning Space</div>
+      <div class="visual-sub">Build knowledge, one concept at a time.</div>
+
+      <div class="progress-track">
+        <div class="progress-value"></div>
+      </div>
+
+      <div class="progress-label">
+        <span>Learning preview</span>
+        <strong>AI</strong>
+      </div>
+
+      <div class="subject-grid">
+        <div class="subject"><span>⚛️</span><small>Physics</small></div>
+        <div class="subject"><span>🧪</span><small>Chemistry</small></div>
+        <div class="subject"><span>📐</span><small>Maths</small></div>
+      </div>
+
+      <div style="margin-top:22px;padding:13px;border-radius:11px;background:rgba(146,92,255,.12);font-size:11px;color:#d9c9ff">
+        ✨ Your next achievement starts here.
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ================= STUDENT OVERVIEW DASHBOARD ================= -->
+
+<section class="sv-dashboard student-dashboard-section" id="student-dashboard" hidden>
+
+  <div class="container">
+
+    <div class="sv-dashboard-heading">
+
+      <span class="sv-eyebrow">YOUR PERSONAL LEARNING SPACE</span>
+
+      <h2>
+        Welcome back,
+        <span class="gradient-text" id="dashboardStudentName">Learner</span>
+      </h2>
+
+      <p>Monitor your learning activities and continue your preparation journey.</p>
+
+    </div>
+
+    <div id="student-dashboard-loading" class="sv-status" aria-live="polite">
+      Loading your learning progress...
+    </div>
+
+    <div id="student-dashboard-content" hidden>
+
+      <div class="student-overview-card">
+
+        <div>
+          <span class="sv-eyebrow">OVERALL LEARNING PROGRESS</span>
+          <h3>Your preparation overview</h3>
+          <p>Based on your recorded learning activities.</p>
+        </div>
+
+        <div class="student-overall-progress">
+          <strong id="overallProgressValue">0%</strong>
+          <span>Overall progress</span>
+        </div>
+
+      </div>
+
+      <div class="student-stats-grid">
+
+        <article class="student-stat-card">
+          <span class="student-stat-icon">📚</span>
+          <strong id="completedLessonsCount">0</strong>
+          <span>Lessons completed</span>
+        </article>
+
+        <article class="student-stat-card">
+          <span class="student-stat-icon">📝</span>
+          <strong id="notesReadCount">0</strong>
+          <span>Notes completed</span>
+        </article>
+
+        <article class="student-stat-card">
+          <span class="student-stat-icon">📐</span>
+          <strong id="formulasRevisedCount">0</strong>
+          <span>Formulas revised</span>
+        </article>
+
+        <article class="student-stat-card">
+          <span class="student-stat-icon">🎯</span>
+          <strong id="pyqsSolvedCount">0</strong>
+          <span>PYQs attempted</span>
+        </article>
+
+      </div>
+
+      <div class="student-activity-card">
+
+        <div class="student-section-heading">
+          <div>
+            <span class="sv-eyebrow">DAILY LEARNING</span>
+            <h3>Today's Activity</h3>
+          </div>
+          <span id="todayActivityDate"></span>
+        </div>
+
+        <div class="today-activity-grid">
+
+          <div class="today-activity-item">
+            <strong id="todayLessonsCount">0</strong>
+            <span>Lessons completed</span>
+          </div>
+
+          <div class="today-activity-item">
+            <strong id="todayNotesCount">0</strong>
+            <span>Notes completed</span>
+          </div>
+
+          <div class="today-activity-item">
+            <strong id="todayFormulasCount">0</strong>
+            <span>Formulas revised</span>
+          </div>
+
+          <div class="today-activity-item">
+            <strong id="todayPyqsCount">0</strong>
+            <span>PYQs attempted</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="student-dashboard-actions">
+        <a href="#detailed-dashboard" class="btn btn-primary">
+          View Detailed Dashboard →
+        </a>
+      </div>
+
+    </div>
+
+    <div id="student-dashboard-empty" class="sv-status" hidden>
+      Start learning to see your personal progress here.
+    </div>
+
+    <div id="student-dashboard-error" class="sv-status" hidden aria-live="polite"></div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= DETAILED STUDENT DASHBOARD ================= -->
+
+<section class="detailed-dashboard-section" id="detailed-dashboard" hidden>
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <div class="eyebrow">YOUR PERFORMANCE</div>
+
+      <h2>
+        Detailed Learning
+        <span class="gradient-text">Dashboard</span>
+      </h2>
+
+      <p>Review your study progress, chapter completion and practice history.</p>
+
+    </div>
+
+    <div class="detailed-dashboard-grid">
+
+      <article class="detail-progress-card">
+        <span class="detail-card-icon">📖</span>
+        <h3>Chapter Progress</h3>
+        <strong id="detailChapterProgress">0%</strong>
+        <p>Chapter completion percentage</p>
+      </article>
+
+      <article class="detail-progress-card">
+        <span class="detail-card-icon">🎬</span>
+        <h3>Video Lessons</h3>
+        <strong id="detailVideoLessons">0</strong>
+        <p>Lessons watched or completed</p>
+      </article>
+
+      <article class="detail-progress-card">
+        <span class="detail-card-icon">📐</span>
+        <h3>Formula Revision</h3>
+        <strong id="detailFormulaRevision">0</strong>
+        <p>Formula sheets revised</p>
+      </article>
+
+      <article class="detail-progress-card">
+        <span class="detail-card-icon">🎯</span>
+        <h3>PYQ Performance</h3>
+        <strong id="detailPyqAccuracy">0%</strong>
+        <p>Accuracy in attempted questions</p>
+      </article>
+
+    </div>
+
+    <div class="student-history-card">
+
+      <div class="student-section-heading">
+        <div>
+          <span class="sv-eyebrow">SUBJECT-WISE TRACKING</span>
+          <h3>Chapter-wise Progress</h3>
+        </div>
+      </div>
+
+      <div id="chapterProgressList" class="chapter-progress-list">
+        <p class="sv-status">Your chapter progress will appear here after you start learning.</p>
+      </div>
+
+    </div>
+
+    <div class="student-history-card">
+
+      <div class="student-section-heading">
+        <div>
+          <span class="sv-eyebrow">YOUR LEARNING RECORD</span>
+          <h3>Recent Study History</h3>
+        </div>
+      </div>
+
+      <div id="studyHistoryList" class="study-history-list">
+        <p class="sv-status">Your study history will appear here.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= EXAMINATION SECTION ================= -->
+
+<section id="exams">
+
+  <div class="container">
+
+    <div class="section-heading">
+      <div class="eyebrow">CHOOSE YOUR DESTINATION</div>
+
+      <h2>
+        Prepare for your
+        <span class="gradient-text">dream examination</span>
+      </h2>
+
+      <p>
+        Choose your target examination and explore the learning resources designed for your preparation.
+      </p>
+    </div>
+
+    <div class="exam-grid">
+
+      <article class="exam-card">
+        <div class="exam-icon">🚀</div>
+        <h3>JEE Main</h3>
+        <p>Prepare for engineering entrance examinations with concept learning and question practice.</p>
+        <a href="#studyverse-dynamic-dashboard" class="exam-link" data-select="jee">Explore JEE Main →</a>
+      </article>
+
+      <article class="exam-card">
+        <div class="exam-icon">🎓</div>
+        <h3>JEE Advanced</h3>
+        <p>Build deeper conceptual understanding and strengthen advanced problem-solving skills.</p>
+        <a href="#studyverse-dynamic-dashboard" class="exam-link" data-select="advanced">Explore JEE Advanced →</a>
+      </article>
+
+      <article class="exam-card">
+        <div class="exam-icon">🧬</div>
+        <h3>NEET UG</h3>
+        <p>Study Biology, Physics and Chemistry with structured preparation and regular practice.</p>
+        <a href="#studyverse-dynamic-dashboard" class="exam-link" data-select="neet">Explore NEET UG →</a>
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= DYNAMIC SUPABASE EXAM DASHBOARD ================= -->
+
+<section id="studyverse-dynamic-dashboard" class="sv-dashboard">
+
+  <div class="container">
+
+    <div class="sv-dashboard-heading">
+
+      <span class="sv-eyebrow">YOUR LEARNING JOURNEY</span>
+
+      <h2>
+        Explore Your
+        <span class="gradient-text">Learning Dashboard</span>
+      </h2>
+
+      <p>Select an examination, choose a subject and explore available chapters.</p>
+
+    </div>
+
+    <div id="sv-exam-loading" class="sv-status" aria-live="polite">
+      Loading examinations...
+    </div>
+
+    <div id="sv-exam-cards" class="sv-exam-grid"></div>
+
+    <div id="sv-subject-area" class="sv-subject-area">
+
+      <h3 id="sv-selected-exam">Select an examination</h3>
+
+      <div id="sv-subject-cards" class="sv-subject-grid"></div>
+
+      <div id="sv-chapter-area" class="sv-chapter-area">
+
+        <h3 id="sv-selected-subject">
+          Select a subject to view chapters
+        </h3>
+
+        <div id="sv-chapter-cards" class="sv-chapter-grid"></div>
+
+      </div>
+
+    </div>
+
+    <p id="sv-dashboard-message" class="sv-status" aria-live="polite"></p>
+
+  </div>
+
+</section>
+
+
+<!-- ================= FEATURES SECTION ================= -->
+
+<section class="feature-section" id="features">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <div class="eyebrow">A SMARTER WAY TO STUDY</div>
+
+      <h2>
+        Everything you need to
+        <span class="gradient-text">learn better</span>
+      </h2>
+
+      <p>Bring your preparation resources together in one place.</p>
+
+    </div>
+
+    <div class="feature-grid">
+
+      <article class="feature-card">
+        <div class="feature-icon">🎬</div>
+        <h3>Animated Concept Videos</h3>
+        <p>Visual explanations designed to make complex topics easier to understand.</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Doubt Solver</h3>
+        <p>Get step-by-step explanations and guidance for your academic doubts.</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon">📝</div>
+        <h3>Smart Notes</h3>
+        <p>Organised chapter-wise notes, revision material and formula sheets.</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>Previous Year Questions</h3>
+        <p>Practise examination questions and understand their solutions.</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon">⏱️</div>
+        <h3>Mock Tests</h3>
+        <p>Test your preparation with timed practice examinations.</p>
+      </article>
+
+      <article class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Student Dashboard</h3>
+        <p>Track learning activities, practice results and your preparation progress.</p>
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= COURSE LIBRARY ================= -->
+
+<section id="courses">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <div class="eyebrow">LEARNING LIBRARY</div>
+
+      <h2>
+        Explore your
+        <span class="gradient-text">study resources</span>
+      </h2>
+
+      <p>Browse learning categories for your target examination.</p>
+
+    </div>
+
+    <div class="library-tools">
+
+      <input
+        class="search-box"
+        id="courseSearch"
+        type="search"
+        placeholder="Search subjects or topics..."
+        aria-label="Search courses"
+      >
+
+      <button class="filter-btn active" data-filter="all" type="button">All</button>
+      <button class="filter-btn" data-filter="jee" type="button">JEE Main</button>
+      <button class="filter-btn" data-filter="advanced" type="button">JEE Advanced</button>
+      <button class="filter-btn" data-filter="neet" type="button">NEET UG</button>
+
+    </div>
+
+    <div class="course-grid" id="courseGrid">
+
+      <article class="course-card" data-exam="jee advanced" data-search="physics mechanics laws motion">
+        <span class="course-tag">JEE • ADVANCED</span>
+        <h3>Physics – Mechanics</h3>
+        <p>Motion, force, work, energy and related concepts.</p>
+        <div class="course-bottom">
+          <span>Chapter collection</span>
+          <button type="button" data-coming>Explore →</button>
+        </div>
+      </article>
+
+      <article class="course-card" data-exam="jee advanced neet" data-search="chemistry atomic structure">
+        <span class="course-tag">JEE • NEET</span>
+        <h3>Chemistry – Atomic Structure</h3>
+        <p>Understand atoms, electronic configuration and fundamentals.</p>
+        <div class="course-bottom">
+          <span>Chapter collection</span>
+          <button type="button" data-coming>Explore →</button>
+        </div>
+      </article>
+
+      <article class="course-card" data-exam="jee advanced" data-search="mathematics calculus">
+        <span class="course-tag">JEE</span>
+        <h3>Mathematics – Calculus</h3>
+        <p>Build a strong foundation in differential and integral calculus.</p>
+        <div class="course-bottom">
+          <span>Chapter collection</span>
+          <button type="button" data-coming>Explore →</button>
+        </div>
+      </article>
+
+      <article class="course-card" data-exam="neet" data-search="biology human physiology">
+        <span class="course-tag">NEET UG</span>
+        <h3>Biology – Human Physiology</h3>
+        <p>Explore the important systems of the human body.</p>
+        <div class="course-bottom">
+          <span>Chapter collection</span>
+          <button type="button" data-coming>Explore →</button>
+        </div>
+      </article>
+
+      <article class="course-card" data-exam="neet jee advanced" data-search="chemistry organic chemistry">
+        <span class="course-tag">JEE • NEET</span>
+        <h3>Chemistry – Organic Chemistry</h3>
+        <p>Learn organic compounds, reactions and mechanisms.</p>
+        <div class="course-bottom">
+          <span>Chapter collection</span>
+          <button type="button" data-coming>Explore →</button>
+        </div>
+      </article>
+
+      <article class="course-card" data-exam="jee advanced neet" data-search="physics electricity magnetism">
+        <span class="course-tag">JEE • NEET</span>
+        <h3>Physics – Electricity</h3>
+        <p>Study electric charges, fields, current and circuits.</p>
+        <div class="course-bottom">
+          <span>Chapter collection</span>
+          <button type="button" data-coming>Explore →</button>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      No matching courses found. Try another search.
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= HOW IT WORKS ================= -->
+
+<section id="how">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <div class="eyebrow">YOUR LEARNING JOURNEY</div>
+
+      <h2>
+        Four steps towards
+        <span class="gradient-text">your goal</span>
+      </h2>
+
+      <p>A simple learning journey designed around your target examination.</p>
+
+    </div>
+
+    <div class="steps-grid">
+
+      <article class="step-card">
+        <div class="step-number">1</div>
+        <h3>Choose Your Exam</h3>
+        <p>Select JEE Main, JEE Advanced or NEET UG.</p>
+      </article>
+
+      <article class="step-card">
+        <div class="step-number">2</div>
+        <h3>Learn Concepts</h3>
+        <p>Build understanding through organised learning resources.</p>
+      </article>
+
+      <article class="step-card">
+        <div class="step-number">3</div>
+        <h3>Practise Questions</h3>
+        <p>Strengthen your preparation with regular practice.</p>
+      </article>
+
+      <article class="step-card">
+        <div class="step-number">4</div>
+        <h3>Track Progress</h3>
+        <p>Review your performance and keep improving.</p>
+      </article>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= CALL TO ACTION ================= -->
+
+<section>
+
+  <div class="container">
+
+    <div class="cta">
+
+      <div class="eyebrow">YOUR FUTURE STARTS TODAY</div>
+
+      <h2>
+        Dream Big.
+        <span class="gradient-text">Study Smart.</span>
+      </h2>
+
+      <p>Take your first step towards a more organised preparation journey.</p>
+
+      <button class="btn btn-primary" id="ctaLogin" type="button">
+        Join STUDYVERSE AI →
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+  <div class="container">
+
+    <div class="footer-content">
+
+      <div>
         <a href="#home" class="brand">
-            <span class="brand-symbol">S<span>V</span></span>
-            <span class="brand-name">STUDYVERSE <span>AI</span></span>
+          STUDYVERSE <span>AI</span>
         </a>
 
-        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
-            <span></span><span></span><span></span>
-        </button>
+        <p class="footer-description">
+          Understand Concepts. Master Questions. Achieve Your Dreams.
+          A smarter learning destination for entrance exam preparation.
+        </p>
+      </div>
 
-        <nav class="nav-links" id="navLinks">
-            <a href="#home" class="nav-link active">Home</a>
-            <a href="#examinations" class="nav-link">Examinations</a>
-            <a href="#features" class="nav-link">Features</a>
-            <a href="#courses" class="nav-link">Courses</a>
-            <a href="#how-it-works" class="nav-link">How it works</a>
-        </nav>
-
-        <div class="nav-actions">
-            <button class="btn btn-outline nav-login" data-open-login>Log in</button>
-            <a href="#examinations" class="btn btn-primary nav-cta">Start Learning <span>↗</span></a>
-        </div>
-    </header>
-
-    <main>
-        
-<!-- ==========================================
-     STUDENT LEARNING JOURNEY
-========================================== -->
-
-<section class="section journey-section" id="journey">
-
-    <div class="section-heading reveal">
-        <span class="eyebrow">YOUR PERSONAL ROADMAP</span>
-        <h2>Your Learning <span class="gradient-text">Journey.</span></h2>
-        <p>Every step takes you closer to your academic goals.</p>
-    </div>
-
-    <div class="journey-timeline">
-
-        <article class="journey-step" data-journey-step="1" data-destination="examinations">
-            <div class="journey-step-marker">01</div>
-            <div class="journey-step-content">
-                <span>STEP ONE</span>
-                <h3>Choose Your Exam</h3>
-                <p>Select JEE Main, JEE Advanced or NEET UG and explore your syllabus.</p>
-                <a href="#examinations">Explore examinations →</a>
-            </div>
-        </article>
-
-        <article class="journey-step" data-journey-step="2" data-destination="examinations">
-            <div class="journey-step-marker">02</div>
-            <div class="journey-step-content">
-                <span>STEP TWO</span>
-                <h3>Learn Concepts</h3>
-                <p>Understand every chapter through AI animated lessons, notes and formulas.</p>
-                <a href="#examinations">Explore learning →</a>
-            </div>
-        </article>
-
-        <article class="journey-step" data-journey-step="3" data-destination="examinations">
-            <div class="journey-step-marker">03</div>
-            <div class="journey-step-content">
-                <span>STEP THREE</span>
-                <h3>Practise Questions</h3>
-                <p>Strengthen your preparation with PYQs, quizzes and mock examinations.</p>
-                <a href="#examinations">Start practising →</a>
-            </div>
-        </article>
-
-        <article class="journey-step" data-journey-step="4" data-destination="student-progress">
-            <div class="journey-step-marker">04</div>
-            <div class="journey-step-content">
-                <span>STEP FOUR</span>
-                <h3>Track Your Progress</h3>
-                <p>Monitor your study activity, completed lessons and chapter performance.</p>
-                <a href="#student-progress">View progress →</a>
-            </div>
-        </article>
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#exams">Examinations</a>
+        <a href="#features">Features</a>
+        <a href="#courses">Courses</a>
+        <a href="#how">About</a>
+      </div>
 
     </div>
-</section>
 
-<!-- ==========================================
-     STUDENT PROGRESS DASHBOARD
-========================================== -->
-
-<section class="section student-progress-section" id="student-progress">
-
-    <div class="section-heading reveal">
-        <span class="eyebrow">YOUR PERSONAL LEARNING ANALYTICS</span>
-        <h2>Progress that <span class="gradient-text">motivates.</span></h2>
-        <p>Keep track of your preparation and celebrate every milestone.</p>
+    <div class="copyright">
+      © <span id="year"></span> STUDYVERSE AI. All rights reserved. | Learning with purpose.
     </div>
 
-    <div class="progress-dashboard">
+  </div>
 
-        <div class="progress-welcome">
-            <div>
-                <span class="eyebrow">STUDENT DASHBOARD</span>
-                <h3>Keep moving forward. ✦</h3>
-                <p>Your learning activity will appear here as you study.</p>
-            </div>
-            <div class="progress-circle">
-                <div>
-                    <strong id="sv-overall-percentage">0%</strong>
-                    <small>Overall</small>
-                </div>
-            </div>
-        </div>
+</footer>
 
-        <div class="progress-metrics">
 
-            <article class="progress-metric">
-                <span class="metric-icon">▶</span>
-                <strong id="sv-video-count">0</strong>
-                <h4>Video Lessons</h4>
-                <p>Completed</p>
-            </article>
+<!-- ================= LOGIN / REGISTRATION MODAL ================= -->
 
-            <article class="progress-metric">
-                <span class="metric-icon">▤</span>
-                <strong id="sv-notes-count">0</strong>
-                <h4>Notes</h4>
-                <p>Read</p>
-            </article>
+<div
+  class="modal"
+  id="loginModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="loginTitle"
+  aria-hidden="true"
+>
 
-            <article class="progress-metric">
-                <span class="metric-icon">∑</span>
-                <strong id="sv-formula-count">0</strong>
-                <h4>Formulas</h4>
-                <p>Revised</p>
-            </article>
+  <div class="modal-box">
 
-            <article class="progress-metric">
-                <span class="metric-icon">✎</span>
-                <strong id="sv-pyq-count">0</strong>
-                <h4>PYQs</h4>
-                <p>Attempted</p>
-            </article>
+    <button class="modal-close" id="modalClose" type="button" aria-label="Close">
+      &times;
+    </button>
 
-        </div>
-
-        <div class="chapter-progress-panel">
-            <div class="chapter-progress-heading">
-                <h3>Chapter Completion</h3>
-                <span id="sv-chapter-percentage">0%</span>
-            </div>
-            <div class="progress-track">
-                <div id="sv-chapter-progress-bar"></div>
-            </div>
-            <p>Complete your chapter activities to build your learning progress.</p>
-        </div>
-
-        <div class="activity-panel">
-            <h3>Recent Study Activity</h3>
-            <div id="sv-recent-activity">
-                <p>Your recent learning activities will appear here.</p>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-        <!-- HERO -->
-        <section class="hero section" id="home">
-            <div class="hero-content reveal">
-                <div class="announcement">
-                    <span class="announcement-dot"></span>
-                    YOUR FUTURE STARTS HERE
-                    <span class="announcement-arrow">✦</span>
-                </div>
-
-                <h1>
-                    Learn Smarter.<br>
-                    Achieve <span class="gradient-text">More.</span>
-                </h1>
-
-                <p class="hero-description">
-                    One destination for your entire preparation journey.
-                    Learn concepts, explore animated lessons, practice questions
-                    and prepare confidently for your dream examination.
-                </p>
-
-                <div class="hero-buttons">
-                    <a href="#examinations" class="btn btn-primary btn-large">
-                        Explore Learning <span>→</span>
-                    </a>
-                    <a href="#features" class="btn btn-glass btn-large">
-                        Discover Features <span>↗</span>
-                    </a>
-                </div>
-
-                <div class="hero-social-proof">
-                    <div class="avatar-stack">
-                        <span>J</span><span>N</span><span>A</span><span>+</span>
-                    </div>
-                    <div>
-                        <strong>Your preparation, your pace.</strong>
-                        <small>Built for ambitious learners.</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hero-visual reveal">
-                <div class="orbit orbit-one"></div>
-                <div class="orbit orbit-two"></div>
-
-                <div class="hero-glow"></div>
-
-                <div class="hero-main-card glass-card">
-                    <div class="hero-card-top">
-                        <span class="live-indicator"></span>
-                        <span>YOUR LEARNING SPACE</span>
-                        <span class="hero-card-menu">•••</span>
-                    </div>
-
-                    <div class="hero-emblem">
-                        <div class="emblem-ring">✦</div>
-                    </div>
-
-                    <h3>Think. Learn. Master.</h3>
-                    <p>Everything you need to move forward.</p>
-
-                    <div class="hero-mini-stats">
-                        <div><strong>03</strong><small>Exams</small></div>
-                        <div><strong>PCM</strong><small>Subjects</small></div>
-                        <div><strong>PCB</strong><small>Subjects</small></div>
-                    </div>
-
-                    <div class="hero-card-footer">
-                        <span>LEARNING NEVER STOPS</span>
-                        <span class="footer-star">✦</span>
-                    </div>
-                </div>
-
-                <div class="floating-card float-card-top">
-                    <span class="float-icon purple">✦</span>
-                    <div><strong>Smart Learning</strong><small>Learn at your pace</small></div>
-                </div>
-
-                <div class="floating-card float-card-bottom">
-                    <span class="float-icon cyan">✓</span>
-                    <div><strong>Stay Consistent</strong><small>Track your progress</small></div>
-                </div>
-            </div>
-
-            <div class="hero-bottom-label">
-                <span>SCROLL TO EXPLORE</span>
-                <span class="scroll-line"></span>
-            </div>
-        </section>
-
-        <!-- EXAMINATIONS -->
-        <section class="section examination-section" id="examinations">
-            <div class="section-heading reveal">
-                <span class="eyebrow">YOUR JOURNEY BEGINS</span>
-                <h2>Choose your <span class="gradient-text">destination.</span></h2>
-                <p>Select your examination and start building your preparation journey.</p>
-            </div>
-
-            <div class="exam-grid" id="sv-exam-cards">
-                <div class="loading-card">
-                    <div class="loader"></div>
-                    <p>Preparing your learning space...</p>
-                </div>
-            </div>
-
-            <div class="dashboard-message" id="sv-dashboard-message" aria-live="polite"></div>
-
-            <div id="studyverse-dynamic-dashboard" class="dynamic-dashboard">
-                <div id="sv-subject-area" class="dashboard-section hidden">
-                    <div class="dashboard-title">
-                        <div>
-                            <span class="eyebrow">STEP 02</span>
-                            <h3>Explore your subjects</h3>
-                            <p>Choose a subject to discover its chapters.</p>
-                        </div>
-                        <span class="selection-chip" id="sv-selected-exam"></span>
-                    </div>
-                    <div id="sv-subject-cards" class="subject-grid"></div>
-                </div>
-
-                <div id="sv-chapter-area" class="dashboard-section hidden">
-                    <div class="dashboard-title">
-                        <div>
-                            <span class="eyebrow">STEP 03</span>
-                            <h3>Master every chapter</h3>
-                            <p>Choose a chapter and start learning.</p>
-                        </div>
-                        <span class="selection-chip" id="sv-selected-subject"></span>
-                    </div>
-                    <div id="sv-chapter-cards" class="chapter-grid"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- FEATURES -->
-        <section class="section features-section" id="features">
-            <div class="section-heading reveal">
-                <span class="eyebrow">A BETTER WAY TO LEARN</span>
-                <h2>Everything in one <span class="gradient-text">universe.</span></h2>
-                <p>Powerful learning resources designed to make preparation more effective.</p>
-            </div>
-
-            <div class="features-grid">
-                <article class="feature-card reveal">
-                    <div class="feature-icon icon-purple">▶</div>
-                    <h3>AI Animated Videos</h3>
-                    <p>Explore difficult concepts through engaging visual lessons and animated explanations.</p>
-                    <span class="feature-number">01</span>
-                </article>
-
-                <article class="feature-card reveal">
-                    <div class="feature-icon icon-blue">▤</div>
-                    <h3>Smart Notes</h3>
-                    <p>Understand important concepts with structured chapter-wise learning notes.</p>
-                    <span class="feature-number">02</span>
-                </article>
-
-                <article class="feature-card reveal">
-                    <div class="feature-icon icon-cyan">∑</div>
-                    <h3>Formula Sheets</h3>
-                    <p>Revise important formulas and key concepts whenever you need them.</p>
-                    <span class="feature-number">03</span>
-                </article>
-
-                <article class="feature-card reveal">
-                    <div class="feature-icon icon-pink">✎</div>
-                    <h3>Previous Year Questions</h3>
-                    <p>Practice examination-oriented questions and improve your problem-solving skills.</p>
-                    <span class="feature-number">04</span>
-                </article>
-
-                <article class="feature-card reveal">
-                    <div class="feature-icon icon-orange">◎</div>
-                    <h3>Mock Tests</h3>
-                    <p>Test your understanding and develop confidence through practice assessments.</p>
-                    <span class="feature-number">05</span>
-                </article>
-
-                <article class="feature-card reveal">
-                    <div class="feature-icon icon-green">↗</div>
-                    <h3>Progress Tracking</h3>
-                    <p>Follow your learning journey and stay motivated with progress insights.</p>
-                    <span class="feature-number">06</span>
-                </article>
-            </div>
-        </section>
-
-        <!-- COURSES -->
-        <section class="section courses-section" id="courses">
-            <div class="section-heading reveal">
-                <span class="eyebrow">COMPLETE SUBJECT COVERAGE</span>
-                <h2>Explore your <span class="gradient-text">subjects.</span></h2>
-                <p>Build strong fundamentals across your examination syllabus.</p>
-            </div>
-
-            <div class="course-grid">
-                <article class="course-card course-physics reveal">
-                    <div class="course-symbol">Φ</div>
-                    <span>SCIENCE</span>
-                    <h3>Physics</h3>
-                    <p>Discover the principles behind the physical universe.</p>
-                    <span class="course-arrow">↗</span>
-                </article>
-
-                <article class="course-card course-chemistry reveal">
-                    <div class="course-symbol">⚗</div>
-                    <span>SCIENCE</span>
-                    <h3>Chemistry</h3>
-                    <p>Understand matter, reactions and molecular concepts.</p>
-                    <span class="course-arrow">↗</span>
-                </article>
-
-                <article class="course-card course-maths reveal">
-                    <div class="course-symbol">∫</div>
-                    <span>MATHEMATICS</span>
-                    <h3>Mathematics</h3>
-                    <p>Develop logical thinking and mathematical confidence.</p>
-                    <span class="course-arrow">↗</span>
-                </article>
-
-                <article class="course-card course-biology reveal">
-                    <div class="course-symbol">♧</div>
-                    <span>LIFE SCIENCE</span>
-                    <h3>Biology</h3>
-                    <p>Explore life, organisms and the fascinating living world.</p>
-                    <span class="course-arrow">↗</span>
-                </article>
-            </div>
-        </section>
-
-        <!-- HOW IT WORKS -->
-        <section class="section workflow-section" id="how-it-works">
-            <div class="section-heading reveal">
-                <span class="eyebrow">SIMPLE. STRUCTURED. EFFECTIVE.</span>
-                <h2>Your path to <span class="gradient-text">progress.</span></h2>
-            </div>
-
-            <div class="workflow-grid">
-                <div class="workflow-item reveal">
-                    <div class="workflow-number">01</div>
-                    <h3>Select an exam</h3>
-                    <p>Choose JEE Main, JEE Advanced or NEET UG.</p>
-                </div>
-                <div class="workflow-item reveal">
-                    <div class="workflow-number">02</div>
-                    <h3>Explore subjects</h3>
-                    <p>Choose the subject you want to master.</p>
-                </div>
-                <div class="workflow-item reveal">
-                    <div class="workflow-number">03</div>
-                    <h3>Learn chapters</h3>
-                    <p>Access your chapter-wise learning resources.</p>
-                </div>
-                <div class="workflow-item reveal">
-                    <div class="workflow-number">04</div>
-                    <h3>Practice & improve</h3>
-                    <p>Revise, solve questions and track your progress.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA -->
-        <section class="section final-cta reveal">
-            <div class="cta-orb"></div>
-            <span class="eyebrow">YOUR FUTURE IS WORTH THE EFFORT</span>
-            <h2>Make every study session <span class="gradient-text">count.</span></h2>
-            <p>Start your learning journey with STUDYVERSE AI.</p>
-            <a href="#examinations" class="btn btn-primary btn-large">Start Your Journey →</a>
-        </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-        <div class="footer-main">
-            <a href="#home" class="brand">
-                <span class="brand-symbol">S<span>V</span></span>
-                <span class="brand-name">STUDYVERSE <span>AI</span></span>
-            </a>
-            <p>Learn Smarter. Achieve More.</p>
-        </div>
-        <div class="footer-bottom">
-            <span>© <span id="year"></span> STUDYVERSE AI. All rights reserved.</span>
-            <span>Designed for curious minds and ambitious learners.</span>
-        </div>
-    </footer>
-
-    <!-- LOGIN MODAL: UI ONLY -->
-    <div class="modal-overlay" id="loginModal">
-        <div class="login-modal">
-            <button class="modal-close" id="modalClose" aria-label="Close">×</button>
-            <div class="modal-logo">SV<span>AI</span></div>
-            <span class="eyebrow">WELCOME TO YOUR LEARNING SPACE</span>
-            <h2>Welcome back.</h2>
-            <p>Student account access will be connected to Supabase authentication in the next development stage.</p>
-            <form id="loginForm">
-                <label for="studentName">Your name</label>
-                <input id="studentName" type="text" placeholder="Enter your name" required>
-                <label for="studentEmail">Email address</label>
-                <input id="studentEmail" type="email" placeholder="Enter your email" required>
-                <label for="studentPassword">Password</label>
-                <input id="studentPassword" type="password" placeholder="Enter a password" required>
-                <button class="btn btn-primary btn-block" type="submit">Continue to dashboard →</button>
-            </form>
-            <p class="modal-note">Demo interface — no password is sent or stored.</p>
-        </div>
+    <div class="brand" style="margin-bottom:20px">
+      STUDYVERSE <span>AI</span>
     </div>
 
-    <div class="toast" id="toast" role="status"></div>
+    <h2 id="loginTitle">Welcome, Learner!</h2>
+
+    <p id="authModeText">
+      Sign in to continue your learning journey.
+    </p>
+
+    <form id="loginForm">
+
+      <!-- FULL NAME: REGISTRATION ONLY -->
+
+      <div id="nameFieldGroup" hidden>
+        <label for="studentName">Full name</label>
+        <input
+          id="studentName"
+          name="full_name"
+          type="text"
+          placeholder="Enter your full name"
+          autocomplete="name"
+        >
+      </div>
+
+
+      <!-- TARGET EXAMINATION: REGISTRATION ONLY -->
+
+      <div id="targetExamGroup" hidden>
+        <label for="targetExam">Target Examination</label>
+
+        <select id="targetExam" name="target_exam">
+          <option value="">Select your examination</option>
+          <option value="JEE Main">JEE Main</option>
+          <option value="JEE Advanced">JEE Advanced</option>
+          <option value="NEET UG">NEET UG</option>
+        </select>
+      </div>
+
+
+      <!-- ACADEMIC LEVEL: REGISTRATION ONLY -->
+
+      <div id="academicLevelGroup" hidden>
+        <label for="academicLevel">Academic Level</label>
+
+        <select id="academicLevel" name="academic_level">
+          <option value="">Select your academic level</option>
+          <option value="Class 11">Class 11</option>
+          <option value="Class 12">Class 12</option>
+          <option value="Dropper">Dropper</option>
+        </select>
+      </div>
+
+
+      <!-- PREFERRED LANGUAGE: REGISTRATION ONLY -->
+
+      <div id="preferredLanguageGroup" hidden>
+        <label for="preferredLanguage">Preferred Language</label>
+
+        <select id="preferredLanguage" name="preferred_language">
+          <option value="">Select your preferred language</option>
+          <option value="English">English</option>
+          <option value="Hindi">Hindi</option>
+          <option value="Marathi">Marathi</option>
+        </select>
+      </div>
+
+
+      <!-- EMAIL -->
+
+      <label for="studentEmail">Email address</label>
+
+      <input
+        id="studentEmail"
+        name="email"
+        type="email"
+        placeholder="Enter your email"
+        autocomplete="email"
+        required
+      >
+
+
+      <!-- PASSWORD -->
+
+      <label for="studentPassword">Password</label>
+
+      <input
+        id="studentPassword"
+        name="password"
+        type="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        minlength="6"
+        required
+      >
+
+
+      <!-- CONFIRM PASSWORD: REGISTRATION ONLY -->
+
+      <div id="confirmPasswordGroup" hidden>
+
+        <label for="confirmPassword">Confirm Password</label>
+
+        <input
+          id="confirmPassword"
+          name="confirm_password"
+          type="password"
+          placeholder="Re-enter your password"
+          autocomplete="new-password"
+          minlength="6"
+        >
+
+      </div>
+
+
+      <!-- SUBMIT -->
+
+      <button class="btn btn-primary" id="authSubmitBtn" type="submit">
+        Log in →
+      </button>
+
+      <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+
+    </form>
+
+    <p class="auth-switch-text">
+      <span id="authSwitchLabel">New to STUDYVERSE AI?</span>
+
+      <button id="authSwitchBtn" type="button" class="auth-switch-btn">
+        Create an account
+      </button>
+    </p>
+
+    <p class="notice">
+      Your account and learning progress will be securely managed through Supabase authentication.
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ================= STUDENT PROFILE MODAL ================= -->
+
+<div
+  class="modal"
+  id="profileModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="profileTitle"
+  aria-hidden="true"
+>
+
+  <div class="modal-box">
+
+    <button class="modal-close" id="profileModalClose" type="button" aria-label="Close">
+      &times;
+    </button>
+
+    <div class="brand" style="margin-bottom:20px">
+      STUDYVERSE <span>AI</span>
+    </div>
+
+    <h2 id="profileTitle">Student Profile</h2>
+
+    <p>Your account information.</p>
+
+    <div class="profile-details">
+
+      <div class="profile-detail-item">
+        <span>Full name</span>
+        <strong id="profileStudentName">Not available</strong>
+      </div>
+
+      <div class="profile-detail-item">
+        <span>Email address</span>
+        <strong id="profileStudentEmail">Not available</strong>
+      </div>
+
+      <div class="profile-detail-item">
+        <span>Account status</span>
+        <strong id="profileAccountStatus">Checking...</strong>
+      </div>
+
+      <div class="profile-detail-item">
+        <span>Member since</span>
+        <strong id="profileCreatedAt">Not available</strong>
+      </div>
+
+    </div>
+
+    <button class="btn btn-primary" id="profileDashboardBtn" type="button">
+      Open My Dashboard →
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ================= TOAST MESSAGE ================= -->
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+
+<!-- ================= JAVASCRIPT LIBRARIES ================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- STUDYVERSE AI MAIN JAVASCRIPT -->
+<script src="./script.js"></script>
 
 </body>
 </html>
