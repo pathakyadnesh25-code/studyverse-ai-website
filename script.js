@@ -182,8 +182,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         renderStudyTracker();
     }
 
-    function flushStudyTime() {
-        if (!studySessionStartedAt || document.visibilityState === "hidden") return;
+    function flushStudyTime(force = false) {
+        if (!studySessionStartedAt || (!force && document.visibilityState === "hidden")) return;
         const now = Date.now();
         const elapsed = Math.max(0, Math.floor((now - studySessionStartedAt) / 1000));
         if (elapsed > 0) {
@@ -253,6 +253,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         studySessionStartedAt = document.visibilityState === "visible" ? Date.now() : null;
         updateLiveClock();
         renderStudyTracker();
+        if (document.getElementById("sv-today-activity")) {
+            recordStudyActivity("Opened Student Dashboard");
+        }
         if (studyTimerInterval) clearInterval(studyTimerInterval);
         studyTimerInterval = setInterval(function () {
             updateLiveClock();
@@ -263,7 +266,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         document.addEventListener("visibilitychange", function () {
             if (document.visibilityState === "hidden") {
-                flushStudyTime();
+                flushStudyTime(true);
                 studySessionStartedAt = null;
             } else if (!studySessionStartedAt) {
                 studySessionStartedAt = Date.now();
