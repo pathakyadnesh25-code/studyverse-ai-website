@@ -113,6 +113,217 @@ document.addEventListener("DOMContentLoaded", async function () {
         }, 3500);
     }
 
+
+    // =====================================================
+    // DAILY WEBSITE TIME, ACTIVITY AND PERSONAL TARGETS
+    // Browser-local first version; Supabase RLS sync follows.
+    // =====================================================
+    let studySessionStartedAt = null;
+    let studyTimerInterval = null;
+
+    function localDateKey() {
+        const d = new Date();
+        return d.getFullYear() + "-" +
+            String(d.getMonth()+1).padStart(2,"0") + "-" +
+            String(d.getDate()).padStart(2,"0");
+    }
+
+    function trackerStorageKey() {
+        const userKey = currentStudent && currentStudent.id ? currentStudent.id : "guest";
+        return "studyverse_daily_v1_" + userKey + "_" + localDateKey();
+    }
+
+    function loadDailyTracker() {
+        try {
+            const saved = JSON.parse(localStorage.getItem(trackerStorageKey()) || "{}");
+            return {
+                seconds: Number(saved.seconds) || 0,
+                activities: Array.isArray(saved.activities) ? saved.activities : [],
+                targets: Array.isArray(saved.targets) ? saved.targets : []
+            };
+        } catch (error) {
+            console.warn("Daily tracker storage could not be read:", error);
+            return { seconds: 0, activities: [], targets: [] };
+        }
+    }
+
+    function saveDailyTracker(state) {
+        try {
+            localStorage.setItem(trackerStorageKey(), JSON.stringify(state));
+        } catch (error) {
+            console.warn("Daily tracker storage could not be saved:", error);
+        }
+    }
+
+    function formatStudyDuration(seconds) {
+        const total = Math.max(0, Math.floor(seconds || 0));
+        const hours = Math.floor(total / 3600);
+        const minutes = Math.floor((total % 3600) / 60);
+        const remaining = total % 60;
+        if (hours) return hours + "h " + minutes + "m";
+        if (minutes) return minutes + "m " + remaining + "s";
+        return remaining + "s";
+    }
+
+    function escapeTrackerText(value) {
+        return String(value ?? "").replace(/[&<>"']/g, function (char) {
+            return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char];
+        });
+    }
+
+    function recordStudyActivity(description) {
+        const state = loadDailyTracker();
+        state.activities.unshift({
+            text: String(description || "Study activity"),
+            time: new Date().toISOString()
+        });
+        state.activities = state.activities.slice(0, 30);
+        saveDailyTracker(state);
+        renderStudyTracker();
+    }
+
+    function flushStudyTime() {
+        if (!studySessionStartedAt || document.visibilityState === "hidden") return;
+        const now = Date.now();
+        const elapsed = Math.max(0, Math.floor((now - studySessionStartedAt) / 1000));
+        if (elapsed > 0) {
+            const state = loadDailyTracker();
+            state.seconds += elapsed;
+            saveDailyTracker(state);
+            studySessionStartedAt = now;
+            renderStudyTracker();
+        }
+    }
+
+    function renderStudyTracker() {
+        const state = loadDailyTracker();
+        const liveSeconds = state.seconds +
+            (studySessionStartedAt && document.visibilityState === "visible"
+                ? Math.max(0, Math.floor((Date.now() - studySessionStartedAt) / 1000))
+                : 0);
+        const timeText = formatStudyDuration(liveSeconds);
+        ["sv-home-study-time", "sv-today-time"].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = timeText;
+        });
+
+        const activityBox = document.getElementById("sv-today-activity");
+        if (activityBox) {
+            activityBox.innerHTML = state.activities.length
+                ? state.activities.map(function (item) {
+                    const time = new Date(item.time).toLocaleTimeString("en-IN", {hour:"2-digit",minute:"2-digit"});
+                    return "<div class='today-activity-row'><span class='activity-dot'></span><div><strong>" +
+                        escapeTrackerText(item.text) + "</strong><small>" + time + "</small></div></div>";
+                }).join("")
+                : "<p class='sv-status'>No study actions recorded yet. Choose an exam or open a chapter to get started.</p>";
+        }
+
+        const targetList = document.getElementById("sv-target-list");
+        const targetProgress = document.getElementById("sv-target-progress");
+        const completed = state.targets.filter(function (target) { return target.done; }).length;
+        if (targetProgress) targetProgress.textContent = completed + "/" + state.targets.length;
+        if (targetList) {
+            targetList.innerHTML = state.targets.length
+                ? state.targets.map(function (target, index) {
+                    return "<label class='target-row " + (target.done ? "is-done" : "") + "'>" +
+                        "<input type='checkbox' data-target-index='" + index + "' " + (target.done ? "checked" : "") + ">" +
+                        "<span>" + escapeTrackerText(target.text) + "</span>" +
+                        "<button type='button' class='target-delete' data-delete-target='" + index + "' aria-label='Delete target'>×</button>" +
+                        "</label>";
+                }).join("")
+                : "<p class='sv-status'>Your checklist is empty. Add your first target above.</p>";
+        }
+    }
+
+    function updateLiveClock() {
+        const now = new Date();
+        const time = now.toLocaleTimeString("en-IN", {hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true,timeZone:"Asia/Kolkata"});
+        const date = now.toLocaleDateString("en-IN", {weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Kolkata"});
+        ["sv-home-clock","sv-dashboard-clock"].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = time;
+        });
+        ["sv-home-date","sv-dashboard-date"].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = date;
+        });
+    }
+
+    function initializeStudyTracker() {
+        studySessionStartedAt = document.visibilityState === "visible" ? Date.now() : null;
+        updateLiveClock();
+        renderStudyTracker();
+        if (studyTimerInterval) clearInterval(studyTimerInterval);
+        studyTimerInterval = setInterval(function () {
+            updateLiveClock();
+            if (document.visibilityState === "visible") {
+                flushStudyTime();
+            }
+        }, 1000);
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.visibilityState === "hidden") {
+                flushStudyTime();
+                studySessionStartedAt = null;
+            } else if (!studySessionStartedAt) {
+                studySessionStartedAt = Date.now();
+            }
+            renderStudyTracker();
+        });
+
+        window.addEventListener("pagehide", function () {
+            if (studySessionStartedAt) {
+                const now = Date.now();
+                const elapsed = Math.max(0, Math.floor((now - studySessionStartedAt) / 1000));
+                if (elapsed) {
+                    const state = loadDailyTracker();
+                    state.seconds += elapsed;
+                    saveDailyTracker(state);
+                }
+                studySessionStartedAt = null;
+            }
+        });
+
+        const targetForm = document.getElementById("sv-target-form");
+        const targetInput = document.getElementById("sv-target-input");
+        targetForm?.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const text = targetInput ? targetInput.value.trim() : "";
+            if (!text) return;
+            const state = loadDailyTracker();
+            state.targets.push({text:text, done:false});
+            saveDailyTracker(state);
+            if (targetInput) targetInput.value = "";
+            recordStudyActivity("Added today's target: " + text);
+            renderStudyTracker();
+        });
+
+        document.getElementById("sv-target-list")?.addEventListener("change", function (event) {
+            const index = Number(event.target.dataset.targetIndex);
+            if (!Number.isInteger(index)) return;
+            const state = loadDailyTracker();
+            if (!state.targets[index]) return;
+            state.targets[index].done = Boolean(event.target.checked);
+            saveDailyTracker(state);
+            if (state.targets[index].done) {
+                recordStudyActivity("Completed target: " + state.targets[index].text);
+            } else {
+                renderStudyTracker();
+            }
+        });
+
+        document.getElementById("sv-target-list")?.addEventListener("click", function (event) {
+            const button = event.target.closest("[data-delete-target]");
+            if (!button) return;
+            const index = Number(button.dataset.deleteTarget);
+            const state = loadDailyTracker();
+            if (!Number.isInteger(index) || !state.targets[index]) return;
+            state.targets.splice(index, 1);
+            saveDailyTracker(state);
+            renderStudyTracker();
+        });
+    }
+
     function showAuthMessage(message, isError = false) {
 
         if (authMessage) {
@@ -867,6 +1078,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     function showStudentDashboard() {
 
+        if (!studentDashboard) {
+            window.location.href = "student-dashboard.html";
+            return;
+        }
+
         if (studentDashboard) {
 
             studentDashboard.hidden = false;
@@ -1057,7 +1273,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     function updateAuthenticationUI(user) {
 
+        if (currentStudent && studySessionStartedAt) flushStudyTime();
         currentStudent = user || null;
+        if (studySessionStartedAt) studySessionStartedAt = Date.now();
+        renderStudyTracker();
 
         const loggedIn = Boolean(user);
 
@@ -1515,6 +1734,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     );
 
                     if (selectedExam) {
+                        recordStudyActivity("Selected examination: " + selectedExam.name);
                         showSubjects(
                             selectedExam.id,
                             selectedExam.name
@@ -1729,6 +1949,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 const subjectName =
                     subjectCard.dataset.subjectName;
+                recordStudyActivity("Opened subject: " + subjectName);
 
                 if (!subjectId) return;
 
@@ -1893,6 +2114,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 }
 
+                recordStudyActivity("Opened chapter: " + (chapterName || "Chapter"));
+
                 console.log(
                     "STUDYVERSE AI: Opening chapter:",
                     {
@@ -1902,7 +2125,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 );
 
                 window.location.href =
-                    "./chapter.html?chapter_id=" +
+                    "./chapter-learning.html?chapter_id=" +
                     encodeURIComponent(chapterId);
 
             }
@@ -1964,6 +2187,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Restore student session.
     await initializeStudentAuthentication();
+    initializeStudyTracker();
 
     // Test database connection.
     testStudyverseDatabase();
