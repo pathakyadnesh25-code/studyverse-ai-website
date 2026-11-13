@@ -4,19 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#090b14">
+    <meta name="theme-color" content="#090b18">
+    <meta name="description" content="Study chapter-wise video lessons, notes, formulas and previous year questions on STUDYVERSE AI.">
 
     <title>Chapter Learning | STUDYVERSE AI</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./chapter-learning.css">
 
+    <style>
+        [hidden] {
+            display: none !important;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        .learning-tab:focus-visible,
+        .back-button:focus-visible,
+        a:focus-visible,
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid #a78bfa;
+            outline-offset: 3px;
+        }
+    </style>
+
+    <!-- Load Supabase before the STUDYVERSE scripts. -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Chapter content and resource loader. -->
     <script src="./chapter-learning.js" defer></script>
+
+    <!-- Student learning progress tracker. -->
+    <script src="./learning-progress.js" defer></script>
 </head>
 
 <body>
+
     <header class="learning-header">
-        <a href="./index.html" class="brand">
+        <a href="./index.html" class="brand" aria-label="STUDYVERSE AI Home">
             <span class="brand-icon">S</span>
             <span>STUDYVERSE <strong>AI</strong></span>
         </a>
@@ -29,19 +65,26 @@
 
     <main class="learning-container">
 
-        <div class="breadcrumbs">
+        <!-- BREADCRUMBS -->
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
             <a href="./index.html">Home</a>
             <span>/</span>
             <span id="breadcrumb-exam">Examination</span>
             <span>/</span>
             <span id="breadcrumb-subject">Subject</span>
-        </div>
+        </nav>
 
+        <!-- CHAPTER HERO -->
         <section class="chapter-hero">
             <div class="chapter-hero-content">
-                <div class="eyebrow">STUDYVERSE AI · CHAPTER LEARNING</div>
 
-                <h1 id="chapter-title">Loading chapter...</h1>
+                <div class="eyebrow">
+                    STUDYVERSE AI · CHAPTER LEARNING
+                </div>
+
+                <h1 id="chapter-title">
+                    Loading chapter...
+                </h1>
 
                 <p id="chapter-description">
                     Your complete learning experience starts here.
@@ -52,112 +95,253 @@
                     <span id="chapter-subject">Loading subject...</span>
                     <span id="chapter-number">Chapter</span>
                 </div>
+
             </div>
 
-            <div class="chapter-hero-icon">📚</div>
+            <div class="chapter-hero-icon" aria-hidden="true">
+                📚
+            </div>
         </section>
 
-        <div id="page-message" class="page-message" role="status">
+        <!-- PAGE STATUS -->
+        <div
+            id="page-message"
+            class="page-message"
+            role="status"
+            aria-live="polite"
+        >
             Connecting to STUDYVERSE AI...
         </div>
 
-        <section class="progress-panel">
+        <!-- CHAPTER PROGRESS -->
+        <section class="progress-panel" aria-label="Chapter learning progress">
+
             <div>
                 <h2>Your learning progress</h2>
-                <p>Track the lessons you complete in this browser.</p>
+                <p>
+                    Track the lessons you complete in this chapter.
+                </p>
             </div>
 
-            <div class="progress-value" id="progress-value">0%</div>
-
-            <div class="progress-track">
-                <div class="progress-fill" id="progress-fill"></div>
+            <div
+                class="progress-value"
+                id="progress-value"
+                aria-live="polite"
+            >
+                0%
             </div>
+
+            <div
+                class="progress-track"
+                role="progressbar"
+                aria-label="Chapter completion"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+                id="chapter-progress-bar"
+            >
+                <div
+                    class="progress-fill"
+                    id="progress-fill"
+                ></div>
+            </div>
+
         </section>
 
+        <!-- LEARNING TABS -->
         <nav class="learning-tabs" aria-label="Chapter resources">
-            <button class="learning-tab active" data-tab="lessons">
+
+            <button
+                class="learning-tab active"
+                type="button"
+                data-tab="lessons"
+                aria-selected="true"
+            >
                 ▶ Video Lessons
             </button>
 
-            <button class="learning-tab" data-tab="notes">
+            <button
+                class="learning-tab"
+                type="button"
+                data-tab="notes"
+                aria-selected="false"
+            >
                 ▤ Study Notes
             </button>
 
-            <button class="learning-tab" data-tab="formulas">
+            <button
+                class="learning-tab"
+                type="button"
+                data-tab="formulas"
+                aria-selected="false"
+            >
                 ∑ Formulas
             </button>
 
-            <button class="learning-tab" data-tab="pyqs">
+            <button
+                class="learning-tab"
+                type="button"
+                data-tab="pyqs"
+                aria-selected="false"
+            >
                 ✎ PYQs
             </button>
+
         </nav>
 
-        <section class="learning-section active" data-section="lessons">
+        <!-- VIDEO LESSONS -->
+        <section
+            class="learning-section active"
+            data-section="lessons"
+        >
+
             <div class="section-heading">
                 <div>
                     <h2>Video Lessons</h2>
-                    <p>Learn each concept step by step.</p>
+                    <p>
+                        Learn every concept step by step.
+                    </p>
                 </div>
-                <span class="resource-count" id="lesson-count">0 lessons</span>
+
+                <span
+                    class="resource-count"
+                    id="lesson-count"
+                >
+                    0 lessons
+                </span>
             </div>
 
-            <div id="lesson-list" class="resource-grid">
-                <div class="loading-card">Loading lessons...</div>
+            <div
+                id="lesson-list"
+                class="resource-grid"
+                aria-live="polite"
+            >
+                <div class="loading-card">
+                    Loading lessons...
+                </div>
             </div>
+
         </section>
 
-        <section class="learning-section" data-section="notes">
+        <!-- STUDY NOTES -->
+        <section
+            class="learning-section"
+            data-section="notes"
+        >
+
             <div class="section-heading">
                 <div>
                     <h2>Study Notes</h2>
-                    <p>Read and revise your chapter concepts.</p>
+                    <p>
+                        Read and revise your chapter concepts.
+                    </p>
                 </div>
-                <span class="resource-count" id="notes-count">0 notes</span>
+
+                <span
+                    class="resource-count"
+                    id="notes-count"
+                >
+                    0 notes
+                </span>
             </div>
 
-            <div id="notes-list" class="resource-grid">
-                <div class="loading-card">Loading notes...</div>
+            <div
+                id="notes-list"
+                class="resource-grid"
+                aria-live="polite"
+            >
+                <div class="loading-card">
+                    Loading notes...
+                </div>
             </div>
+
         </section>
 
-        <section class="learning-section" data-section="formulas">
+        <!-- FORMULAS -->
+        <section
+            class="learning-section"
+            data-section="formulas"
+        >
+
             <div class="section-heading">
                 <div>
                     <h2>Important Formulas</h2>
-                    <p>Quick revision of important concepts and formulas.</p>
+                    <p>
+                        Quickly revise important concepts and formulas.
+                    </p>
                 </div>
-                <span class="resource-count" id="formula-count">0 formulas</span>
+
+                <span
+                    class="resource-count"
+                    id="formula-count"
+                >
+                    0 formulas
+                </span>
             </div>
 
-            <div id="formula-list" class="resource-grid">
-                <div class="loading-card">Loading formulas...</div>
+            <div
+                id="formula-list"
+                class="resource-grid"
+                aria-live="polite"
+            >
+                <div class="loading-card">
+                    Loading formulas...
+                </div>
             </div>
+
         </section>
 
-        <section class="learning-section" data-section="pyqs">
+        <!-- PREVIOUS YEAR QUESTIONS -->
+        <section
+            class="learning-section"
+            data-section="pyqs"
+        >
+
             <div class="section-heading">
                 <div>
                     <h2>Previous Year Questions</h2>
-                    <p>Practise questions relevant to this chapter.</p>
+                    <p>
+                        Practise questions relevant to this chapter.
+                    </p>
                 </div>
-                <span class="resource-count" id="pyq-count">0 questions</span>
+
+                <span
+                    class="resource-count"
+                    id="pyq-count"
+                >
+                    0 questions
+                </span>
             </div>
 
-            <div id="pyq-list" class="resource-grid">
-                <div class="loading-card">Loading questions...</div>
+            <div
+                id="pyq-list"
+                class="resource-grid"
+                aria-live="polite"
+            >
+                <div class="loading-card">
+                    Loading questions...
+                </div>
             </div>
 
             <p class="security-note">
-                Answer keys and detailed solutions will be connected
-                after student authentication is implemented.
+                Question answers and detailed solutions will be
+                displayed when they are added to the learning database.
             </p>
+
         </section>
 
+        <!-- FOOTER -->
         <footer class="learning-footer">
             <strong>STUDYVERSE AI</strong>
-            <p>Learn smarter. Practise better. Achieve more.</p>
+            <p>
+                Learn smarter. Practise better. Achieve more.
+            </p>
+            <a href="./index.html">
+                Return to STUDYVERSE AI Home ↑
+            </a>
         </footer>
 
     </main>
+
 </body>
 </html>
