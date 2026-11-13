@@ -690,52 +690,141 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
+    
     // -----------------------------------------------------
-    // 12. LOAD FORMULAS
+    // 12. LOAD FORMULAS — PUBLIC.FORMULAS
     // -----------------------------------------------------
 
     async function loadFormulas() {
+
         const { data, error } = await db
-            .from("chapter_learning_formulas")
-            .select(
-                "id, formula_name, formula_text, explanation"
-            )
+            .from("formulas")
+            .select(`
+                id,
+                chapter_id,
+                title,
+                formula_text,
+                explanation,
+                is_published,
+                created_at
+            `)
             .eq("chapter_id", chapterId)
             .eq("is_published", true)
-            .order("sort_order", { ascending: true });
+            .order("title", { ascending: true });
 
-        if (error) throw error;
+        if (error) {
+            console.error(
+                "STUDYVERSE AI: Formula loading error:",
+                error
+            );
+            throw error;
+        }
 
         const formulas = data || [];
-        setCount(elements.formulaCount, formulas.length, "formula");
+
+        setCount(
+            elements.formulaCount,
+            formulas.length,
+            "formula"
+        );
+
+        if (!elements.formulas) return;
 
         if (!formulas.length) {
             showEmpty(
                 elements.formulas,
                 "No formulas published yet",
-                "Important chapter formulas and revision points will appear here."
+                "No published formulas were found for this chapter. Check the Supabase formulas table."
             );
             return;
         }
 
         elements.formulas.replaceChildren();
 
-        formulas.forEach(function (formula) {
-            const card = makeElement("article", "resource-card");
+        formulas.forEach(function (formula, index) {
 
-            card.appendChild(
-                makeElement("span", "resource-label", "QUICK REVISION")
+            const card = makeElement(
+                "article",
+                "resource-card formula-card"
             );
 
             card.appendChild(
-                makeElement("h3", "", formula.formula_name)
+                makeElement(
+                    "span",
+                    "resource-label",
+                    "FORMULA " + (index + 1)
+                )
             );
 
             card.appendChild(
-                makeElement("code", "formula-text", formula.formula_text)
+                makeElement(
+                    "h3",
+                    "",
+                    formula.title || "Important Formula"
+                )
             );
 
-            addTextContent(card, formula.explanation);
+            const formulaBox = makeElement(
+                "div",
+                "formula-display"
+            );
+
+            const formulaCode = makeElement(
+                "code",
+                "formula-text",
+                formula.formula_text || "Formula not available"
+            );
+
+            formulaBox.appendChild(formulaCode);
+            card.appendChild(formulaBox);
+
+            if (formula.explanation) {
+                const explanation = makeElement(
+                    "p",
+                    "formula-explanation",
+                    formula.explanation
+                );
+
+                card.appendChild(explanation);
+            }
+
+            const actions = makeElement(
+                "div",
+                "formula-actions"
+            );
+
+            const copyButton = makeElement(
+                "button",
+                "resource-action",
+                "Copy Formula"
+            );
+
+            copyButton.type = "button";
+
+            copyButton.addEventListener("click", async function () {
+
+                const copyText =
+                    (formula.title || "") +
+                    "\n" +
+                    (formula.formula_text || "") +
+                    "\n" +
+                    (formula.explanation || "");
+
+                try {
+                    await navigator.clipboard.writeText(copyText);
+
+                    copyButton.textContent = "✓ Copied";
+                    showToast("Formula copied successfully!");
+
+                    setTimeout(function () {
+                        copyButton.textContent = "Copy Formula";
+                    }, 2000);
+
+                } catch (error) {
+                    console.error("Copy failed:", error);
+                    showToast("Unable to copy. Please select the formula manually.");
+                }
+            });
 
             const reviseButton = makeElement(
                 "button",
@@ -746,11 +835,15 @@ document.addEventListener("DOMContentLoaded", async function () {
             reviseButton.type = "button";
 
             reviseButton.addEventListener("click", async function () {
+
                 reviseButton.disabled = true;
 
                 const result = await saveLearningActivity(
                     "formula_revised",
-                    formula.id
+                    formula.id,
+                    {
+                        formula_title: formula.title || ""
+                    }
                 );
 
                 if (result) {
@@ -761,10 +854,18 @@ document.addEventListener("DOMContentLoaded", async function () {
                 }
             });
 
-            card.appendChild(reviseButton);
+            actions.append(copyButton, reviseButton);
+            card.appendChild(actions);
+
             elements.formulas.appendChild(card);
         });
+
+        console.log(
+            "STUDYVERSE AI: Formulas loaded successfully.",
+            formulas.length
+        );
     }
+
 
     // -----------------------------------------------------
     // 13. LOAD PREVIOUS YEAR QUESTIONS
