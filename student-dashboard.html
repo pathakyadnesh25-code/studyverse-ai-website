@@ -1,0 +1,1303 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090b16">
+<title>Student Dashboard | STUDYVERSE AI</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg: #090b16;
+    --panel: #111629;
+    --panel2: #171e34;
+    --border: rgba(255,255,255,.09);
+    --text: #f5f6ff;
+    --muted: #929bb5;
+    --purple: #9270ff;
+    --blue: #55b9ff;
+    --green: #43d9a3;
+    --orange: #ffb45c;
+    --red: #ff7185;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(111,74,255,.17), transparent 36%),
+      radial-gradient(ellipse at 90% 30%, rgba(47,156,255,.10), transparent 32%),
+      var(--bg);
+    color: var(--text);
+    font-family: Inter, sans-serif;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+a { color: inherit; text-decoration: none; }
+
+.app {
+    width: min(1450px, 100%);
+    margin: auto;
+    padding: 22px 30px 50px;
+}
+
+.topbar {
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 18px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: -.6px;
+}
+
+.brand-icon {
+    width: 43px;
+    height: 43px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#8e65ff,#4e9bff);
+    box-shadow: 0 8px 28px rgba(130,91,255,.35);
+    font-size: 22px;
+}
+
+.brand span { color: #a990ff; }
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.back-btn, .logout-btn {
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: rgba(255,255,255,.045);
+    padding: 11px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: .25s;
+}
+
+.back-btn:hover, .logout-btn:hover {
+    background: rgba(146,112,255,.16);
+    border-color: var(--purple);
+    transform: translateY(-2px);
+}
+
+.profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px 6px 7px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+}
+
+.avatar {
+    height: 34px;
+    width: 34px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg,#9a70ff,#43b7ff);
+    font-weight: 800;
+}
+
+.profile-mini span { font-size: 12px; font-weight: 600; }
+
+.hero {
+    padding: 43px 0 27px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+    animation: fadeUp .65s ease both;
+}
+
+.eyebrow {
+    color: #aa91ff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: clamp(29px,4vw,43px);
+    line-height: 1.15;
+    letter-spacing: -1.6px;
+}
+
+.hero h1 span {
+    background: linear-gradient(90deg,#a78bff,#65c4ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.clock-card {
+    min-width: 245px;
+    padding: 19px 23px;
+    border: 1px solid rgba(157,126,255,.25);
+    border-radius: 19px;
+    background: linear-gradient(135deg,rgba(120,87,255,.15),rgba(59,155,255,.08));
+    text-align: right;
+}
+
+.clock-label {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.clock {
+    font-family: "Space Grotesk",sans-serif;
+    font-size: 29px;
+    font-weight: 700;
+    margin: 5px 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.date {
+    color: #b4bbd0;
+    font-size: 12px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 29px 0 16px;
+}
+
+.section-heading h2 {
+    font-family: "Space Grotesk",sans-serif;
+    font-size: 19px;
+}
+
+.section-heading p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 16px;
+}
+
+.stat-card, .panel {
+    border: 1px solid var(--border);
+    background: linear-gradient(145deg,rgba(23,30,52,.94),rgba(14,19,35,.96));
+    border-radius: 19px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.12);
+}
+
+.stat-card {
+    padding: 20px;
+    min-height: 145px;
+    transition: .3s;
+    animation: fadeUp .6s ease both;
+}
+
+.stat-card:hover, .panel:hover {
+    border-color: rgba(146,112,255,.36);
+    transform: translateY(-3px);
+}
+
+.stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+    font-size: 19px;
+    background: rgba(146,112,255,.14);
+}
+
+.stat-tag {
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.stat-value {
+    font-family: "Space Grotesk",sans-serif;
+    font-size: 29px;
+    font-weight: 700;
+    margin-top: 16px;
+}
+
+.stat-name {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+
+.main-grid {
+    display: grid;
+    grid-template-columns: minmax(0,1.25fr) minmax(300px,.75fr);
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.panel {
+    padding: 23px;
+    min-width: 0;
+    transition: .25s;
+}
+
+.panel-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 19px;
+}
+
+.panel-title h3 {
+    font-family: "Space Grotesk",sans-serif;
+    font-size: 17px;
+}
+
+.panel-title small {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.progress-summary {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 0 20px;
+}
+
+.progress-ring {
+    width: 116px;
+    height: 116px;
+    flex: 0 0 116px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: conic-gradient(var(--purple) 0deg, #30364e 0deg);
+    position: relative;
+    transition: background .5s;
+}
+
+.progress-ring::before {
+    content: "";
+    position: absolute;
+    inset: 9px;
+    border-radius: 50%;
+    background: #151b2f;
+}
+
+.progress-ring strong {
+    position: relative;
+    font-family: "Space Grotesk",sans-serif;
+    font-size: 25px;
+}
+
+.progress-info h4 { font-size: 15px; margin-bottom: 7px; }
+.progress-info p { font-size: 12px; line-height: 1.7; color: var(--muted); }
+
+.progress-bar {
+    height: 8px;
+    background: #29314a;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.progress-bar div {
+    height: 100%;
+    width: 0;
+    border-radius: 20px;
+    background: linear-gradient(90deg,#8d65ff,#58c2ff);
+    transition: width .6s;
+}
+
+.progress-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 10px;
+}
+
+.activity-list, .target-list {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 13px;
+    background: rgba(255,255,255,.035);
+}
+
+.activity-icon {
+    width: 37px;
+    height: 37px;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    background: rgba(91,157,255,.13);
+}
+
+.activity-text { flex: 1; min-width: 0; }
+.activity-text strong { display: block; font-size: 12px; }
+.activity-text small { display: block; color: var(--muted); font-size: 10px; margin-top: 4px; }
+
+.empty {
+    padding: 20px 10px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.target-form {
+    display: flex;
+    gap: 9px;
+    margin-bottom: 17px;
+}
+
+.target-form input {
+    min-width: 0;
+    flex: 1;
+    padding: 12px 13px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    outline: none;
+    color: white;
+    background: rgba(255,255,255,.045);
+    font-size: 12px;
+}
+
+.target-form input:focus { border-color: var(--purple); }
+
+.add-btn {
+    border: none;
+    padding: 0 17px;
+    border-radius: 11px;
+    color: white;
+    font-weight: 700;
+    font-size: 12px;
+    background: linear-gradient(120deg,#9067ff,#5b9cff);
+    transition: .2s;
+}
+
+.add-btn:hover { transform: translateY(-2px); filter: brightness(1.12); }
+
+.target-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid transparent;
+}
+
+.target-item.done { border-color: rgba(67,217,163,.18); }
+
+.target-item input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--green);
+    cursor: pointer;
+}
+
+.target-item span {
+    flex: 1;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.target-item.done span {
+    color: #7e8a9f;
+    text-decoration: line-through;
+}
+
+.delete-btn {
+    color: #9aa3b9;
+    border: none;
+    background: transparent;
+    font-size: 17px;
+    padding: 3px 6px;
+}
+
+.delete-btn:hover { color: var(--red); }
+
+.target-footer {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 15px;
+}
+
+.wide-panel { margin-top: 18px; }
+
+.quick-grid {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 13px;
+}
+
+.quick-link {
+    display: block;
+    padding: 17px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: .25s;
+}
+
+.quick-link:hover {
+    background: rgba(146,112,255,.10);
+    border-color: rgba(146,112,255,.4);
+    transform: translateY(-3px);
+}
+
+.quick-link .emoji { font-size: 22px; }
+.quick-link strong { display: block; font-size: 12px; margin-top: 12px; }
+.quick-link small { display: block; font-size: 10px; color: var(--muted); margin-top: 5px; }
+
+.status-line {
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 11px;
+    text-align: center;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    margin-right: 6px;
+}
+
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    max-width: calc(100% - 40px);
+    padding: 13px 18px;
+    background: #202943;
+    border: 1px solid rgba(146,112,255,.4);
+    border-radius: 12px;
+    color: white;
+    font-size: 12px;
+    opacity: 0;
+    transform: translateY(15px);
+    pointer-events: none;
+    transition: .3s;
+    z-index: 20;
+}
+
+.toast.show { opacity: 1; transform: translateY(0); }
+
+footer {
+    padding: 35px 0 5px;
+    text-align: center;
+    color: #737e99;
+    font-size: 11px;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media(max-width:900px) {
+    .stats-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .main-grid { grid-template-columns: 1fr; }
+}
+
+@media(max-width:600px) {
+    .app { padding: 15px 14px 35px; }
+    .topbar { align-items: flex-start; }
+    .brand { font-size: 16px; }
+    .brand-icon { width: 37px; height: 37px; }
+    .profile-mini span { display: none; }
+    .top-actions { gap: 6px; }
+    .back-btn, .logout-btn { padding: 9px 10px; font-size: 11px; }
+    .hero { align-items: flex-start; flex-direction: column; padding-top: 30px; }
+    .clock-card { width: 100%; text-align: left; }
+    .stats-grid { gap: 10px; }
+    .stat-card { padding: 15px; min-height: 130px; }
+    .stat-value { font-size: 24px; }
+    .panel { padding: 17px; }
+    .progress-summary { gap: 15px; }
+    .progress-ring { width: 95px; height: 95px; flex-basis: 95px; }
+    .progress-ring strong { font-size: 21px; }
+    .quick-grid { grid-template-columns: 1fr; }
+    .section-heading h2 { font-size: 17px; }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+    <header class="topbar">
+        <a class="brand" href="./index.html">
+            <div class="brand-icon">✦</div>
+            <div>STUDYVERSE <span>AI</span></div>
+        </a>
+
+        <div class="top-actions">
+            <div class="profile-mini">
+                <div class="avatar" id="profile-avatar">S</div>
+                <span id="profile-name">Student</span>
+            </div>
+            <a class="back-btn" href="./index.html">← Home</a>
+            <button class="logout-btn" id="logout-btn" type="button">Logout</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div>
+            <div class="eyebrow">Your personal learning space</div>
+            <h1>Welcome back, <span id="welcome-name">Student</span>!</h1>
+            <p>Every focused minute brings you closer to your dream. Keep learning, keep growing.</p>
+        </div>
+
+        <div class="clock-card">
+            <div class="clock-label">Indian Standard Time</div>
+            <div class="clock" id="dashboard-clock">--:--:--</div>
+            <div class="date" id="dashboard-date">Loading date...</div>
+        </div>
+    </section>
+
+    <div class="section-heading">
+        <div>
+            <h2>Your learning overview</h2>
+            <p>A snapshot of your study activity and achievements</p>
+        </div>
+    </div>
+
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-top">
+                <div class="stat-icon">⏱️</div>
+                <span class="stat-tag">TODAY</span>
+            </div>
+            <div class="stat-value" id="today-study-time">0m</div>
+            <div class="stat-name">Study time on this dashboard</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <div class="stat-icon">🎬</div>
+                <span class="stat-tag">TOTAL</span>
+            </div>
+            <div class="stat-value" id="completed-lessons">0</div>
+            <div class="stat-name">Completed lessons</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <div class="stat-icon">📝</div>
+                <span class="stat-tag">TOTAL</span>
+            </div>
+            <div class="stat-value" id="notes-read">0</div>
+            <div class="stat-name">Notes read</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <div class="stat-icon">🎯</div>
+                <span class="stat-tag">TOTAL</span>
+            </div>
+            <div class="stat-value" id="pyqs-solved">0</div>
+            <div class="stat-name">PYQs solved</div>
+        </div>
+    </section>
+
+    <section class="main-grid">
+
+        <div class="panel">
+            <div class="panel-title">
+                <h3>Learning progress</h3>
+                <small>Based on recorded activities</small>
+            </div>
+
+            <div class="progress-summary">
+                <div class="progress-ring" id="progress-ring">
+                    <strong id="overall-progress">0%</strong>
+                </div>
+                <div class="progress-info">
+                    <h4>Your learning journey</h4>
+                    <p id="progress-description">Your learning activities will appear here when you complete lessons and study resources.</p>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div id="progress-bar-fill"></div>
+            </div>
+            <div class="progress-note" id="progress-note">Your activity progress will update as you learn.</div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">
+                <h3>Today's activity</h3>
+                <small id="activity-date">Today</small>
+            </div>
+
+            <div class="activity-list" id="activity-list">
+                <div class="empty">Your recent learning activities will appear here.</div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="main-grid">
+
+        <div class="panel">
+            <div class="panel-title">
+                <h3>My daily targets</h3>
+                <small>Personal checklist</small>
+            </div>
+
+            <form class="target-form" id="target-form">
+                <input id="target-input" type="text" maxlength="100"
+                       placeholder="Add a study target..." autocomplete="off" required>
+                <button class="add-btn" type="submit">+ Add</button>
+            </form>
+
+            <div class="target-list" id="target-list"></div>
+
+            <div class="target-footer">
+                <span id="target-count">0 targets</span>
+                <span id="target-completed">0 completed</span>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">
+                <h3>Recent learning activity</h3>
+                <small>From your account</small>
+            </div>
+
+            <div class="activity-list" id="recent-activity-list">
+                <div class="empty">Loading your learning history...</div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="panel wide-panel">
+        <div class="panel-title">
+            <h3>Continue your preparation</h3>
+            <small>Quick navigation</small>
+        </div>
+
+        <div class="quick-grid">
+            <a class="quick-link" href="./index.html#studyverse-dynamic-dashboard">
+                <div class="emoji">📚</div>
+                <strong>Explore examinations</strong>
+                <small>JEE Main, JEE Advanced and NEET UG</small>
+            </a>
+
+            <a class="quick-link" href="./index.html#studyverse-dynamic-dashboard">
+                <div class="emoji">🧠</div>
+                <strong>Continue learning</strong>
+                <small>Open subjects and chapter lessons</small>
+            </a>
+
+            <a class="quick-link" href="./index.html">
+                <div class="emoji">🏠</div>
+                <strong>Studyverse homepage</strong>
+                <small>Return to your learning platform</small>
+            </a>
+        </div>
+    </section>
+
+    <div class="status-line">
+        <span class="status-dot"></span>
+        <span id="connection-status">Connecting to STUDYVERSE AI...</span>
+    </div>
+
+    <footer>
+        © 2026 STUDYVERSE AI · Learn Smarter. Achieve More.
+    </footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(() => {
+    "use strict";
+
+    // ------------------------------------------------
+    // SUPABASE CONFIGURATION
+    // ------------------------------------------------
+
+    const SUPABASE_URL = "https://mtxkvupfczhglaqghcbc.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
+
+    let db = null;
+    let currentUser = null;
+    let sessionStart = Date.now();
+    let studySeconds = 0;
+    let sessionTimer = null;
+    let toastTimer = null;
+
+    const $ = id => document.getElementById(id);
+
+    const todayKey = () => {
+        const parts = new Intl.DateTimeFormat("en-CA", {
+            timeZone: "Asia/Kolkata",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit"
+        }).formatToParts(new Date());
+
+        const values = {};
+        parts.forEach(part => values[part.type] = part.value);
+        return `${values.year}-${values.month}-${values.day}`;
+    };
+
+    const storageKey = name => `studyverse_dashboard_${name}_${todayKey()}`;
+
+    function showToast(message) {
+        const toast = $("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    // ------------------------------------------------
+    // LIVE INDIAN CLOCK
+    // ------------------------------------------------
+
+    function updateClock() {
+        const now = new Date();
+
+        $("dashboard-clock").textContent =
+            new Intl.DateTimeFormat("en-IN", {
+                timeZone: "Asia/Kolkata",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true
+            }).format(now);
+
+        $("dashboard-date").textContent =
+            new Intl.DateTimeFormat("en-IN", {
+                timeZone: "Asia/Kolkata",
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }).format(now);
+
+        $("activity-date").textContent =
+            new Intl.DateTimeFormat("en-IN", {
+                timeZone: "Asia/Kolkata",
+                day: "numeric",
+                month: "short"
+            }).format(now);
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // ------------------------------------------------
+    // DAILY STUDY TIMER
+    // ------------------------------------------------
+
+    function getSavedStudySeconds() {
+        return Number(localStorage.getItem(storageKey("study_seconds")) || 0);
+    }
+
+    function saveStudySeconds() {
+        localStorage.setItem(storageKey("study_seconds"), String(studySeconds));
+    }
+
+    function formatDuration(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+
+        if (hours > 0) return `${hours}h ${minutes}m`;
+        if (minutes > 0) return `${minutes}m`;
+        return `${seconds}s`;
+    }
+
+    function updateStudyTimer() {
+        const elapsed = Math.floor((Date.now() - sessionStart) / 1000);
+        const total = studySeconds + elapsed;
+
+        $("today-study-time").textContent = formatDuration(total);
+    }
+
+    function startStudyTimer() {
+        studySeconds = getSavedStudySeconds();
+        sessionStart = Date.now();
+
+        sessionTimer = setInterval(updateStudyTimer, 1000);
+        updateStudyTimer();
+    }
+
+    function saveActiveStudyTime() {
+        if (!sessionTimer) return;
+
+        const elapsed = Math.floor((Date.now() - sessionStart) / 1000);
+        if (elapsed <= 0) return;
+
+        studySeconds += elapsed;
+        sessionStart = Date.now();
+        saveStudySeconds();
+        updateStudyTimer();
+    }
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            saveActiveStudyTime();
+        } else {
+            sessionStart = Date.now();
+            updateStudyTimer();
+        }
+    });
+
+    window.addEventListener("pagehide", saveActiveStudyTime);
+
+    startStudyTimer();
+
+    // ------------------------------------------------
+    // DAILY PERSONAL TARGETS
+    // ------------------------------------------------
+
+    function getTargets() {
+        try {
+            return JSON.parse(localStorage.getItem(storageKey("targets")) || "[]");
+        } catch {
+            return [];
+        }
+    }
+
+    function saveTargets(targets) {
+        localStorage.setItem(storageKey("targets"), JSON.stringify(targets));
+    }
+
+    function renderTargets() {
+        const targets = getTargets();
+        const list = $("target-list");
+
+        list.innerHTML = "";
+
+        if (!targets.length) {
+            list.innerHTML = '<div class="empty">No targets added yet. Add your first study target above!</div>';
+        }
+
+        targets.forEach(target => {
+            const item = document.createElement("div");
+            item.className = `target-item ${target.done ? "done" : ""}`;
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = Boolean(target.done);
+            checkbox.setAttribute("aria-label", "Mark target completed");
+
+            checkbox.addEventListener("change", () => {
+                const updated = getTargets();
+                const found = updated.find(t => t.id === target.id);
+
+                if (found) found.done = checkbox.checked;
+
+                saveTargets(updated);
+                renderTargets();
+            });
+
+            const label = document.createElement("span");
+            label.textContent = target.text;
+
+            const remove = document.createElement("button");
+            remove.className = "delete-btn";
+            remove.type = "button";
+            remove.textContent = "×";
+            remove.setAttribute("aria-label", "Delete target");
+
+            remove.addEventListener("click", () => {
+                saveTargets(getTargets().filter(t => t.id !== target.id));
+                renderTargets();
+                showToast("Target removed.");
+            });
+
+            item.append(checkbox, label, remove);
+            list.appendChild(item);
+        });
+
+        const completed = targets.filter(t => t.done).length;
+
+        $("target-count").textContent =
+            `${targets.length} ${targets.length === 1 ? "target" : "targets"}`;
+
+        $("target-completed").textContent = `${completed} completed`;
+    }
+
+    $("target-form").addEventListener("submit", event => {
+        event.preventDefault();
+
+        const input = $("target-input");
+        const value = input.value.trim();
+
+        if (!value) return;
+
+        const targets = getTargets();
+
+        targets.push({
+            id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            text: value,
+            done: false
+        });
+
+        saveTargets(targets);
+        input.value = "";
+        renderTargets();
+        showToast("Your study target has been added!");
+    });
+
+    renderTargets();
+
+    // ------------------------------------------------
+    // PROFILE
+    // ------------------------------------------------
+
+    function setProfile(name, email) {
+        const displayName = name || (email ? email.split("@")[0] : "Student");
+        const firstName = displayName.split(" ")[0];
+
+        $("profile-name").textContent = displayName;
+        $("welcome-name").textContent = firstName;
+        $("profile-avatar").textContent = firstName.charAt(0).toUpperCase();
+    }
+
+    // ------------------------------------------------
+    // ACTIVITY DISPLAY
+    // ------------------------------------------------
+
+    function eventDetails(type) {
+        const details = {
+            lesson_completed: ["🎬", "Lesson completed"],
+            note_read: ["📝", "Notes read"],
+            formula_revised: ["📐", "Formula revised"],
+            pyq_attempted: ["✍️", "PYQ attempted"],
+            pyq_solved: ["🎯", "PYQ solved"]
+        };
+
+        return details[type] || ["📘", String(type || "Learning activity").replaceAll("_", " ")];
+    }
+
+    function timeLabel(dateString) {
+        const date = new Date(dateString);
+
+        if (Number.isNaN(date.getTime())) return "";
+
+        return new Intl.DateTimeFormat("en-IN", {
+            timeZone: "Asia/Kolkata",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        }).format(date);
+    }
+
+    function renderActivity(container, records, emptyMessage) {
+        container.innerHTML = "";
+
+        if (!records.length) {
+            container.innerHTML = `<div class="empty">${emptyMessage}</div>`;
+            return;
+        }
+
+        records.forEach(record => {
+            const [emoji, label] = eventDetails(record.event_type);
+
+            const item = document.createElement("div");
+            item.className = "activity-item";
+
+            const icon = document.createElement("div");
+            icon.className = "activity-icon";
+            icon.textContent = emoji;
+
+            const text = document.createElement("div");
+            text.className = "activity-text";
+
+            const title = document.createElement("strong");
+            title.textContent = label;
+
+            const time = document.createElement("small");
+            time.textContent = timeLabel(record.created_at);
+
+            text.append(title, time);
+            item.append(icon, text);
+            container.appendChild(item);
+        });
+    }
+
+    // ------------------------------------------------
+    // LOAD SUPABASE LEARNING PROGRESS
+    // ------------------------------------------------
+
+    async function loadLearningProgress() {
+        if (!db || !currentUser) {
+            $("connection-status").textContent = "Please log in to load account learning progress.";
+            return;
+        }
+
+        $("connection-status").textContent = "Loading your learning progress...";
+
+        try {
+            const { data, error } = await db
+                .from("learning_progress_events")
+                .select("event_type, created_at, chapter_id, resource_id, metadata")
+                .eq("user_id", currentUser.id)
+                .order("created_at", { ascending: false })
+                .limit(1000);
+
+            if (error) throw error;
+
+            const records = data || [];
+            const today = todayKey();
+
+            const todayRecords = records.filter(record => {
+                const date = new Date(record.created_at);
+
+                const localDate = new Intl.DateTimeFormat("en-CA", {
+                    timeZone: "Asia/Kolkata",
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit"
+                }).format(date);
+
+                return localDate === today;
+            });
+
+            const count = type => records.filter(r => r.event_type === type).length;
+
+            const lessons = count("lesson_completed");
+            const notes = count("note_read");
+            const formulas = count("formula_revised");
+            const pyqs = count("pyq_solved");
+
+            $("completed-lessons").textContent = lessons;
+            $("notes-read").textContent = notes;
+            $("pyqs-solved").textContent = pyqs;
+
+            const todayLessons = todayRecords.filter(r => r.event_type === "lesson_completed").length;
+            const todayNotes = todayRecords.filter(r => r.event_type === "note_read").length;
+            const todayFormulas = todayRecords.filter(r => r.event_type === "formula_revised").length;
+            const todayPyqs = todayRecords.filter(r => r.event_type === "pyq_solved").length;
+
+            const totalActivities = lessons + notes + formulas + pyqs;
+            const dailyActivities = todayLessons + todayNotes + todayFormulas + todayPyqs;
+
+            // This is an activity-based indicator, not a syllabus completion percentage.
+            const progress = Math.min(100, totalActivities);
+
+            $("overall-progress").textContent = `${progress}%`;
+            $("progress-ring").style.background =
+                `conic-gradient(var(--purple) ${progress * 3.6}deg, #30364e 0deg)`;
+
+            $("progress-bar-fill").style.width = `${progress}%`;
+
+            $("progress-description").textContent =
+                `${totalActivities} recorded learning activities so far. Keep building your study consistency!`;
+
+            $("progress-note").textContent =
+                `${lessons} lessons · ${notes} notes · ${formulas} formula revisions · ${pyqs} solved PYQs`;
+
+            const todayActivity = todayRecords.slice(0, 5);
+
+            renderActivity(
+                $("activity-list"),
+                todayActivity,
+                "No learning activities recorded today yet. Start a chapter to begin!"
+            );
+
+            renderActivity(
+                $("recent-activity-list"),
+                records.slice(0, 6),
+                "Your learning history will appear here after you complete lessons or study resources."
+            );
+
+            $("connection-status").textContent =
+                "Supabase connected · Learning progress loaded";
+
+        } catch (error) {
+            console.error("STUDYVERSE dashboard progress error:", error);
+
+            $("connection-status").textContent =
+                "Dashboard opened · Learning progress could not be loaded";
+
+            $("activity-list").innerHTML =
+                '<div class="empty">Learning activity is temporarily unavailable. Your dashboard and personal targets are still working.</div>';
+
+            $("recent-activity-list").innerHTML =
+                '<div class="empty">Could not load recent learning history.</div>';
+
+            showToast("Could not load learning progress. Check the browser console.");
+        }
+    }
+
+    // ------------------------------------------------
+    // INITIALIZE SUPABASE AND AUTHENTICATION
+    // ------------------------------------------------
+
+    async function initializeDashboard() {
+        try {
+            if (!window.supabase || !window.supabase.createClient) {
+                throw new Error("Supabase library did not load.");
+            }
+
+            db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+            const { data, error } = await db.auth.getSession();
+
+            if (error) throw error;
+
+            currentUser = data.session?.user || null;
+
+            if (currentUser) {
+                const metadata = currentUser.user_metadata || {};
+                setProfile(
+                    metadata.full_name || metadata.name,
+                    currentUser.email
+                );
+
+                await loadLearningProgress();
+            } else {
+                setProfile("Student", "");
+                $("connection-status").textContent =
+                    "No active login · Log in from the homepage to view your account progress";
+
+                $("activity-list").innerHTML =
+                    '<div class="empty">Log in to your STUDYVERSE AI account to see your learning activities.</div>';
+
+                $("recent-activity-list").innerHTML =
+                    '<div class="empty">Your account learning history will appear after login.</div>';
+
+                showToast("Dashboard opened. Log in to load your learning records.");
+            }
+
+            db.auth.onAuthStateChange((event, session) => {
+                if (event === "SIGNED_IN" && session?.user) {
+                    currentUser = session.user;
+
+                    const metadata = currentUser.user_metadata || {};
+                    setProfile(metadata.full_name || metadata.name, currentUser.email);
+
+                    // Defer the query so the auth event callback can finish.
+                    setTimeout(() => loadLearningProgress(), 0);
+                }
+
+                if (event === "SIGNED_OUT") {
+                    currentUser = null;
+                    setProfile("Student", "");
+                    $("connection-status").textContent = "You are signed out.";
+                }
+            });
+
+        } catch (error) {
+            console.error("STUDYVERSE dashboard initialization error:", error);
+
+            $("connection-status").textContent =
+                "Dashboard opened · Account connection unavailable";
+
+            showToast("Dashboard opened, but account connection failed.");
+        }
+    }
+
+    // ------------------------------------------------
+    // LOGOUT
+    // ------------------------------------------------
+
+    $("logout-btn").addEventListener("click", async () => {
+        if (!db) {
+            window.location.href = "./index.html";
+            return;
+        }
+
+        const confirmed = window.confirm("Are you sure you want to log out?");
+
+        if (!confirmed) return;
+
+        try {
+            const { error } = await db.auth.signOut();
+
+            if (error) throw error;
+
+            window.location.href = "./index.html";
+
+        } catch (error) {
+            console.error("Logout error:", error);
+            showToast("Unable to log out. Please try again.");
+        }
+    });
+
+    initializeDashboard();
+
+})();
+</script>
+
+</body>
+</html>
