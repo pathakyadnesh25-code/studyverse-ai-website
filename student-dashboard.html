@@ -1,0 +1,590 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090b18">
+  <meta name="description" content="STUDYVERSE AI - Your smart learning destination for JEE Main, JEE Advanced and NEET UG preparation.">
+
+  <title>STUDYVERSE AI | Learn Smarter. Achieve More.</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./chapter-learning.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+  <div class="container nav-inner">
+
+    <a href="index.html#home" class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+          <path d="M5 15L20 7L35 15L20 23L5 15Z" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M11 19V27C16 32 24 32 29 27V19" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M35 15V25" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      STUDYVERSE <span>AI</span>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html#home">Home</a>
+      <a href="index.html#exams">Examinations</a>
+      <a href="index.html#features">Features</a>
+      <a href="index.html#courses">Courses</a>
+      <a href="index.html#how">How it works</a>
+      <a href="student-dashboard.html" class="student-only" hidden>My Dashboard</a>
+    </nav>
+
+    <div class="nav-actions">
+
+      <button class="btn btn-outline" id="loginBtn" type="button">
+        Log in
+      </button>
+
+      <button class="btn btn-primary student-only" id="profileBtn" type="button" hidden>
+        My Profile
+      </button>
+
+      <button class="btn btn-outline student-only" id="logoutBtn" type="button" hidden>
+        Log out
+      </button>
+
+      <a href="index.html#exams" class="btn btn-primary guest-only" id="getStartedBtn">
+        Get Started →
+      </a>
+
+      <button class="menu-btn" id="menuToggle" aria-label="Open navigation" aria-expanded="false">
+        ☰
+      </button>
+
+    </div>
+  </div>
+</header>
+
+
+<main class="student-dashboard-page">
+  <section class="dashboard-page-hero section">
+    <div class="container">
+      <span class="sv-eyebrow">STUDYVERSE AI · STUDENT SPACE</span>
+      <h1>Your learning.<br><span class="gradient-text">Your progress.</span></h1>
+      <p>Everything about your preparation, in one private dashboard.</p>
+      <a class="btn btn-outline" href="index.html#exams">← Back to examinations</a>
+    </div>
+  </section>
+  <section class="sv-dashboard student-dashboard-section" id="student-dashboard">
+
+  <div class="container">
+
+    <div class="sv-dashboard-heading">
+
+      <span class="sv-eyebrow">YOUR PERSONAL LEARNING SPACE</span>
+
+      <h2>
+        Welcome back,
+        <span class="gradient-text" id="dashboardStudentName">Learner</span>
+      </h2>
+
+      <p>Monitor your learning activities and continue your preparation journey.</p>
+
+    </div>
+
+    <div id="student-dashboard-loading" class="sv-status" aria-live="polite">
+      Loading your learning progress...
+    </div>
+
+    <div id="student-dashboard-content" hidden>
+
+      <div class="student-overview-card">
+
+        <div>
+          <span class="sv-eyebrow">OVERALL LEARNING PROGRESS</span>
+          <h3>Your preparation overview</h3>
+          <p>Based on your recorded learning activities.</p>
+        </div>
+
+        <div class="student-overall-progress">
+          <strong id="overallProgressValue">0%</strong>
+          <span>Overall progress</span>
+        </div>
+
+      </div>
+
+      <div class="student-stats-grid">
+
+        <article class="student-stat-card">
+          <span class="student-stat-icon">📚</span>
+          <strong id="completedLessonsCount">0</strong>
+          <span>Lessons completed</span>
+        </article>
+
+        <article class="student-stat-card">
+          <span class="student-stat-icon">📝</span>
+          <strong id="notesReadCount">0</strong>
+          <span>Notes completed</span>
+        </article>
+
+        <article class="student-stat-card">
+          <span class="student-stat-icon">📐</span>
+          <strong id="formulasRevisedCount">0</strong>
+          <span>Formulas revised</span>
+        </article>
+
+        <article class="student-stat-card">
+          <span class="student-stat-icon">🎯</span>
+          <strong id="pyqsSolvedCount">0</strong>
+          <span>PYQs attempted</span>
+        </article>
+
+      </div>
+
+      <div class="student-activity-card">
+
+        <div class="student-section-heading">
+          <div>
+            <span class="sv-eyebrow">DAILY LEARNING</span>
+            <h3>Today's Activity</h3>
+          </div>
+          <span id="todayActivityDate"></span>
+        </div>
+
+        <div class="today-activity-grid">
+
+          <div class="today-activity-item">
+            <strong id="todayLessonsCount">0</strong>
+            <span>Lessons completed</span>
+          </div>
+
+          <div class="today-activity-item">
+            <strong id="todayNotesCount">0</strong>
+            <span>Notes completed</span>
+          </div>
+
+          <div class="today-activity-item">
+            <strong id="todayFormulasCount">0</strong>
+            <span>Formulas revised</span>
+          </div>
+
+          <div class="today-activity-item">
+            <strong id="todayPyqsCount">0</strong>
+            <span>PYQs attempted</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="student-dashboard-actions">
+        <a href="#detailed-dashboard" class="btn btn-primary">
+          View Detailed Dashboard →
+        </a>
+      </div>
+
+    </div>
+
+    <div id="student-dashboard-empty" class="sv-status" hidden>
+      Start learning to see your personal progress here.
+    </div>
+
+    <div id="student-dashboard-error" class="sv-status" hidden aria-live="polite"></div>
+
+  </div>
+
+</section>
+  
+<section class="daily-study-panel section">
+  <div class="container">
+    <div class="section-heading">
+      <span class="sv-eyebrow">YOUR DAY, YOUR PLAN</span>
+      <h2>Today's <span class="gradient-text">Study Room.</span></h2>
+      <p>See how long you studied on STUDYVERSE AI, review your activity and set your own daily targets.</p>
+    </div>
+    <div class="daily-study-grid">
+      <article class="daily-time-card">
+        <span class="daily-card-kicker">ACTIVE WEBSITE TIME TODAY</span>
+        <strong id="sv-today-time">0 min</strong>
+        <p>Counts while this website is open and the tab is active.</p>
+        <div class="daily-live-clock"><span>Current time</span><strong id="sv-dashboard-clock">--:--:--</strong></div>
+      </article>
+      <article class="daily-activity-card">
+        <div class="daily-panel-heading"><div><span class="daily-card-kicker">YOUR STUDY LOG</span><h3>What you did today</h3></div><span id="sv-dashboard-date"></span></div>
+        <div id="sv-today-activity" class="today-activity-list"><p class="sv-status">Your activity will appear here as you use the website.</p></div>
+      </article>
+    </div>
+    <article class="daily-target-card">
+      <div class="daily-panel-heading">
+        <div><span class="daily-card-kicker">PERSONAL DAILY TARGETS</span><h3>My checklist</h3><p>Add your own targets and tick them when completed.</p></div>
+        <div class="target-progress"><strong id="sv-target-progress">0/0</strong><span>completed</span></div>
+      </div>
+      <form id="sv-target-form" class="target-form">
+        <input id="sv-target-input" type="text" maxlength="100" placeholder="e.g. Complete 2 Biology topics" autocomplete="off" required>
+        <button class="btn btn-primary" type="submit">Add target +</button>
+      </form>
+      <div id="sv-target-list" class="target-list"><p class="sv-status">Your checklist is empty. Add your first target above.</p></div>
+    </article>
+    <p class="tracker-storage-note">Your checklist and study-time history are currently saved on this browser. We will connect secure student-specific cloud saving through Supabase policies in the next database step.</p>
+  </div>
+</section>
+
+  <section class="detailed-dashboard-section" id="detailed-dashboard">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <div class="eyebrow">YOUR PERFORMANCE</div>
+
+      <h2>
+        Detailed Learning
+        <span class="gradient-text">Dashboard</span>
+      </h2>
+
+      <p>Review your study progress, chapter completion and practice history.</p>
+
+    </div>
+
+    <div class="detailed-dashboard-grid">
+
+      <article class="detail-progress-card">
+        <span class="detail-card-icon">📖</span>
+        <h3>Chapter Progress</h3>
+        <strong id="detailChapterProgress">0%</strong>
+        <p>Chapter completion percentage</p>
+      </article>
+
+      <article class="detail-progress-card">
+        <span class="detail-card-icon">🎬</span>
+        <h3>Video Lessons</h3>
+        <strong id="detailVideoLessons">0</strong>
+        <p>Lessons watched or completed</p>
+      </article>
+
+      <article class="detail-progress-card">
+        <span class="detail-card-icon">📐</span>
+        <h3>Formula Revision</h3>
+        <strong id="detailFormulaRevision">0</strong>
+        <p>Formula sheets revised</p>
+      </article>
+
+      <article class="detail-progress-card">
+        <span class="detail-card-icon">🎯</span>
+        <h3>PYQ Performance</h3>
+        <strong id="detailPyqAccuracy">0%</strong>
+        <p>Accuracy in attempted questions</p>
+      </article>
+
+    </div>
+
+    <div class="student-history-card">
+
+      <div class="student-section-heading">
+        <div>
+          <span class="sv-eyebrow">SUBJECT-WISE TRACKING</span>
+          <h3>Chapter-wise Progress</h3>
+        </div>
+      </div>
+
+      <div id="chapterProgressList" class="chapter-progress-list">
+        <p class="sv-status">Your chapter progress will appear here after you start learning.</p>
+      </div>
+
+    </div>
+
+    <div class="student-history-card">
+
+      <div class="student-section-heading">
+        <div>
+          <span class="sv-eyebrow">YOUR LEARNING RECORD</span>
+          <h3>Recent Study History</h3>
+        </div>
+      </div>
+
+      <div id="studyHistoryList" class="study-history-list">
+        <p class="sv-status">Your study history will appear here.</p>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+  <div class="container">
+
+    <div class="footer-content">
+
+      <div>
+        <a href="#home" class="brand">
+          STUDYVERSE <span>AI</span>
+        </a>
+
+        <p class="footer-description">
+          Understand Concepts. Master Questions. Achieve Your Dreams.
+          A smarter learning destination for entrance exam preparation.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <a href="#home">Home</a>
+        <a href="#exams">Examinations</a>
+        <a href="#features">Features</a>
+        <a href="#courses">Courses</a>
+        <a href="#how">About</a>
+      </div>
+
+    </div>
+
+    <div class="copyright">
+      © <span id="year"></span> STUDYVERSE AI. All rights reserved. | Learning with purpose.
+    </div>
+
+  </div>
+
+</footer>
+
+
+<!-- ================= LOGIN / REGISTRATION MODAL ================= -->
+
+<div
+  class="modal"
+  id="loginModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="loginTitle"
+  aria-hidden="true"
+>
+
+  <div class="modal-box">
+
+    <button class="modal-close" id="modalClose" type="button" aria-label="Close">
+      &times;
+    </button>
+
+    <div class="brand" style="margin-bottom:20px">
+      STUDYVERSE <span>AI</span>
+    </div>
+
+    <h2 id="loginTitle">Welcome, Learner!</h2>
+
+    <p id="authModeText">
+      Sign in to continue your learning journey.
+    </p>
+
+    <form id="loginForm">
+
+      <!-- FULL NAME: REGISTRATION ONLY -->
+
+      <div id="nameFieldGroup" hidden>
+        <label for="studentName">Full name</label>
+        <input
+          id="studentName"
+          name="full_name"
+          type="text"
+          placeholder="Enter your full name"
+          autocomplete="name"
+        >
+      </div>
+
+
+      <!-- TARGET EXAMINATION: REGISTRATION ONLY -->
+
+      <div id="targetExamGroup" hidden>
+        <label for="targetExam">Target Examination</label>
+
+        <select id="targetExam" name="target_exam">
+          <option value="">Select your examination</option>
+          <option value="JEE Main">JEE Main</option>
+          <option value="JEE Advanced">JEE Advanced</option>
+          <option value="NEET UG">NEET UG</option>
+        </select>
+      </div>
+
+
+      <!-- ACADEMIC LEVEL: REGISTRATION ONLY -->
+
+      <div id="academicLevelGroup" hidden>
+        <label for="academicLevel">Academic Level</label>
+
+        <select id="academicLevel" name="academic_level">
+          <option value="">Select your academic level</option>
+          <option value="Class 11">Class 11</option>
+          <option value="Class 12">Class 12</option>
+          <option value="Dropper">Dropper</option>
+        </select>
+      </div>
+
+
+      <!-- PREFERRED LANGUAGE: REGISTRATION ONLY -->
+
+      <div id="preferredLanguageGroup" hidden>
+        <label for="preferredLanguage">Preferred Language</label>
+
+        <select id="preferredLanguage" name="preferred_language">
+          <option value="">Select your preferred language</option>
+          <option value="English">English</option>
+          <option value="Hindi">Hindi</option>
+          <option value="Marathi">Marathi</option>
+        </select>
+      </div>
+
+
+      <!-- EMAIL -->
+
+      <label for="studentEmail">Email address</label>
+
+      <input
+        id="studentEmail"
+        name="email"
+        type="email"
+        placeholder="Enter your email"
+        autocomplete="email"
+        required
+      >
+
+
+      <!-- PASSWORD -->
+
+      <label for="studentPassword">Password</label>
+
+      <input
+        id="studentPassword"
+        name="password"
+        type="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+        minlength="6"
+        required
+      >
+
+
+      <!-- CONFIRM PASSWORD: REGISTRATION ONLY -->
+
+      <div id="confirmPasswordGroup" hidden>
+
+        <label for="confirmPassword">Confirm Password</label>
+
+        <input
+          id="confirmPassword"
+          name="confirm_password"
+          type="password"
+          placeholder="Re-enter your password"
+          autocomplete="new-password"
+          minlength="6"
+        >
+
+      </div>
+
+
+      <!-- SUBMIT -->
+
+      <button class="btn btn-primary" id="authSubmitBtn" type="submit">
+        Log in →
+      </button>
+
+      <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+
+    </form>
+
+    <p class="auth-switch-text">
+      <span id="authSwitchLabel">New to STUDYVERSE AI?</span>
+
+      <button id="authSwitchBtn" type="button" class="auth-switch-btn">
+        Create an account
+      </button>
+    </p>
+
+    <p class="notice">
+      Your account and learning progress will be securely managed through Supabase authentication.
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ================= STUDENT PROFILE MODAL ================= -->
+
+<div
+  class="modal"
+  id="profileModal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="profileTitle"
+  aria-hidden="true"
+>
+
+  <div class="modal-box">
+
+    <button class="modal-close" id="profileModalClose" type="button" aria-label="Close">
+      &times;
+    </button>
+
+    <div class="brand" style="margin-bottom:20px">
+      STUDYVERSE <span>AI</span>
+    </div>
+
+    <h2 id="profileTitle">Student Profile</h2>
+
+    <p>Your account information.</p>
+
+    <div class="profile-details">
+
+      <div class="profile-detail-item">
+        <span>Full name</span>
+        <strong id="profileStudentName">Not available</strong>
+      </div>
+
+      <div class="profile-detail-item">
+        <span>Email address</span>
+        <strong id="profileStudentEmail">Not available</strong>
+      </div>
+
+      <div class="profile-detail-item">
+        <span>Account status</span>
+        <strong id="profileAccountStatus">Checking...</strong>
+      </div>
+
+      <div class="profile-detail-item">
+        <span>Member since</span>
+        <strong id="profileCreatedAt">Not available</strong>
+      </div>
+
+    </div>
+
+    <button class="btn btn-primary" id="profileDashboardBtn" type="button">
+      Open My Dashboard →
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ================= TOAST MESSAGE ================= -->
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+
+<!-- ================= JAVASCRIPT LIBRARIES ================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- STUDYVERSE AI MAIN JAVASCRIPT -->
+<script src="./script.js"></script>
+
+</body>
+</html>
