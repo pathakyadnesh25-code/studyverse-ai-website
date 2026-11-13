@@ -1,0 +1,1055 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Formula Sheets | STUDYVERSE AI</title>
+
+    <meta name="description" content="Chapter-wise NEET, JEE Main and JEE Advanced Physics, Chemistry and Mathematics formula revision sheets.">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        :root {
+            --bg: #080b18;
+            --panel: #11182c;
+            --panel2: #171f38;
+            --border: rgba(255,255,255,.09);
+            --text: #f3f5ff;
+            --muted: #a5aec9;
+            --purple: #9274ff;
+            --blue: #45a6ff;
+            --green: #42d6a0;
+            --yellow: #ffd36b;
+            --red: #ff758a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background:
+                radial-gradient(ellipse at top left, #242054 0, transparent 36%),
+                radial-gradient(ellipse at top right, #102b50 0, transparent 35%),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(8,11,24,.88);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: 900;
+            letter-spacing: .5px;
+        }
+
+        .brand span {
+            color: var(--purple);
+        }
+
+        .back-btn {
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: white;
+            padding: 10px 17px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            border-color: var(--purple);
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: auto;
+            padding: 35px 5% 70px;
+        }
+
+        .hero {
+            padding: 35px;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            background: linear-gradient(130deg, rgba(119,87,255,.19), rgba(38,151,255,.08));
+            position: relative;
+            overflow: hidden;
+            animation: appear .6s ease;
+        }
+
+        .hero::after {
+            content: "∑";
+            position: absolute;
+            right: 45px;
+            top: 10px;
+            font-size: 145px;
+            color: rgba(255,255,255,.055);
+            font-weight: 900;
+        }
+
+        .eyebrow {
+            color: #b6a7ff;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: clamp(29px, 5vw, 46px);
+            margin: 12px 0;
+        }
+
+        .hero p {
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 680px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 24px 0;
+        }
+
+        .stat {
+            background: rgba(17,24,44,.88);
+            border: 1px solid var(--border);
+            padding: 19px;
+            border-radius: 17px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 27px;
+            color: var(--purple);
+            margin-bottom: 5px;
+        }
+
+        .stat small {
+            color: var(--muted);
+        }
+
+        .section-title {
+            font-size: 21px;
+            margin: 32px 0 15px;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+            margin-bottom: 18px;
+        }
+
+        .field {
+            width: 100%;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 13px;
+            padding: 14px;
+            outline: none;
+        }
+
+        .field:focus {
+            border-color: var(--purple);
+        }
+
+        select option {
+            background: #11182c;
+        }
+
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+            gap: 13px;
+        }
+
+        .chapter-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 17px;
+            cursor: pointer;
+            transition: .25s ease;
+            animation: appear .4s ease;
+        }
+
+        .chapter-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--purple);
+            background: var(--panel2);
+        }
+
+        .chapter-card.active {
+            border-color: var(--purple);
+            background: rgba(146,116,255,.15);
+        }
+
+        .chapter-number {
+            font-size: 11px;
+            color: #b9aaff;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .chapter-card h3 {
+            font-size: 15px;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
+        .chapter-card p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .formula-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 32px 0 16px;
+        }
+
+        .formula-heading h2 {
+            font-size: 23px;
+        }
+
+        .formula-actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            border: 1px solid var(--border);
+            color: white;
+            background: var(--panel2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            border-color: var(--purple);
+        }
+
+        .formula-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 15px;
+        }
+
+        .formula-card {
+            background: linear-gradient(145deg, #151e35, #101629);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: .25s;
+            animation: appear .4s ease;
+        }
+
+        .formula-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(146,116,255,.65);
+        }
+
+        .formula-card h3 {
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 10px 0 14px;
+        }
+
+        .formula-label {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            color: var(--green);
+            text-transform: uppercase;
+        }
+
+        .formula-text {
+            background: rgba(0,0,0,.24);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 12px;
+            padding: 17px 12px;
+            color: #d9ccff;
+            font-family: "Cambria Math", Georgia, serif;
+            font-size: 18px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .explanation {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            margin-top: 13px;
+        }
+
+        .copy-formula {
+            margin-top: 15px;
+            padding: 9px 12px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            color: white;
+            background: rgba(146,116,255,.13);
+            cursor: pointer;
+        }
+
+        .copy-formula:hover {
+            background: rgba(146,116,255,.3);
+        }
+
+        .empty, .loading {
+            text-align: center;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 35px 20px;
+            border-radius: 17px;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .message {
+            display: none;
+            margin: 15px 0;
+            padding: 13px;
+            border-radius: 12px;
+            background: rgba(66,214,160,.12);
+            color: var(--green);
+            border: 1px solid rgba(66,214,160,.25);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 10px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(13px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media(max-width: 650px) {
+            .topbar {
+                padding: 13px 4%;
+            }
+
+            .container {
+                padding: 22px 4% 45px;
+            }
+
+            .hero {
+                padding: 25px 19px;
+            }
+
+            .hero::after {
+                right: 12px;
+                font-size: 90px;
+            }
+
+            .stats {
+                gap: 8px;
+            }
+
+            .stat {
+                padding: 13px 9px;
+            }
+
+            .stat strong {
+                font-size: 21px;
+            }
+
+            .stat small {
+                font-size: 10px;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .formula-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chapter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .chapter-card {
+                padding: 13px;
+            }
+
+            .chapter-card h3 {
+                font-size: 13px;
+            }
+        }
+
+        @media(max-width: 380px) {
+            .chapter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .topbar, .hero, .stats, .filters,
+            .chapter-grid, .formula-actions,
+            .copy-formula, .footer {
+                display: none !important;
+            }
+
+            .container {
+                max-width: none;
+                padding: 0;
+            }
+
+            .formula-card {
+                break-inside: avoid;
+                background: white;
+                color: black;
+                border: 1px solid #bbb;
+            }
+
+            .formula-card h3,
+            .formula-text,
+            .explanation,
+            .formula-label {
+                color: black;
+            }
+
+            .formula-text {
+                background: #f4f4f4;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <a class="brand" href="./index.html">
+        STUDYVERSE <span>AI</span>
+    </a>
+
+    <button class="back-btn" onclick="goBack()">
+        ← Back
+    </button>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <div class="eyebrow">Smart Revision Centre</div>
+
+        <h1>Formula Sheets</h1>
+
+        <p>
+            Your complete chapter-wise formula revision space.
+            Understand important equations, revise faster,
+            strengthen concepts and prepare confidently for
+            NEET UG, JEE Main and JEE Advanced.
+        </p>
+    </section>
+
+    <section class="stats">
+        <div class="stat">
+            <strong id="chapterCount">--</strong>
+            <small>Chapters Available</small>
+        </div>
+
+        <div class="stat">
+            <strong id="formulaCount">--</strong>
+            <small>Published Formulas</small>
+        </div>
+
+        <div class="stat">
+            <strong id="subjectLabel">Physics</strong>
+            <small>Selected Subject</small>
+        </div>
+    </section>
+
+    <h2 class="section-title">Find Your Chapter</h2>
+
+    <div class="filters">
+        <select class="field" id="examSelect">
+            <option value="neet-ug">NEET UG</option>
+            <option value="jee-main">JEE Main</option>
+            <option value="jee-advanced">JEE Advanced</option>
+        </select>
+
+        <select class="field" id="subjectSelect">
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Biology">Biology</option>
+        </select>
+
+        <input
+            class="field"
+            type="search"
+            id="chapterSearch"
+            placeholder="Search chapters..."
+        >
+    </div>
+
+    <div id="chapterStatus" class="loading">
+        Loading chapters from STUDYVERSE AI...
+    </div>
+
+    <div class="chapter-grid" id="chapterGrid"></div>
+
+    <section id="formulaSection" hidden>
+
+        <div class="formula-heading">
+            <h2 id="selectedChapterTitle">Chapter Formula Sheet</h2>
+
+            <div class="formula-actions">
+                <button class="action-btn" onclick="printFormulas()">
+                    Print / Save PDF
+                </button>
+
+                <button class="action-btn" onclick="copyAllFormulas()">
+                    Copy All
+                </button>
+            </div>
+        </div>
+
+        <input
+            type="search"
+            class="field"
+            id="formulaSearch"
+            placeholder="Search a formula or concept..."
+            style="margin-bottom:16px"
+        >
+
+        <div id="formulaStatus" class="loading">
+            Select a chapter to see its formulas.
+        </div>
+
+        <div class="formula-grid" id="formulaGrid"></div>
+
+    </section>
+
+    <div class="message" id="message"></div>
+
+</main>
+
+<footer class="footer">
+    STUDYVERSE AI · Learn Smarter. Achieve More.
+    <br><br>
+    Formula revision resources for serious learners.
+</footer>
+
+<script>
+/* =====================================================
+   STUDYVERSE AI
+   CHAPTER FORMULA SHEETS
+   SUPABASE DATABASE CONNECTION
+===================================================== */
+
+const SUPABASE_URL =
+    "https://mtxkvupfczhglaqghcbc.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
+
+const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+let chapters = [];
+let currentFormulas = [];
+let selectedChapter = null;
+
+/* -----------------------------------------------------
+   ELEMENTS
+----------------------------------------------------- */
+
+const examSelect = document.getElementById("examSelect");
+const subjectSelect = document.getElementById("subjectSelect");
+const chapterSearch = document.getElementById("chapterSearch");
+const formulaSearch = document.getElementById("formulaSearch");
+
+const chapterGrid = document.getElementById("chapterGrid");
+const formulaGrid = document.getElementById("formulaGrid");
+
+const chapterStatus = document.getElementById("chapterStatus");
+const formulaStatus = document.getElementById("formulaStatus");
+const formulaSection = document.getElementById("formulaSection");
+
+/* -----------------------------------------------------
+   LOAD CHAPTERS
+----------------------------------------------------- */
+
+async function loadChapters() {
+
+    chapterStatus.style.display = "block";
+    chapterStatus.textContent = "Loading chapters...";
+    chapterGrid.innerHTML = "";
+    formulaSection.hidden = true;
+
+    selectedChapter = null;
+    currentFormulas = [];
+
+    try {
+
+        const examSlug = examSelect.value;
+        const subjectName = subjectSelect.value;
+
+        const { data, error } = await db
+            .from("exams")
+            .select(`
+                id,
+                slug,
+                subjects (
+                    id,
+                    name,
+                    chapters (
+                        id,
+                        chapter_number,
+                        chapter_name,
+                        is_published
+                    )
+                )
+            `)
+            .eq("slug", examSlug)
+            .single();
+
+        if (error) throw error;
+
+        const subject = (data.subjects || []).find(
+            s => s.name.toLowerCase() === subjectName.toLowerCase()
+        );
+
+        if (!subject) {
+            chapters = [];
+            renderChapters();
+
+            chapterStatus.textContent =
+                "This subject is not available for the selected examination yet.";
+
+            return;
+        }
+
+        chapters = (subject.chapters || [])
+            .filter(chapter => chapter.is_published === true)
+            .sort((a,b) =>
+                (a.chapter_number || 0) - (b.chapter_number || 0)
+            );
+
+        document.getElementById("chapterCount").textContent =
+            chapters.length;
+
+        document.getElementById("subjectLabel").textContent =
+            subjectName;
+
+        chapterStatus.style.display = "none";
+
+        renderChapters();
+
+    } catch (error) {
+
+        console.error("Chapter loading error:", error);
+
+        chapterStatus.style.display = "block";
+        chapterStatus.textContent =
+            "Unable to load chapters. Check your Supabase connection and database permissions.";
+
+    }
+}
+
+/* -----------------------------------------------------
+   DISPLAY CHAPTER CARDS
+----------------------------------------------------- */
+
+function renderChapters() {
+
+    const search = chapterSearch.value.toLowerCase().trim();
+
+    const filtered = chapters.filter(chapter =>
+        chapter.chapter_name.toLowerCase().includes(search)
+    );
+
+    chapterGrid.innerHTML = "";
+
+    if (!filtered.length) {
+
+        chapterGrid.innerHTML = `
+            <div class="empty">
+                No chapters found for this search.
+            </div>
+        `;
+
+        return;
+    }
+
+    filtered.forEach(chapter => {
+
+        const card = document.createElement("div");
+
+        card.className =
+            "chapter-card" +
+            (selectedChapter?.id === chapter.id ? " active" : "");
+
+        card.innerHTML = `
+            <div class="chapter-number">
+                CHAPTER ${chapter.chapter_number ?? ""}
+            </div>
+
+            <h3>${escapeHTML(chapter.chapter_name)}</h3>
+
+            <p>Open formula revision sheet →</p>
+        `;
+
+        card.addEventListener("click", () => {
+            selectChapter(chapter);
+        });
+
+        chapterGrid.appendChild(card);
+
+    });
+
+}
+
+/* -----------------------------------------------------
+   SELECT CHAPTER
+----------------------------------------------------- */
+
+async function selectChapter(chapter) {
+
+    selectedChapter = chapter;
+
+    formulaSection.hidden = false;
+
+    document.getElementById("selectedChapterTitle").textContent =
+        chapter.chapter_name + " — Formula Sheet";
+
+    formulaSearch.value = "";
+
+    renderChapters();
+
+    formulaGrid.innerHTML = "";
+
+    formulaStatus.style.display = "block";
+    formulaStatus.textContent = "Loading chapter formulas...";
+
+    formulaSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+    await loadFormulas(chapter.id);
+
+}
+
+/* -----------------------------------------------------
+   LOAD FORMULAS FROM PUBLIC.FORMULAS
+----------------------------------------------------- */
+
+async function loadFormulas(chapterId) {
+
+    try {
+
+        const { data, error } = await db
+            .from("formulas")
+            .select("id,chapter_id,title,formula_text,explanation,is_published")
+            .eq("chapter_id", chapterId)
+            .eq("is_published", true)
+            .order("title", { ascending: true });
+
+        if (error) throw error;
+
+        currentFormulas = data || [];
+
+        formulaStatus.style.display = "none";
+
+        document.getElementById("formulaCount").textContent =
+            currentFormulas.length;
+
+        renderFormulas();
+
+    } catch (error) {
+
+        console.error("Formula loading error:", error);
+
+        formulaStatus.style.display = "block";
+
+        formulaStatus.textContent =
+            "Unable to load formulas. Check the formulas table SELECT policy and Supabase connection.";
+
+    }
+}
+
+/* -----------------------------------------------------
+   DISPLAY FORMULA CARDS
+----------------------------------------------------- */
+
+function renderFormulas() {
+
+    const search = formulaSearch.value.toLowerCase().trim();
+
+    const filtered = currentFormulas.filter(formula => {
+
+        return (
+            (formula.title || "").toLowerCase().includes(search) ||
+            (formula.formula_text || "").toLowerCase().includes(search) ||
+            (formula.explanation || "").toLowerCase().includes(search)
+        );
+
+    });
+
+    formulaGrid.innerHTML = "";
+
+    if (!filtered.length) {
+
+        formulaGrid.innerHTML = `
+            <div class="empty">
+                No formulas found in this chapter.
+            </div>
+        `;
+
+        return;
+    }
+
+    filtered.forEach((formula, index) => {
+
+        const card = document.createElement("article");
+
+        card.className = "formula-card";
+
+        const title = escapeHTML(formula.title || "Important Formula");
+        const equation = escapeHTML(formula.formula_text || "");
+        const explanation = escapeHTML(
+            formula.explanation || "Important formula for chapter revision."
+        );
+
+        card.innerHTML = `
+            <div class="formula-label">
+                IMPORTANT FORMULA ${index + 1}
+            </div>
+
+            <h3>${title}</h3>
+
+            <div class="formula-text">${equation}</div>
+
+            <p class="explanation">${explanation}</p>
+
+            <button class="copy-formula">
+                Copy Formula
+            </button>
+        `;
+
+        card.querySelector("button").addEventListener("click", () => {
+            copyText(title + "\n" + equation + "\n" + explanation);
+        });
+
+        formulaGrid.appendChild(card);
+
+    });
+
+}
+
+/* -----------------------------------------------------
+   COPY FORMULA
+----------------------------------------------------- */
+
+async function copyText(text) {
+
+    try {
+
+        await navigator.clipboard.writeText(text);
+
+        showMessage("Formula copied successfully!");
+
+    } catch (error) {
+
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+
+        document.body.appendChild(textArea);
+
+        textArea.select();
+
+        document.execCommand("copy");
+
+        textArea.remove();
+
+        showMessage("Formula copied successfully!");
+
+    }
+
+}
+
+/* -----------------------------------------------------
+   COPY ALL FORMULAS
+----------------------------------------------------- */
+
+function copyAllFormulas() {
+
+    if (!currentFormulas.length) {
+        showMessage("No formulas available to copy.");
+        return;
+    }
+
+    let output =
+        "STUDYVERSE AI\n" +
+        selectedChapter.chapter_name +
+        " - FORMULA REVISION SHEET\n\n";
+
+    currentFormulas.forEach((formula, index) => {
+
+        output +=
+            (index + 1) + ". " + formula.title + "\n" +
+            "Formula: " + formula.formula_text + "\n" +
+            "Explanation: " + (formula.explanation || "") +
+            "\n\n";
+
+    });
+
+    copyText(output);
+
+}
+
+/* -----------------------------------------------------
+   PRINT / SAVE AS PDF
+----------------------------------------------------- */
+
+function printFormulas() {
+
+    if (!currentFormulas.length) {
+        showMessage("No formulas available to print.");
+        return;
+    }
+
+    window.print();
+
+}
+
+/* -----------------------------------------------------
+   MESSAGE
+----------------------------------------------------- */
+
+function showMessage(text) {
+
+    const message = document.getElementById("message");
+
+    message.textContent = text;
+    message.style.display = "block";
+
+    setTimeout(() => {
+        message.style.display = "none";
+    }, 2500);
+
+}
+
+/* -----------------------------------------------------
+   HTML ESCAPING
+----------------------------------------------------- */
+
+function escapeHTML(value) {
+
+    return String(value).replace(/[&<>"']/g, character => {
+
+        const entities = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        };
+
+        return entities[character];
+
+    });
+
+}
+
+/* -----------------------------------------------------
+   BACK NAVIGATION
+----------------------------------------------------- */
+
+function goBack() {
+
+    if (document.referrer &&
+        new URL(document.referrer).origin === location.origin) {
+
+        history.back();
+
+    } else {
+
+        location.href = "./index.html";
+
+    }
+
+}
+
+/* -----------------------------------------------------
+   EVENT LISTENERS
+----------------------------------------------------- */
+
+examSelect.addEventListener("change", loadChapters);
+
+subjectSelect.addEventListener("change", loadChapters);
+
+chapterSearch.addEventListener("input", renderChapters);
+
+formulaSearch.addEventListener("input", renderFormulas);
+
+/* -----------------------------------------------------
+   START APPLICATION
+----------------------------------------------------- */
+
+loadChapters();
+
+</script>
+
+</body>
+</html>
