@@ -2128,7 +2128,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 );
 
                 window.location.href =
-                    "./chapter-learning.html?chapter_id=" +
+                    "./chapter.html?chapter_id=" +
                     encodeURIComponent(chapterId);
 
             }
