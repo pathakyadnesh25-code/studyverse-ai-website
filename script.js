@@ -785,5 +785,3 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
     }
-
-    // The rest of script.js continues in Part 2.
