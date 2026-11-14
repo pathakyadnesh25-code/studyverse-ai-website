@@ -1,0 +1,848 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mock Tests | STUDYVERSE AI</title>
+
+    <meta name="description"
+        content="Practice JEE Main, JEE Advanced and NEET UG mock tests on STUDYVERSE AI.">
+
+    <meta name="theme-color" content="#090817">
+
+    <!-- Main Mock Test Dashboard CSS -->
+    <link rel="stylesheet" href="mock-tests.css">
+
+    <!-- Supabase JavaScript Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Existing Supabase Configuration -->
+    <script src="supabase.js" defer></script>
+
+    <!-- Mock Test Dashboard JavaScript -->
+    <script src="mock-tests.js" defer></script>
+</head>
+
+<body>
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="mt-header">
+
+        <div class="mt-header-container">
+
+            <a href="index.html" class="mt-logo">
+                <span class="mt-logo-icon">S</span>
+
+                <span class="mt-logo-text">
+                    STUDYVERSE <strong>AI</strong>
+                    <small>LEARN SMARTER. ACHIEVE MORE.</small>
+                </span>
+            </a>
+
+            <nav class="mt-navigation">
+
+                <a href="index.html">Home</a>
+
+                <a href="index.html#examinations">
+                    Examinations
+                </a>
+
+                <a href="mock-tests.html" class="active">
+                    Mock Tests
+                </a>
+
+                <a href="index.html#courses">
+                    Courses
+                </a>
+
+            </nav>
+
+            <div class="mt-header-actions">
+
+                <a href="student-dashboard.html"
+                    class="mt-dashboard-link">
+                    My Dashboard
+                </a>
+
+                <button type="button"
+                    class="mt-mobile-menu"
+                    id="mtMobileMenu"
+                    aria-label="Toggle navigation">
+                    ☰
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="mt-main">
+
+        <!-- HERO SECTION -->
+
+        <section class="mt-hero">
+
+            <div class="mt-hero-content">
+
+                <span class="mt-eyebrow">
+                    <span class="mt-status-dot"></span>
+                    YOUR EXAM PREPARATION STARTS HERE
+                </span>
+
+                <h1>
+                    Test Your Knowledge.
+                    <span>Improve Your Rank.</span>
+                </h1>
+
+                <p>
+                    Practice with structured mock tests for
+                    JEE Main, JEE Advanced and NEET UG.
+                    Analyse your performance and improve
+                    with every attempt.
+                </p>
+
+                <div class="mt-hero-buttons">
+
+                    <a href="#availableTests"
+                        class="mt-primary-button">
+                        Explore Mock Tests
+                        <span>→</span>
+                    </a>
+
+                    <a href="#testInstructions"
+                        class="mt-secondary-button">
+                        How It Works
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="mt-hero-visual">
+
+                <div class="mt-visual-card">
+
+                    <div class="mt-visual-top">
+                        <span>YOUR NEXT CHALLENGE</span>
+                        <span class="mt-live-indicator">
+                            ● LIVE PRACTICE
+                        </span>
+                    </div>
+
+                    <div class="mt-visual-icon">
+                        🧠
+                    </div>
+
+                    <h3>Think. Attempt. Improve.</h3>
+
+                    <p>
+                        Every question brings you one step
+                        closer to your goal.
+                    </p>
+
+                    <div class="mt-visual-progress">
+                        <span></span>
+                    </div>
+
+                    <div class="mt-visual-footer">
+                        <span>Practice consistently</span>
+                        <strong>STUDYVERSE AI</strong>
+                    </div>
+
+                </div>
+
+                <div class="mt-floating-badge">
+                    <span>✦</span>
+                    Smart Practice
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- STATISTICS -->
+
+        <section class="mt-statistics">
+
+            <div class="mt-stat-card">
+                <span class="mt-stat-icon">📚</span>
+                <div>
+                    <h3 id="totalMockTests">--</h3>
+                    <p>Available Tests</p>
+                </div>
+            </div>
+
+            <div class="mt-stat-card">
+                <span class="mt-stat-icon">🎯</span>
+                <div>
+                    <h3 id="totalQuestions">--</h3>
+                    <p>Practice Questions</p>
+                </div>
+            </div>
+
+            <div class="mt-stat-card">
+                <span class="mt-stat-icon">⏱️</span>
+                <div>
+                    <h3 id="totalAttempts">--</h3>
+                    <p>Your Attempts</p>
+                </div>
+            </div>
+
+            <div class="mt-stat-card">
+                <span class="mt-stat-icon">📈</span>
+                <div>
+                    <h3 id="averageScore">--</h3>
+                    <p>Average Score</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- EXAMINATION SELECTION -->
+
+        <section class="mt-section" id="examinationSelection">
+
+            <div class="mt-section-heading">
+
+                <div>
+                    <span class="mt-section-label">
+                        CHOOSE YOUR GOAL
+                    </span>
+
+                    <h2>Select Your Examination</h2>
+
+                    <p>
+                        Choose the examination for which
+                        you are preparing.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="mt-exam-grid">
+
+                <button type="button"
+                    class="mt-exam-card active"
+                    data-exam="all"
+                    aria-pressed="true">
+
+                    <span class="mt-exam-icon">🎓</span>
+
+                    <span class="mt-exam-name">
+                        All Examinations
+                    </span>
+
+                    <span class="mt-exam-description">
+                        Explore all available tests
+                    </span>
+
+                    <span class="mt-exam-arrow">→</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mt-exam-card"
+                    data-exam="JEE Main"
+                    aria-pressed="false">
+
+                    <span class="mt-exam-icon">⚛️</span>
+
+                    <span class="mt-exam-name">
+                        JEE Main
+                    </span>
+
+                    <span class="mt-exam-description">
+                        Engineering entrance preparation
+                    </span>
+
+                    <span class="mt-exam-arrow">→</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mt-exam-card"
+                    data-exam="JEE Advanced"
+                    aria-pressed="false">
+
+                    <span class="mt-exam-icon">🚀</span>
+
+                    <span class="mt-exam-name">
+                        JEE Advanced
+                    </span>
+
+                    <span class="mt-exam-description">
+                        Advanced engineering preparation
+                    </span>
+
+                    <span class="mt-exam-arrow">→</span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mt-exam-card"
+                    data-exam="NEET UG"
+                    aria-pressed="false">
+
+                    <span class="mt-exam-icon">🧬</span>
+
+                    <span class="mt-exam-name">
+                        NEET UG
+                    </span>
+
+                    <span class="mt-exam-description">
+                        Medical entrance preparation
+                    </span>
+
+                    <span class="mt-exam-arrow">→</span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- TEST CATEGORIES -->
+
+        <section class="mt-section mt-category-section">
+
+            <div class="mt-section-heading">
+
+                <div>
+                    <span class="mt-section-label">
+                        PRACTICE YOUR WAY
+                    </span>
+
+                    <h2>Test Categories</h2>
+
+                    <p>
+                        Select the type of practice you need.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="mt-category-grid">
+
+                <button type="button"
+                    class="mt-category-card active"
+                    data-category="all"
+                    aria-pressed="true">
+
+                    <span class="mt-category-icon">🌟</span>
+
+                    <span class="mt-category-content">
+                        <strong>All Tests</strong>
+                        <small>Explore every available test</small>
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mt-category-card"
+                    data-category="full"
+                    aria-pressed="false">
+
+                    <span class="mt-category-icon">🏆</span>
+
+                    <span class="mt-category-content">
+                        <strong>Full Syllabus</strong>
+                        <small>Complete examination practice</small>
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mt-category-card"
+                    data-category="subject"
+                    aria-pressed="false">
+
+                    <span class="mt-category-icon">📖</span>
+
+                    <span class="mt-category-content">
+                        <strong>Subject Wise</strong>
+                        <small>Physics, Chemistry and Biology</small>
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                    class="mt-category-card"
+                    data-category="chapter"
+                    aria-pressed="false">
+
+                    <span class="mt-category-icon">📝</span>
+
+                    <span class="mt-category-content">
+                        <strong>Chapter Wise</strong>
+                        <small>Practise individual chapters</small>
+                    </span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- AVAILABLE TESTS -->
+
+        <section class="mt-section" id="availableTests">
+
+            <div class="mt-section-heading mt-tests-heading">
+
+                <div>
+                    <span class="mt-section-label">
+                        YOUR PRACTICE LIBRARY
+                    </span>
+
+                    <h2>Available Mock Tests</h2>
+
+                    <p id="testSectionDescription">
+                        Find a test and challenge yourself.
+                    </p>
+                </div>
+
+                <div class="mt-test-search">
+
+                    <input type="search"
+                        id="mockTestSearch"
+                        placeholder="Search mock tests..."
+                        aria-label="Search mock tests">
+
+                    <span>⌕</span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIVE FILTERS -->
+
+            <div class="mt-active-filters">
+
+                <span>Filters:</span>
+
+                <span id="activeExamFilter"
+                    class="mt-filter-chip">
+                    All Examinations
+                </span>
+
+                <span id="activeCategoryFilter"
+                    class="mt-filter-chip">
+                    All Tests
+                </span>
+
+            </div>
+
+
+            <!-- LOADING MESSAGE -->
+
+            <div class="mt-loading" id="mockTestsLoading">
+
+                <div class="mt-loader"></div>
+
+                <p>Loading available mock tests...</p>
+
+            </div>
+
+
+            <!-- TEST CARDS WILL BE INSERTED HERE BY JAVASCRIPT -->
+
+            <div class="mt-test-grid" id="mockTestGrid">
+
+            </div>
+
+
+            <!-- EMPTY STATE -->
+
+            <div class="mt-empty-state"
+                id="mockTestsEmpty"
+                hidden>
+
+                <div class="mt-empty-icon">📚</div>
+
+                <h3>No Mock Tests Found</h3>
+
+                <p>
+                    No tests match your current selection.
+                    Try another examination or category.
+                </p>
+
+                <button type="button"
+                    id="resetMockFilters"
+                    class="mt-primary-button">
+                    Reset Filters
+                </button>
+
+            </div>
+
+
+            <!-- ERROR MESSAGE -->
+
+            <div class="mt-error-state"
+                id="mockTestsError"
+                hidden>
+
+                <div class="mt-empty-icon">⚠️</div>
+
+                <h3>Unable to Load Mock Tests</h3>
+
+                <p id="mockTestsErrorMessage">
+                    Please try again later.
+                </p>
+
+                <button type="button"
+                    id="retryMockTests"
+                    class="mt-primary-button">
+                    Try Again
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- HOW IT WORKS -->
+
+        <section class="mt-section mt-instructions-section"
+            id="testInstructions">
+
+            <div class="mt-section-heading">
+
+                <div>
+                    <span class="mt-section-label">
+                        SIMPLE PROCESS
+                    </span>
+
+                    <h2>How Mock Tests Work</h2>
+
+                    <p>
+                        Follow these steps to get the most
+                        out of your practice.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="mt-steps-grid">
+
+                <div class="mt-step-card">
+
+                    <span class="mt-step-number">01</span>
+
+                    <div class="mt-step-icon">🎯</div>
+
+                    <h3>Select a Test</h3>
+
+                    <p>
+                        Choose your examination and
+                        preferred mock test.
+                    </p>
+
+                </div>
+
+
+                <div class="mt-step-card">
+
+                    <span class="mt-step-number">02</span>
+
+                    <div class="mt-step-icon">📋</div>
+
+                    <h3>Read Instructions</h3>
+
+                    <p>
+                        Check the duration, questions
+                        and marking scheme.
+                    </p>
+
+                </div>
+
+
+                <div class="mt-step-card">
+
+                    <span class="mt-step-number">03</span>
+
+                    <div class="mt-step-icon">✍️</div>
+
+                    <h3>Attempt Questions</h3>
+
+                    <p>
+                        Answer questions and track
+                        your progress.
+                    </p>
+
+                </div>
+
+
+                <div class="mt-step-card">
+
+                    <span class="mt-step-number">04</span>
+
+                    <div class="mt-step-icon">📊</div>
+
+                    <h3>Analyse Results</h3>
+
+                    <p>
+                        Review your score and identify
+                        areas to improve.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- IMPORTANT INFORMATION -->
+
+        <section class="mt-important-section">
+
+            <div class="mt-important-icon">💡</div>
+
+            <div>
+                <h3>Prepare Smart. Perform Better.</h3>
+
+                <p>
+                    Read the test instructions carefully.
+                    Your answers and test progress will be
+                    saved according to the test system's
+                    availability and connection.
+                </p>
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =========================
+         TEST INSTRUCTIONS MODAL
+    ========================== -->
+
+    <div class="mt-modal-overlay"
+        id="testInstructionsModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTestTitle"
+        hidden>
+
+        <div class="mt-modal">
+
+            <button type="button"
+                class="mt-modal-close"
+                id="closeTestModal"
+                aria-label="Close modal">
+                ×
+            </button>
+
+            <span class="mt-modal-label">
+                TEST DETAILS
+            </span>
+
+            <h2 id="modalTestTitle">
+                Mock Test
+            </h2>
+
+            <p id="modalTestDescription">
+                Review the test details before starting.
+            </p>
+
+            <div class="mt-modal-details">
+
+                <div>
+                    <span>Examination</span>
+                    <strong id="modalExam">--</strong>
+                </div>
+
+                <div>
+                    <span>Duration</span>
+                    <strong id="modalDuration">--</strong>
+                </div>
+
+                <div>
+                    <span>Total Questions</span>
+                    <strong id="modalQuestions">--</strong>
+                </div>
+
+                <div>
+                    <span>Total Marks</span>
+                    <strong id="modalMarks">--</strong>
+                </div>
+
+            </div>
+
+            <div class="mt-modal-notice">
+
+                <strong>Before you begin:</strong>
+
+                <ul>
+                    <li>Ensure you have enough uninterrupted time.</li>
+                    <li>Read each question carefully.</li>
+                    <li>Check your answers before submitting.</li>
+                    <li>Do not refresh or close the test unnecessarily.</li>
+                </ul>
+
+            </div>
+
+            <div class="mt-modal-actions">
+
+                <button type="button"
+                    class="mt-secondary-button"
+                    id="cancelTestStart">
+                    Cancel
+                </button>
+
+                <button type="button"
+                    class="mt-primary-button"
+                    id="confirmTestStart">
+                    Start Test →
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer class="mt-footer">
+
+        <div class="mt-footer-container">
+
+            <div class="mt-footer-brand">
+
+                <a href="index.html" class="mt-logo">
+                    <span class="mt-logo-icon">S</span>
+
+                    <span class="mt-logo-text">
+                        STUDYVERSE <strong>AI</strong>
+                        <small>LEARN SMARTER. ACHIEVE MORE.</small>
+                    </span>
+                </a>
+
+                <p>
+                    Empowering students with smarter
+                    learning and examination preparation.
+                </p>
+
+            </div>
+
+
+            <div class="mt-footer-links">
+
+                <div>
+                    <h4>Platform</h4>
+                    <a href="index.html">Home</a>
+                    <a href="mock-tests.html">Mock Tests</a>
+                    <a href="student-dashboard.html">Dashboard</a>
+                </div>
+
+                <div>
+                    <h4>Examinations</h4>
+                    <a href="mock-tests.html?exam=JEE%20Main">
+                        JEE Main
+                    </a>
+
+                    <a href="mock-tests.html?exam=JEE%20Advanced">
+                        JEE Advanced
+                    </a>
+
+                    <a href="mock-tests.html?exam=NEET%20UG">
+                        NEET UG
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-footer-bottom">
+
+            <p>
+                © <span id="currentYear">2026</span>
+                STUDYVERSE AI. All Rights Reserved.
+            </p>
+
+            <p>
+                Learn Smarter. Achieve More.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ACCESSIBLE NOTIFICATION AREA -->
+
+    <div id="mtNotification"
+        class="mt-notification"
+        role="status"
+        aria-live="polite">
+    </div>
+
+
+    <!-- =========================
+         BASIC PAGE INITIALIZATION
+    ========================== -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const yearElement =
+                document.getElementById("currentYear");
+
+            if (yearElement) {
+                yearElement.textContent =
+                    new Date().getFullYear();
+            }
+
+            const menuButton =
+                document.getElementById("mtMobileMenu");
+
+            const navigation =
+                document.querySelector(".mt-navigation");
+
+            if (menuButton && navigation) {
+
+                menuButton.addEventListener("click", function () {
+
+                    navigation.classList.toggle("mt-nav-open");
+
+                });
+
+            }
+
+        });
+    </script>
+
+</body>
+</html>
