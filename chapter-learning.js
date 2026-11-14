@@ -1,19 +1,18 @@
 
 /* =========================================================
    STUDYVERSE AI — CHAPTER LEARNING SYSTEM
-   Version 2.0
+   Version 3.0
 
    FEATURES
-   1. Supabase-powered chapter information
-   2. Video lessons (YouTube / MP4 / WebM)
-   3. English learning-page content
-   4. Video narration language display
-   5. Study notes and PDF links
-   6. Formula revision tracking
-   7. PYQ attempt tracking
-   8. Lesson completion tracking
-   9. Supabase learning_progress_events integration
-  10. Local chapter completion progress
+   1. Supabase chapter resources
+   2. Video lessons
+   3. Study notes with local read tracking
+   4. Formula revision with local tracking
+   5. PYQ options can be changed before submission
+   6. Check Answer button
+   7. Instant correct / incorrect feedback
+   8. Correct answer and explanation display
+   9. Local progress without requiring login
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -28,8 +27,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const SUPABASE_PUBLISHABLE_KEY =
         "sb_publishable_wMXP6W777wKfoVG_e6iNvg_k8Az7Qc6";
-
-    const PROGRESS_TABLE = "learning_progress_events";
 
     let db = window.studyverseSupabase || null;
 
@@ -50,9 +47,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         messageBox.textContent = message;
         messageBox.className = "page-message";
 
-        if (type) {
-            messageBox.classList.add(type);
-        }
+        if (type) messageBox.classList.add(type);
     }
 
     if (!db) {
@@ -64,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // -----------------------------------------------------
-    // 2. GET CHAPTER ID
+    // 2. CHAPTER ID
     // -----------------------------------------------------
 
     const params = new URLSearchParams(window.location.search);
@@ -139,6 +134,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         container.replaceChildren();
 
         const card = makeElement("div", "empty-card");
+
         card.append(
             makeElement("strong", "", heading),
             makeElement("p", "", description)
@@ -190,84 +186,52 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // -----------------------------------------------------
-    // 5. LEARNING PROGRESS INTEGRATION
+    // 5. LOCAL STORAGE HELPERS
     // -----------------------------------------------------
 
-    async function saveLearningActivity(
-        eventType,
-        resourceId = null,
-        metadata = {}
-    ) {
+    const storagePrefix = "studyverse_" + chapterId + "_";
+
+    function readLocalList(key) {
         try {
-            // Prefer the central progress system when loaded.
-            if (
-                window.StudyverseProgress &&
-                typeof window.StudyverseProgress.track === "function"
-            ) {
-                return await window.StudyverseProgress.track({
-                    eventType: eventType,
-                    resourceId: resourceId,
-                    chapterId: chapterId,
-                    metadata: metadata
-                });
-            }
-
-            // Fallback: save directly to Supabase.
-            const { data: userResult, error: userError } =
-                await db.auth.getUser();
-
-            if (userError) throw userError;
-
-            const user = userResult.user;
-
-            if (!user) {
-                showToast("Log in to save this activity to your account.");
-                return null;
-            }
-
-            const { data, error } = await db
-                .from(PROGRESS_TABLE)
-                .insert({
-                    user_id: user.id,
-                    chapter_id: chapterId,
-                    event_type: eventType,
-                    resource_id: resourceId
-                        ? String(resourceId)
-                        : null,
-                    metadata: metadata
-                })
-                .select()
-                .single();
-
-            if (error) throw error;
-
-            document.dispatchEvent(
-                new CustomEvent("studyverse:progress-updated", {
-                    detail: {
-                        eventType: eventType,
-                        record: data
-                    }
-                })
+            const value = JSON.parse(
+                localStorage.getItem(storagePrefix + key) || "[]"
             );
 
-            return data;
-
-        } catch (error) {
-            console.error(
-                "STUDYVERSE AI: Could not save learning activity:",
-                error
-            );
-
-            showToast(
-                "Activity could not be saved. Please check your login and Supabase permissions."
-            );
-
-            return null;
+            return Array.isArray(value) ? value : [];
+        } catch {
+            return [];
         }
     }
 
+    function writeLocalList(key, values) {
+        try {
+            localStorage.setItem(
+                storagePrefix + key,
+                JSON.stringify(values)
+            );
+        } catch (error) {
+            console.warn("Local progress could not be saved:", error);
+        }
+    }
+
+    function addLocalRecord(key, id) {
+        const values = readLocalList(key);
+
+        if (!values.includes(String(id))) {
+            values.push(String(id));
+            writeLocalList(key, values);
+        }
+    }
+
+    function hasLocalRecord(key, id) {
+        return readLocalList(key).includes(String(id));
+    }
+
+    // Progress is stored in this browser for now.
+    // No login or email verification is required.
+
     // -----------------------------------------------------
-    // 6. LEARNING TABS
+    // 6. TAB NAVIGATION
     // -----------------------------------------------------
 
     const tabButtons = document.querySelectorAll("[data-tab]");
@@ -291,36 +255,18 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     // -----------------------------------------------------
-    // 7. LOCAL LESSON COMPLETION
+    // 7. LESSON PROGRESS
     // -----------------------------------------------------
 
     const progressStorageKey =
-        "studyverse_completed_lessons_" + chapterId;
+        storagePrefix + "completed_lessons";
 
     function getCompletedLessons() {
-        try {
-            const saved = JSON.parse(
-                localStorage.getItem(progressStorageKey) || "[]"
-            );
-
-            return Array.isArray(saved) ? saved : [];
-        } catch {
-            return [];
-        }
+        return readLocalList("completed_lessons");
     }
 
     function saveCompletedLessons(completed) {
-        try {
-            localStorage.setItem(
-                progressStorageKey,
-                JSON.stringify(completed)
-            );
-        } catch (error) {
-            console.warn(
-                "STUDYVERSE AI: Local progress could not be saved.",
-                error
-            );
-        }
+        writeLocalList("completed_lessons", completed);
     }
 
     let totalLessons = 0;
@@ -477,20 +423,31 @@ document.addEventListener("DOMContentLoaded", async function () {
             if (exam) examName = exam.name;
         }
 
-        elements.title.textContent = chapter.chapter_name;
+        if (elements.title) {
+            elements.title.textContent = chapter.chapter_name;
+        }
 
-        elements.description.textContent =
-            chapter.description ||
-            "Explore the lessons and learning resources for this chapter.";
+        if (elements.description) {
+            elements.description.textContent =
+                chapter.description ||
+                "Explore the lessons and learning resources for this chapter.";
+        }
 
-        elements.exam.textContent = examName;
-        elements.subject.textContent = subjectName;
+        if (elements.exam) elements.exam.textContent = examName;
+        if (elements.subject) elements.subject.textContent = subjectName;
 
-        elements.number.textContent =
-            "Chapter " + chapter.chapter_number;
+        if (elements.number) {
+            elements.number.textContent =
+                "Chapter " + chapter.chapter_number;
+        }
 
-        elements.breadcrumbExam.textContent = examName;
-        elements.breadcrumbSubject.textContent = subjectName;
+        if (elements.breadcrumbExam) {
+            elements.breadcrumbExam.textContent = examName;
+        }
+
+        if (elements.breadcrumbSubject) {
+            elements.breadcrumbSubject.textContent = subjectName;
+        }
 
         document.title =
             chapter.chapter_name + " | STUDYVERSE AI";
@@ -572,7 +529,6 @@ document.addEventListener("DOMContentLoaded", async function () {
                     "lesson-content"
                 );
 
-                // Display stored text safely as text, not executable HTML.
                 content.textContent = lesson.content_markdown;
                 card.appendChild(content);
             }
@@ -646,26 +602,25 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             const readButton = makeElement(
                 "button",
-                "resource-action",
-                "Mark notes as read"
+                "resource-action note-read-button",
+                hasLocalRecord("read_notes", note.id)
+                    ? "✓ Notes marked as read"
+                    : "Mark notes as read"
             );
 
             readButton.type = "button";
 
-            readButton.addEventListener("click", async function () {
-                readButton.disabled = true;
+            if (hasLocalRecord("read_notes", note.id)) {
+                readButton.classList.add("is-completed");
+            }
 
-                const result = await saveLearningActivity(
-                    "note_read",
-                    note.id
-                );
+            readButton.addEventListener("click", function () {
+                addLocalRecord("read_notes", note.id);
 
-                if (result) {
-                    readButton.textContent = "✓ Reading recorded";
-                    showToast("Notes reading recorded!");
-                } else {
-                    readButton.disabled = false;
-                }
+                readButton.textContent = "✓ Notes marked as read";
+                readButton.classList.add("is-completed");
+
+                showToast("Notes marked as read on this device.");
             });
 
             card.appendChild(readButton);
@@ -690,35 +645,21 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
     }
 
-    
     // -----------------------------------------------------
-    // 12. LOAD FORMULAS — PUBLIC.FORMULAS
+    // 12. LOAD FORMULAS
     // -----------------------------------------------------
 
     async function loadFormulas() {
-
         const { data, error } = await db
             .from("formulas")
-            .select(`
-                id,
-                chapter_id,
-                title,
-                formula_text,
-                explanation,
-                is_published,
-                created_at
-            `)
+            .select(
+                "id, chapter_id, title, formula_text, explanation, is_published, created_at"
+            )
             .eq("chapter_id", chapterId)
             .eq("is_published", true)
             .order("title", { ascending: true });
 
-        if (error) {
-            console.error(
-                "STUDYVERSE AI: Formula loading error:",
-                error
-            );
-            throw error;
-        }
+        if (error) throw error;
 
         const formulas = data || [];
 
@@ -734,7 +675,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             showEmpty(
                 elements.formulas,
                 "No formulas published yet",
-                "No published formulas were found for this chapter. Check the Supabase formulas table."
+                "No published formulas were found for this chapter."
             );
             return;
         }
@@ -742,7 +683,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         elements.formulas.replaceChildren();
 
         formulas.forEach(function (formula, index) {
-
             const card = makeElement(
                 "article",
                 "resource-card formula-card"
@@ -779,13 +719,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             card.appendChild(formulaBox);
 
             if (formula.explanation) {
-                const explanation = makeElement(
-                    "p",
-                    "formula-explanation",
-                    formula.explanation
+                card.appendChild(
+                    makeElement(
+                        "p",
+                        "formula-explanation",
+                        formula.explanation
+                    )
                 );
-
-                card.appendChild(explanation);
             }
 
             const actions = makeElement(
@@ -802,7 +742,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             copyButton.type = "button";
 
             copyButton.addEventListener("click", async function () {
-
                 const copyText =
                     (formula.title || "") +
                     "\n" +
@@ -816,42 +755,38 @@ document.addEventListener("DOMContentLoaded", async function () {
                     copyButton.textContent = "✓ Copied";
                     showToast("Formula copied successfully!");
 
-                    setTimeout(function () {
+                    window.setTimeout(function () {
                         copyButton.textContent = "Copy Formula";
                     }, 2000);
-
                 } catch (error) {
                     console.error("Copy failed:", error);
-                    showToast("Unable to copy. Please select the formula manually.");
+                    showToast(
+                        "Unable to copy. Please select the formula manually."
+                    );
                 }
             });
 
             const reviseButton = makeElement(
                 "button",
-                "resource-action",
-                "Mark as revised"
+                "resource-action formula-revise-button",
+                hasLocalRecord("revised_formulas", formula.id)
+                    ? "✓ Marked as revised"
+                    : "Mark as revised"
             );
 
             reviseButton.type = "button";
 
-            reviseButton.addEventListener("click", async function () {
+            if (hasLocalRecord("revised_formulas", formula.id)) {
+                reviseButton.classList.add("is-completed");
+            }
 
-                reviseButton.disabled = true;
+            reviseButton.addEventListener("click", function () {
+                addLocalRecord("revised_formulas", formula.id);
 
-                const result = await saveLearningActivity(
-                    "formula_revised",
-                    formula.id,
-                    {
-                        formula_title: formula.title || ""
-                    }
-                );
+                reviseButton.textContent = "✓ Marked as revised";
+                reviseButton.classList.add("is-completed");
 
-                if (result) {
-                    reviseButton.textContent = "✓ Revision recorded";
-                    showToast("Formula revision recorded!");
-                } else {
-                    reviseButton.disabled = false;
-                }
+                showToast("Formula revision saved on this device.");
             });
 
             actions.append(copyButton, reviseButton);
@@ -859,38 +794,45 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             elements.formulas.appendChild(card);
         });
-
-        console.log(
-            "STUDYVERSE AI: Formulas loaded successfully.",
-            formulas.length
-        );
     }
 
-
     // -----------------------------------------------------
-    // 13. LOAD PREVIOUS YEAR QUESTIONS
+    // 13. PYQ ANSWER FEEDBACK
     // -----------------------------------------------------
 
     async function loadPyqs() {
         const { data, error } = await db
             .from("chapter_learning_pyqs")
-            .select(
-                "id, question_text, option_a, option_b, option_c, option_d, exam_year, difficulty"
-            )
+            .select(`
+                id,
+                question_number,
+                question_text,
+                option_a,
+                option_b,
+                option_c,
+                option_d,
+                correct_option,
+                explanation,
+                exam_year,
+                difficulty,
+                topic,
+                question_type
+            `)
             .eq("chapter_id", chapterId)
             .eq("is_published", true)
-            .order("exam_year", { ascending: false });
+            .order("question_number", { ascending: true });
 
         if (error) throw error;
 
         const questions = data || [];
+
         setCount(elements.pyqCount, questions.length, "question");
 
         if (!questions.length) {
             showEmpty(
                 elements.pyqs,
-                "No PYQs published yet",
-                "Previous-year questions will appear here when added."
+                "No questions published yet",
+                "Practice questions will appear here when they are added."
             );
             return;
         }
@@ -898,19 +840,33 @@ document.addEventListener("DOMContentLoaded", async function () {
         elements.pyqs.replaceChildren();
 
         questions.forEach(function (question, index) {
-            const card = makeElement("article", "resource-card");
+            const card = makeElement(
+                "article",
+                "resource-card pyq-card"
+            );
+
+            card.dataset.questionId = question.id;
+
+            const questionLabel =
+                question.question_number
+                    ? "QUESTION " + question.question_number
+                    : "QUESTION " + (index + 1);
 
             card.appendChild(
                 makeElement(
                     "span",
                     "resource-label",
-                    "QUESTION " + (index + 1)
+                    questionLabel
                 )
             );
 
             card.appendChild(
                 makeElement("h3", "", question.question_text)
             );
+
+            if (question.topic) {
+                addTextContent(card, "Topic: " + question.topic);
+            }
 
             if (question.exam_year) {
                 addTextContent(
@@ -932,8 +888,24 @@ document.addEventListener("DOMContentLoaded", async function () {
                 ["C", question.option_c],
                 ["D", question.option_d]
             ].filter(function (option) {
-                return Boolean(option[1]);
+                return option[1] !== null &&
+                    option[1] !== undefined &&
+                    String(option[1]).trim() !== "";
             });
+
+            const validAnswer = ["A", "B", "C", "D"].includes(
+                String(question.correct_option || "").toUpperCase()
+            );
+
+            const optionGroup = makeElement(
+                "div",
+                "pyq-options"
+            );
+
+            let selectedOption = null;
+            let submitted = false;
+
+            const optionButtons = [];
 
             options.forEach(function (option) {
                 const optionButton = makeElement(
@@ -943,35 +915,180 @@ document.addEventListener("DOMContentLoaded", async function () {
                 );
 
                 optionButton.type = "button";
+                optionButton.dataset.option = option[0];
+                optionButton.setAttribute(
+                    "aria-pressed",
+                    "false"
+                );
 
-                optionButton.addEventListener("click", async function () {
-                    const buttons = card.querySelectorAll(".pyq-option");
+                optionButton.addEventListener("click", function () {
+                    if (submitted) return;
 
-                    buttons.forEach(function (button) {
-                        button.disabled = true;
+                    selectedOption = option[0];
+
+                    optionButtons.forEach(function (button) {
+                        const isSelected =
+                            button.dataset.option === selectedOption;
+
+                        button.classList.toggle("selected", isSelected);
+                        button.setAttribute(
+                            "aria-pressed",
+                            String(isSelected)
+                        );
                     });
 
-                    const result = await saveLearningActivity(
-                        "pyq_attempted",
-                        question.id,
-                        {
-                            selected_option: option[0],
-                            exam_year: question.exam_year || null
-                        }
-                    );
+                    checkButton.disabled = false;
 
-                    if (result) {
-                        optionButton.classList.add("selected");
-                        showToast("Your PYQ attempt has been recorded.");
-                    } else {
-                        buttons.forEach(function (button) {
-                            button.disabled = false;
-                        });
+                    feedback.className = "pyq-feedback";
+                    feedback.textContent = "";
+
+                    showToast("Option " + selectedOption + " selected.");
+                });
+
+                optionButtons.push(optionButton);
+                optionGroup.appendChild(optionButton);
+            });
+
+            card.appendChild(optionGroup);
+
+            // Check Answer button
+            const checkButton = makeElement(
+                "button",
+                "resource-action pyq-check-button",
+                "Check Answer"
+            );
+
+            checkButton.type = "button";
+            checkButton.disabled = true;
+
+            // Feedback area
+            const feedback = makeElement(
+                "div",
+                "pyq-feedback"
+            );
+
+            feedback.setAttribute("aria-live", "polite");
+
+            checkButton.addEventListener("click", function () {
+                if (!selectedOption || submitted) return;
+
+                if (!validAnswer) {
+                    feedback.className =
+                        "pyq-feedback incorrect";
+
+                    feedback.textContent =
+                        "The correct answer is not available for this question yet. Please contact the content administrator.";
+
+                    return;
+                }
+
+                submitted = true;
+
+                const correctAnswer =
+                    String(question.correct_option).toUpperCase();
+
+                const isCorrect =
+                    selectedOption === correctAnswer;
+
+                optionButtons.forEach(function (button) {
+                    const optionLetter = button.dataset.option;
+
+                    button.disabled = true;
+
+                    if (optionLetter === correctAnswer) {
+                        button.classList.add("correct");
+                    } else if (
+                        optionLetter === selectedOption &&
+                        !isCorrect
+                    ) {
+                        button.classList.add("incorrect");
                     }
                 });
 
-                card.appendChild(optionButton);
+                if (isCorrect) {
+                    feedback.className =
+                        "pyq-feedback correct";
+
+                    feedback.appendChild(
+                        makeElement(
+                            "strong",
+                            "",
+                            "✓ Correct Answer!"
+                        )
+                    );
+                } else {
+                    feedback.className =
+                        "pyq-feedback incorrect";
+
+                    feedback.appendChild(
+                        makeElement(
+                            "strong",
+                            "",
+                            "✗ Incorrect Answer"
+                        )
+                    );
+
+                    feedback.appendChild(
+                        makeElement(
+                            "p",
+                            "",
+                            "Correct option: " + correctAnswer
+                        )
+                    );
+                }
+
+                if (question.explanation) {
+                    feedback.appendChild(
+                        makeElement(
+                            "p",
+                            "pyq-explanation",
+                            "Explanation: " + question.explanation
+                        )
+                    );
+                } else {
+                    feedback.appendChild(
+                        makeElement(
+                            "p",
+                            "pyq-explanation",
+                            "Explanation has not been added yet."
+                        )
+                    );
+                }
+
+                checkButton.textContent = "Answer Checked";
+                checkButton.disabled = true;
+
+                addLocalRecord(
+                    "attempted_questions",
+                    question.id
+                );
+
+                const attemptRecords = readLocalList(
+                    "question_results"
+                );
+
+                attemptRecords.push({
+                    question_id: question.id,
+                    selected_option: selectedOption,
+                    correct_option: correctAnswer,
+                    is_correct: isCorrect,
+                    attempted_at: new Date().toISOString()
+                });
+
+                writeLocalList(
+                    "question_results",
+                    attemptRecords
+                );
+
+                showToast(
+                    isCorrect
+                        ? "Correct! Well done."
+                        : "Answer checked. Review the explanation."
+                );
             });
+
+            card.appendChild(checkButton);
+            card.appendChild(feedback);
 
             elements.pyqs.appendChild(card);
         });
@@ -982,40 +1099,38 @@ document.addEventListener("DOMContentLoaded", async function () {
     // -----------------------------------------------------
 
     if (elements.lessons) {
-        elements.lessons.addEventListener("change", async function (event) {
-            const checkbox = event.target.closest(
-                'input[type="checkbox"][data-lesson-id]'
-            );
-
-            if (!checkbox) return;
-
-            const lessonId = checkbox.dataset.lessonId;
-            let completed = getCompletedLessons();
-
-            if (checkbox.checked) {
-                if (!completed.includes(lessonId)) {
-                    completed.push(lessonId);
-                }
-            } else {
-                completed = completed.filter(function (id) {
-                    return id !== lessonId;
-                });
-            }
-
-            saveCompletedLessons(completed);
-            updateProgress();
-
-            if (checkbox.checked) {
-                const result = await saveLearningActivity(
-                    "lesson_completed",
-                    lessonId
+        elements.lessons.addEventListener(
+            "change",
+            function (event) {
+                const checkbox = event.target.closest(
+                    'input[type="checkbox"][data-lesson-id]'
                 );
 
-                if (result) {
-                    showToast("Lesson completion saved!");
+                if (!checkbox) return;
+
+                const lessonId = checkbox.dataset.lessonId;
+                let completed = getCompletedLessons();
+
+                if (checkbox.checked) {
+                    if (!completed.includes(lessonId)) {
+                        completed.push(lessonId);
+                    }
+                } else {
+                    completed = completed.filter(function (id) {
+                        return id !== lessonId;
+                    });
                 }
+
+                saveCompletedLessons(completed);
+                updateProgress();
+
+                showToast(
+                    checkbox.checked
+                        ? "Lesson completion saved on this device."
+                        : "Lesson completion removed."
+                );
             }
-        });
+        );
     }
 
     // -----------------------------------------------------
@@ -1030,10 +1145,26 @@ document.addEventListener("DOMContentLoaded", async function () {
         showMessage("Loading your learning resources...");
 
         const sections = [
-            { name: "lessons", loader: loadLessons, target: elements.lessons },
-            { name: "notes", loader: loadNotes, target: elements.notes },
-            { name: "formulas", loader: loadFormulas, target: elements.formulas },
-            { name: "PYQs", loader: loadPyqs, target: elements.pyqs }
+            {
+                name: "lessons",
+                loader: loadLessons,
+                target: elements.lessons
+            },
+            {
+                name: "notes",
+                loader: loadNotes,
+                target: elements.notes
+            },
+            {
+                name: "formulas",
+                loader: loadFormulas,
+                target: elements.formulas
+            },
+            {
+                name: "PYQs",
+                loader: loadPyqs,
+                target: elements.pyqs
+            }
         ];
 
         const results = await Promise.allSettled(
@@ -1047,17 +1178,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         results.forEach(function (result, index) {
             if (result.status === "rejected") {
                 const section = sections[index];
+
                 failedSections.push(section.name);
 
                 console.error(
-                    "STUDYVERSE AI: Could not load " + section.name,
+                    "STUDYVERSE AI: Could not load " +
+                    section.name,
                     result.reason
                 );
 
                 showEmpty(
                     section.target,
                     "Unable to load this section",
-                    "Check the Supabase table, permissions and browser console."
+                    "Check the Supabase table, column names and permissions."
                 );
             }
         });
@@ -1079,12 +1212,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         updateProgress();
 
         console.log(
-            "STUDYVERSE AI: Chapter Learning Version 2.0 initialized.",
+            "STUDYVERSE AI: Chapter Learning Version 3.0 initialized.",
             {
                 chapterId: chapterId,
                 failedSections: failedSections,
-                progressTracking:
-                    Boolean(window.StudyverseProgress)
+                pyqAnswerChecking: true,
+                localProgress: true
             }
         );
 
