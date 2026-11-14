@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,39 +13,55 @@
 
     <meta name="theme-color" content="#090817">
 
-    <!-- Main Mock Test Dashboard CSS -->
+    <!-- =================================================
+         1. MOCK TEST DASHBOARD CSS
+    ================================================== -->
     <link rel="stylesheet" href="mock-tests.css">
 
-    <!-- Supabase JavaScript Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- =================================================
+         2. SUPABASE JAVASCRIPT LIBRARY
+         Must load before supabase.js
+    ================================================== -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
 
-    <!-- Existing Supabase Configuration -->
+    <!-- =================================================
+         3. STUDYVERSE SUPABASE CONFIGURATION
+         Initializes window.studyverseSupabase
+    ================================================== -->
     <script src="supabase.js" defer></script>
 
-    <!-- Mock Test Dashboard JavaScript -->
+    <!-- =================================================
+         4. MOCK TEST DASHBOARD JAVASCRIPT
+         Loads after Supabase initialization
+    ================================================== -->
     <script src="mock-tests.js" defer></script>
+
 </head>
 
 <body>
 
-    <!-- =========================
+    <!-- =================================================
          HEADER
-    ========================== -->
+    ================================================== -->
 
     <header class="mt-header">
 
         <div class="mt-header-container">
 
             <a href="index.html" class="mt-logo">
+
                 <span class="mt-logo-icon">S</span>
 
                 <span class="mt-logo-text">
                     STUDYVERSE <strong>AI</strong>
                     <small>LEARN SMARTER. ACHIEVE MORE.</small>
                 </span>
+
             </a>
 
-            <nav class="mt-navigation">
+            <nav class="mt-navigation" id="mtNavigation">
 
                 <a href="index.html">Home</a>
 
@@ -69,11 +86,16 @@
                     My Dashboard
                 </a>
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-mobile-menu"
                     id="mtMobileMenu"
-                    aria-label="Toggle navigation">
+                    aria-label="Toggle navigation"
+                    aria-expanded="false"
+                    aria-controls="mtNavigation">
+
                     ☰
+
                 </button>
 
             </div>
@@ -83,9 +105,9 @@
     </header>
 
 
-    <!-- =========================
+    <!-- =================================================
          MAIN CONTENT
-    ========================== -->
+    ================================================== -->
 
     <main class="mt-main">
 
@@ -96,8 +118,11 @@
             <div class="mt-hero-content">
 
                 <span class="mt-eyebrow">
+
                     <span class="mt-status-dot"></span>
+
                     YOUR EXAM PREPARATION STARTS HERE
+
                 </span>
 
                 <h1>
@@ -116,28 +141,36 @@
 
                     <a href="#availableTests"
                         class="mt-primary-button">
+
                         Explore Mock Tests
                         <span>→</span>
+
                     </a>
 
                     <a href="#testInstructions"
                         class="mt-secondary-button">
+
                         How It Works
+
                     </a>
 
                 </div>
 
             </div>
 
+
             <div class="mt-hero-visual">
 
                 <div class="mt-visual-card">
 
                     <div class="mt-visual-top">
+
                         <span>YOUR NEXT CHALLENGE</span>
+
                         <span class="mt-live-indicator">
                             ● LIVE PRACTICE
                         </span>
+
                     </div>
 
                     <div class="mt-visual-icon">
@@ -156,15 +189,20 @@
                     </div>
 
                     <div class="mt-visual-footer">
+
                         <span>Practice consistently</span>
+
                         <strong>STUDYVERSE AI</strong>
+
                     </div>
 
                 </div>
 
                 <div class="mt-floating-badge">
+
                     <span>✦</span>
                     Smart Practice
+
                 </div>
 
             </div>
@@ -172,52 +210,73 @@
         </section>
 
 
-        <!-- STATISTICS -->
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
 
         <section class="mt-statistics">
 
             <div class="mt-stat-card">
+
                 <span class="mt-stat-icon">📚</span>
+
                 <div>
                     <h3 id="totalMockTests">--</h3>
                     <p>Available Tests</p>
                 </div>
+
             </div>
 
+
             <div class="mt-stat-card">
+
                 <span class="mt-stat-icon">🎯</span>
+
                 <div>
                     <h3 id="totalQuestions">--</h3>
                     <p>Practice Questions</p>
                 </div>
+
             </div>
 
+
             <div class="mt-stat-card">
+
                 <span class="mt-stat-icon">⏱️</span>
+
                 <div>
                     <h3 id="totalAttempts">--</h3>
                     <p>Your Attempts</p>
                 </div>
+
             </div>
 
+
             <div class="mt-stat-card">
+
                 <span class="mt-stat-icon">📈</span>
+
                 <div>
                     <h3 id="averageScore">--</h3>
                     <p>Average Score</p>
                 </div>
+
             </div>
 
         </section>
 
 
-        <!-- EXAMINATION SELECTION -->
+        <!-- =================================================
+             EXAMINATION SELECTION
+        ================================================== -->
 
-        <section class="mt-section" id="examinationSelection">
+        <section class="mt-section"
+            id="examinationSelection">
 
             <div class="mt-section-heading">
 
                 <div>
+
                     <span class="mt-section-label">
                         CHOOSE YOUR GOAL
                     </span>
@@ -228,6 +287,7 @@
                         Choose the examination for which
                         you are preparing.
                     </p>
+
                 </div>
 
             </div>
@@ -235,7 +295,8 @@
 
             <div class="mt-exam-grid">
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-exam-card active"
                     data-exam="all"
                     aria-pressed="true">
@@ -255,7 +316,8 @@
                 </button>
 
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-exam-card"
                     data-exam="JEE Main"
                     aria-pressed="false">
@@ -275,7 +337,8 @@
                 </button>
 
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-exam-card"
                     data-exam="JEE Advanced"
                     aria-pressed="false">
@@ -295,7 +358,8 @@
                 </button>
 
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-exam-card"
                     data-exam="NEET UG"
                     aria-pressed="false">
@@ -319,13 +383,16 @@
         </section>
 
 
-        <!-- TEST CATEGORIES -->
+        <!-- =================================================
+             TEST CATEGORIES
+        ================================================== -->
 
         <section class="mt-section mt-category-section">
 
             <div class="mt-section-heading">
 
                 <div>
+
                     <span class="mt-section-label">
                         PRACTICE YOUR WAY
                     </span>
@@ -335,6 +402,7 @@
                     <p>
                         Select the type of practice you need.
                     </p>
+
                 </div>
 
             </div>
@@ -342,7 +410,8 @@
 
             <div class="mt-category-grid">
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-category-card active"
                     data-category="all"
                     aria-pressed="true">
@@ -350,14 +419,20 @@
                     <span class="mt-category-icon">🌟</span>
 
                     <span class="mt-category-content">
+
                         <strong>All Tests</strong>
-                        <small>Explore every available test</small>
+
+                        <small>
+                            Explore every available test
+                        </small>
+
                     </span>
 
                 </button>
 
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-category-card"
                     data-category="full"
                     aria-pressed="false">
@@ -365,14 +440,20 @@
                     <span class="mt-category-icon">🏆</span>
 
                     <span class="mt-category-content">
+
                         <strong>Full Syllabus</strong>
-                        <small>Complete examination practice</small>
+
+                        <small>
+                            Complete examination practice
+                        </small>
+
                     </span>
 
                 </button>
 
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-category-card"
                     data-category="subject"
                     aria-pressed="false">
@@ -380,14 +461,20 @@
                     <span class="mt-category-icon">📖</span>
 
                     <span class="mt-category-content">
+
                         <strong>Subject Wise</strong>
-                        <small>Physics, Chemistry and Biology</small>
+
+                        <small>
+                            Physics, Chemistry and Biology
+                        </small>
+
                     </span>
 
                 </button>
 
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-category-card"
                     data-category="chapter"
                     aria-pressed="false">
@@ -395,8 +482,13 @@
                     <span class="mt-category-icon">📝</span>
 
                     <span class="mt-category-content">
+
                         <strong>Chapter Wise</strong>
-                        <small>Practise individual chapters</small>
+
+                        <small>
+                            Practise individual chapters
+                        </small>
+
                     </span>
 
                 </button>
@@ -406,13 +498,17 @@
         </section>
 
 
-        <!-- AVAILABLE TESTS -->
+        <!-- =================================================
+             AVAILABLE TESTS
+        ================================================== -->
 
-        <section class="mt-section" id="availableTests">
+        <section class="mt-section"
+            id="availableTests">
 
             <div class="mt-section-heading mt-tests-heading">
 
                 <div>
+
                     <span class="mt-section-label">
                         YOUR PRACTICE LIBRARY
                     </span>
@@ -422,11 +518,14 @@
                     <p id="testSectionDescription">
                         Find a test and challenge yourself.
                     </p>
+
                 </div>
+
 
                 <div class="mt-test-search">
 
-                    <input type="search"
+                    <input
+                        type="search"
                         id="mockTestSearch"
                         placeholder="Search mock tests..."
                         aria-label="Search mock tests">
@@ -446,12 +545,16 @@
 
                 <span id="activeExamFilter"
                     class="mt-filter-chip">
+
                     All Examinations
+
                 </span>
 
                 <span id="activeCategoryFilter"
                     class="mt-filter-chip">
+
                     All Tests
+
                 </span>
 
             </div>
@@ -459,7 +562,8 @@
 
             <!-- LOADING MESSAGE -->
 
-            <div class="mt-loading" id="mockTestsLoading">
+            <div class="mt-loading"
+                id="mockTestsLoading">
 
                 <div class="mt-loader"></div>
 
@@ -468,10 +572,10 @@
             </div>
 
 
-            <!-- TEST CARDS WILL BE INSERTED HERE BY JAVASCRIPT -->
+            <!-- TEST CARDS -->
 
-            <div class="mt-test-grid" id="mockTestGrid">
-
+            <div class="mt-test-grid"
+                id="mockTestGrid">
             </div>
 
 
@@ -490,16 +594,19 @@
                     Try another examination or category.
                 </p>
 
-                <button type="button"
+                <button
+                    type="button"
                     id="resetMockFilters"
                     class="mt-primary-button">
+
                     Reset Filters
+
                 </button>
 
             </div>
 
 
-            <!-- ERROR MESSAGE -->
+            <!-- ERROR STATE -->
 
             <div class="mt-error-state"
                 id="mockTestsError"
@@ -513,10 +620,13 @@
                     Please try again later.
                 </p>
 
-                <button type="button"
+                <button
+                    type="button"
                     id="retryMockTests"
                     class="mt-primary-button">
+
                     Try Again
+
                 </button>
 
             </div>
@@ -524,14 +634,18 @@
         </section>
 
 
-        <!-- HOW IT WORKS -->
+        <!-- =================================================
+             HOW IT WORKS
+        ================================================== -->
 
-        <section class="mt-section mt-instructions-section"
+        <section
+            class="mt-section mt-instructions-section"
             id="testInstructions">
 
             <div class="mt-section-heading">
 
                 <div>
+
                     <span class="mt-section-label">
                         SIMPLE PROCESS
                     </span>
@@ -542,6 +656,7 @@
                         Follow these steps to get the most
                         out of your practice.
                     </p>
+
                 </div>
 
             </div>
@@ -617,13 +732,16 @@
         </section>
 
 
-        <!-- IMPORTANT INFORMATION -->
+        <!-- =================================================
+             IMPORTANT INFORMATION
+        ================================================== -->
 
         <section class="mt-important-section">
 
             <div class="mt-important-icon">💡</div>
 
             <div>
+
                 <h3>Prepare Smart. Perform Better.</h3>
 
                 <p>
@@ -632,19 +750,20 @@
                     saved according to the test system's
                     availability and connection.
                 </p>
+
             </div>
 
         </section>
 
-
     </main>
 
 
-    <!-- =========================
+    <!-- =================================================
          TEST INSTRUCTIONS MODAL
-    ========================== -->
+    ================================================== -->
 
-    <div class="mt-modal-overlay"
+    <div
+        class="mt-modal-overlay"
         id="testInstructionsModal"
         role="dialog"
         aria-modal="true"
@@ -653,12 +772,16 @@
 
         <div class="mt-modal">
 
-            <button type="button"
+            <button
+                type="button"
                 class="mt-modal-close"
                 id="closeTestModal"
                 aria-label="Close modal">
+
                 ×
+
             </button>
+
 
             <span class="mt-modal-label">
                 TEST DETAILS
@@ -671,6 +794,7 @@
             <p id="modalTestDescription">
                 Review the test details before starting.
             </p>
+
 
             <div class="mt-modal-details">
 
@@ -696,31 +820,51 @@
 
             </div>
 
+
             <div class="mt-modal-notice">
 
                 <strong>Before you begin:</strong>
 
                 <ul>
-                    <li>Ensure you have enough uninterrupted time.</li>
-                    <li>Read each question carefully.</li>
-                    <li>Check your answers before submitting.</li>
-                    <li>Do not refresh or close the test unnecessarily.</li>
+                    <li>
+                        Ensure you have enough uninterrupted time.
+                    </li>
+
+                    <li>
+                        Read each question carefully.
+                    </li>
+
+                    <li>
+                        Check your answers before submitting.
+                    </li>
+
+                    <li>
+                        Do not refresh or close the test unnecessarily.
+                    </li>
                 </ul>
 
             </div>
 
+
             <div class="mt-modal-actions">
 
-                <button type="button"
+                <button
+                    type="button"
                     class="mt-secondary-button"
                     id="cancelTestStart">
+
                     Cancel
+
                 </button>
 
-                <button type="button"
+
+                <button
+                    type="button"
                     class="mt-primary-button"
                     id="confirmTestStart">
+
                     Start Test →
+
                 </button>
 
             </div>
@@ -730,9 +874,9 @@
     </div>
 
 
-    <!-- =========================
+    <!-- =================================================
          FOOTER
-    ========================== -->
+    ================================================== -->
 
     <footer class="mt-footer">
 
@@ -741,12 +885,14 @@
             <div class="mt-footer-brand">
 
                 <a href="index.html" class="mt-logo">
+
                     <span class="mt-logo-icon">S</span>
 
                     <span class="mt-logo-text">
                         STUDYVERSE <strong>AI</strong>
                         <small>LEARN SMARTER. ACHIEVE MORE.</small>
                     </span>
+
                 </a>
 
                 <p>
@@ -760,14 +906,26 @@
             <div class="mt-footer-links">
 
                 <div>
+
                     <h4>Platform</h4>
+
                     <a href="index.html">Home</a>
-                    <a href="mock-tests.html">Mock Tests</a>
-                    <a href="student-dashboard.html">Dashboard</a>
+
+                    <a href="mock-tests.html">
+                        Mock Tests
+                    </a>
+
+                    <a href="student-dashboard.html">
+                        Dashboard
+                    </a>
+
                 </div>
 
+
                 <div>
+
                     <h4>Examinations</h4>
+
                     <a href="mock-tests.html?exam=JEE%20Main">
                         JEE Main
                     </a>
@@ -779,11 +937,13 @@
                     <a href="mock-tests.html?exam=NEET%20UG">
                         NEET UG
                     </a>
+
                 </div>
 
             </div>
 
         </div>
+
 
         <div class="mt-footer-bottom">
 
@@ -801,21 +961,27 @@
     </footer>
 
 
-    <!-- ACCESSIBLE NOTIFICATION AREA -->
+    <!-- =================================================
+         ACCESSIBLE NOTIFICATION AREA
+    ================================================== -->
 
-    <div id="mtNotification"
+    <div
+        id="mtNotification"
         class="mt-notification"
         role="status"
         aria-live="polite">
     </div>
 
 
-    <!-- =========================
-         BASIC PAGE INITIALIZATION
-    ========================== -->
+    <!-- =================================================
+         PAGE INITIALIZATION
+    ================================================== -->
 
     <script>
+
         document.addEventListener("DOMContentLoaded", function () {
+
+            /* Current year */
 
             const yearElement =
                 document.getElementById("currentYear");
@@ -825,24 +991,86 @@
                     new Date().getFullYear();
             }
 
+
+            /* Mobile navigation */
+
             const menuButton =
                 document.getElementById("mtMobileMenu");
 
             const navigation =
-                document.querySelector(".mt-navigation");
+                document.getElementById("mtNavigation");
 
             if (menuButton && navigation) {
 
                 menuButton.addEventListener("click", function () {
 
-                    navigation.classList.toggle("mt-nav-open");
+                    const isOpen =
+                        navigation.classList.toggle("mt-nav-open");
+
+                    menuButton.setAttribute(
+                        "aria-expanded",
+                        String(isOpen)
+                    );
+
+                    menuButton.textContent =
+                        isOpen ? "✕" : "☰";
+
+                });
+
+                navigation.querySelectorAll("a").forEach(link => {
+
+                    link.addEventListener("click", function () {
+
+                        navigation.classList.remove("mt-nav-open");
+
+                        menuButton.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+                        menuButton.textContent = "☰";
+
+                    });
+
+                });
+
+            }
+
+
+            /* Read exam filter from URL */
+
+            const urlParameters =
+                new URLSearchParams(window.location.search);
+
+            const requestedExam =
+                urlParameters.get("exam");
+
+            if (requestedExam) {
+
+                const examButtons =
+                    document.querySelectorAll("[data-exam]");
+
+                examButtons.forEach(button => {
+
+                    const selected =
+                        button.dataset.exam.toLowerCase() ===
+                        requestedExam.toLowerCase();
+
+                    button.classList.toggle("active", selected);
+
+                    button.setAttribute(
+                        "aria-pressed",
+                        String(selected)
+                    );
 
                 });
 
             }
 
         });
+
     </script>
 
 </body>
+
 </html>
